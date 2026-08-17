@@ -5,14 +5,36 @@ function childrenOf(id){
   return DATA.filter(d => d.parents && d.parents.includes(id));
 }
 
+const STORAGE_KEY = 'greekMythTree_visited_v1';
+let visited = new Set();
+try{
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw) visited = new Set(JSON.parse(raw));
+}catch(e){ /* localStorage unavailable — progress just won't persist */ }
+
+function markVisited(id){
+  visited.add(id);
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify([...visited])); }catch(e){}
+  const el = document.getElementById('node-'+id);
+  if(el) el.classList.add('visited');
+  updateProgressCounter();
+}
+
+function updateProgressCounter(){
+  const el = document.getElementById('progressCounter');
+  if(!el) return;
+  el.textContent = `已探索 ${visited.size} / ${DATA.length}`;
+}
+
 function renderNodes(){
   ['primordial','titan','olympian','hero','nature','zodiac','troy'].forEach(gen=>{
     const row = document.querySelector('.gen-row[data-row="'+gen+'"]');
-    DATA.filter(d=>d.gen===gen).forEach(d=>{
+    DATA.filter(d=>d.gen===gen).forEach((d,i)=>{
       const el = document.createElement('div');
-      el.className = 'node';
+      el.className = 'node' + (visited.has(d.id) ? ' visited' : '');
       el.id = 'node-'+d.id;
       el.setAttribute('data-gen', gen);
+      el.style.setProperty('--stagger', (i%10)*45+'ms');
       if(d.isRoman) el.setAttribute('data-roman', 'true');
       el.innerHTML = `
         <div class="medallion"><span class="zh">${d.zh}</span></div>
@@ -23,6 +45,7 @@ function renderNodes(){
       row.appendChild(el);
     });
   });
+  updateProgressCounter();
 }
 
 function drawConnections(){
@@ -103,6 +126,19 @@ function drawConnections(){
 
 let currentId = null;
 
+function animateEdgeDraw(path){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const len = path.getTotalLength();
+  const isDashedType = path.classList.contains('edge-counterpart') || path.classList.contains('edge-zodiac');
+  path.style.transition = 'none';
+  if(!isDashedType){ path.style.strokeDasharray = len; }
+  path.style.strokeDashoffset = len;
+  // force reflow so the browser registers the starting state before we animate
+  void path.getBoundingClientRect();
+  path.style.transition = 'stroke-dashoffset .7s cubic-bezier(.4,0,.2,1), opacity .2s ease, stroke .2s ease, stroke-width .2s ease';
+  path.style.strokeDashoffset = '0';
+}
+
 function selectNode(id){
   currentId = id;
   document.querySelectorAll('.node').forEach(n=>n.classList.remove('active'));
@@ -112,12 +148,14 @@ function selectNode(id){
     e.classList.remove('edge-active','edge-dim');
     if(e.dataset.from===id || e.dataset.to===id){
       e.classList.add('edge-active');
+      animateEdgeDraw(e);
     } else {
       e.classList.add('edge-dim');
     }
   });
 
   storyOpenId = null;
+  markVisited(id);
   renderDetail(id);
 
   const panel = document.getElementById('detailPanel');
@@ -154,6 +192,10 @@ function renderDetail(id){
     <div class="link-row">${d.links.map(lid=>`<button class="link-chip" onclick="jumpToNode('${lid}')">✧ ${byId[lid].zh} ${byId[lid].gr}</button>`).join('')}</div>
   ` : '';
 
+  const storyParts = d.story.split('。');
+  const storyHook = storyParts[0] ? storyParts[0] + '。' : d.story;
+  const storyRest = storyParts.slice(1).join('。');
+
   content.innerHTML = `
     <div class="detail-header">
       <div class="detail-medallion" style="--ring:var(--${d.gen})">${d.zh.slice(0,1)}</div>
@@ -167,7 +209,7 @@ function renderDetail(id){
       <span class="tag">領域：${d.domain}</span>
       <span class="tag">象徵：${d.symbol}</span>
     </div>
-    <div class="detail-story">${d.story}</div>
+    <div class="detail-story"><span class="story-hook">${storyHook}</span>${storyRest}</div>
     <button class="read-story-btn" id="storyToggleBtn" onclick="toggleStory('${d.id}')">📜 閱讀完整神話故事</button>
     <div class="full-story-box" id="fullStoryBox"></div>
     <div class="astro-box">
@@ -194,6 +236,8 @@ function jumpTo(gen){
 }
 
 let storyOpenId = null;
+let storyParaIndex = 0;
+let storyShowAll = false;
 
 function toggleStory(id){
   const box = document.getElementById('fullStoryBox');
@@ -205,16 +249,91 @@ function toggleStory(id){
     storyOpenId = null;
     return;
   }
-  const d = byId[id];
-  const paragraphs = (d.fullStory||[]).map(p=>`<p>${p}</p>`).join('');
-  box.innerHTML = paragraphs;
-  box.style.display = 'block';
-  btn.textContent = '📜 收起故事';
   storyOpenId = id;
+  storyParaIndex = 0;
+  storyShowAll = false;
+  btn.textContent = '📜 收起故事';
+  box.style.display = 'block';
+  renderStoryBox();
   box.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
+function renderStoryBox(){
+  const box = document.getElementById('fullStoryBox');
+  if(!box || !storyOpenId) return;
+  const d = byId[storyOpenId];
+  const paras = d.fullStory || [];
+
+  if(storyShowAll){
+    box.innerHTML = paras.map(p=>`<p>${p}</p>`).join('') +
+      `<button class="story-mode-toggle" onclick="storyShowAll=false; storyParaIndex=0; renderStoryBox();">↩ 改成一段一段看</button>`;
+    return;
+  }
+
+  const dots = paras.map((_,i)=>`<span class="story-dot ${i===storyParaIndex?'active':''}"></span>`).join('');
+  box.innerHTML = `
+    <p>${paras[storyParaIndex]}</p>
+    <div class="story-nav">
+      <button class="story-nav-btn" onclick="storyParaIndex=Math.max(0,storyParaIndex-1); renderStoryBox();" ${storyParaIndex===0?'disabled':''}>← 上一段</button>
+      <div class="story-dots">${dots}</div>
+      <button class="story-nav-btn" onclick="storyParaIndex=Math.min(${paras.length-1},storyParaIndex+1); renderStoryBox();" ${storyParaIndex===paras.length-1?'disabled':''}>下一段 →</button>
+    </div>
+    <button class="story-mode-toggle" onclick="storyShowAll=true; renderStoryBox();">顯示全部段落</button>
+  `;
+}
+
+function setupRevealObserver(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.querySelectorAll('.node').forEach(n=>n.classList.add('revealed'));
+    return;
+  }
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('revealed');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.15, rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.node').forEach(n=>io.observe(n));
+}
+
+const GEN_META = [
+  {id:'primordial', label:'創世 · 原初神', color:'#3B2E42'},
+  {id:'titan', label:'泰坦神族', color:'#6B4A2F'},
+  {id:'olympian', label:'奧林帕斯十二主神', color:'#1F4959'},
+  {id:'hero', label:'凡間英雄', color:'#B5502E'},
+  {id:'nature', label:'自然精靈與野性之神', color:'#4B6B3A'},
+  {id:'zodiac', label:'黃道十二宮', color:'#3D3A6B'},
+  {id:'troy', label:'特洛伊戰爭與奧德賽', color:'#6B2E3A'},
+];
+
+function setupProgressRail(){
+  const rail = document.getElementById('progressRail');
+  if(!rail) return;
+  GEN_META.forEach(g=>{
+    const dot = document.createElement('button');
+    dot.className = 'rail-dot';
+    dot.style.setProperty('--dot-color', g.color);
+    dot.title = g.label;
+    dot.setAttribute('aria-label', g.label);
+    dot.dataset.gen = g.id;
+    dot.onclick = ()=> jumpTo(g.id);
+    rail.appendChild(dot);
+  });
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting) return;
+      const gen = entry.target.id.replace('sec-','');
+      rail.querySelectorAll('.rail-dot').forEach(d=>d.classList.toggle('active', d.dataset.gen===gen));
+    });
+  }, {threshold:0, rootMargin:'-45% 0px -45% 0px'});
+  document.querySelectorAll('.gen-section').forEach(s=>io.observe(s));
+}
+
 renderNodes();
+setupRevealObserver();
+setupProgressRail();
 window.addEventListener('load', ()=>{
   drawConnections();
   setTimeout(drawConnections, 150);
