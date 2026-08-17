@@ -1,0 +1,226 @@
+
+const byId = Object.fromEntries(DATA.map(d=>[d.id,d]));
+
+function childrenOf(id){
+  return DATA.filter(d => d.parents && d.parents.includes(id));
+}
+
+function renderNodes(){
+  ['primordial','titan','olympian','hero','nature','zodiac','troy'].forEach(gen=>{
+    const row = document.querySelector('.gen-row[data-row="'+gen+'"]');
+    DATA.filter(d=>d.gen===gen).forEach(d=>{
+      const el = document.createElement('div');
+      el.className = 'node';
+      el.id = 'node-'+d.id;
+      el.setAttribute('data-gen', gen);
+      if(d.isRoman) el.setAttribute('data-roman', 'true');
+      el.innerHTML = `
+        <div class="medallion"><span class="zh">${d.zh}</span></div>
+        <div class="gr">${d.gr}</div>
+        ${d.isRoman ? '<span class="roman-badge">羅馬 ROMAN</span>' : ''}
+      `;
+      el.addEventListener('click', ()=>selectNode(d.id));
+      row.appendChild(el);
+    });
+  });
+}
+
+function drawConnections(){
+  const wrap = document.getElementById('treeWrap');
+  const svg = document.getElementById('connections');
+  const wrapRect = wrap.getBoundingClientRect();
+  svg.setAttribute('width', wrap.scrollWidth);
+  svg.setAttribute('height', wrap.scrollHeight);
+  svg.innerHTML = '';
+
+  DATA.forEach(node=>{
+    if(!node.parents || node.parents.length===0) return;
+    node.parents.forEach(pid=>{
+      const parentEl = document.getElementById('node-'+pid);
+      const childEl = document.getElementById('node-'+node.id);
+      if(!parentEl || !childEl) return;
+      const pr = parentEl.getBoundingClientRect();
+      const cr = childEl.getBoundingClientRect();
+      const x1 = pr.left + pr.width/2 - wrapRect.left + wrap.scrollLeft;
+      const y1 = pr.top + pr.height - 8 - wrapRect.top + wrap.scrollTop;
+      const x2 = cr.left + cr.width/2 - wrapRect.left + wrap.scrollLeft;
+      const y2 = cr.top + 8 - wrapRect.top + wrap.scrollTop;
+      const midY = (y1+y2)/2;
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
+      path.setAttribute('class','edge');
+      path.dataset.from = pid;
+      path.dataset.to = node.id;
+      svg.appendChild(path);
+    });
+  });
+
+  const drawnCounterparts = new Set();
+  DATA.forEach(node=>{
+    if(!node.counterpart) return;
+    const pairKey = [node.id, node.counterpart].sort().join('|');
+    if(drawnCounterparts.has(pairKey)) return;
+    drawnCounterparts.add(pairKey);
+    const aEl = document.getElementById('node-'+node.id);
+    const bEl = document.getElementById('node-'+node.counterpart);
+    if(!aEl || !bEl) return;
+    const ar = aEl.getBoundingClientRect();
+    const br = bEl.getBoundingClientRect();
+    const x1 = ar.left + ar.width/2 - wrapRect.left + wrap.scrollLeft;
+    const y1 = ar.top + ar.height/2 - wrapRect.top + wrap.scrollTop;
+    const x2 = br.left + br.width/2 - wrapRect.left + wrap.scrollLeft;
+    const y2 = br.top + br.height/2 - wrapRect.top + wrap.scrollTop;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
+    path.setAttribute('class','edge edge-counterpart');
+    path.dataset.from = node.id;
+    path.dataset.to = node.counterpart;
+    svg.appendChild(path);
+  });
+
+  DATA.forEach(node=>{
+    if(!node.links || node.links.length===0) return;
+    node.links.forEach(targetId=>{
+      const aEl = document.getElementById('node-'+node.id);
+      const bEl = document.getElementById('node-'+targetId);
+      if(!aEl || !bEl) return;
+      const ar = aEl.getBoundingClientRect();
+      const br = bEl.getBoundingClientRect();
+      const x1 = ar.left + ar.width/2 - wrapRect.left + wrap.scrollLeft;
+      const y1 = ar.top + ar.height/2 - wrapRect.top + wrap.scrollTop;
+      const x2 = br.left + br.width/2 - wrapRect.left + wrap.scrollLeft;
+      const y2 = br.top + br.height/2 - wrapRect.top + wrap.scrollTop;
+      const midY = (y1+y2)/2;
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
+      path.setAttribute('class','edge edge-zodiac');
+      path.dataset.from = node.id;
+      path.dataset.to = targetId;
+      svg.appendChild(path);
+    });
+  });
+}
+
+let currentId = null;
+
+function selectNode(id){
+  currentId = id;
+  document.querySelectorAll('.node').forEach(n=>n.classList.remove('active'));
+  document.getElementById('node-'+id).classList.add('active');
+
+  document.querySelectorAll('.edge').forEach(e=>{
+    e.classList.remove('edge-active','edge-dim');
+    if(e.dataset.from===id || e.dataset.to===id){
+      e.classList.add('edge-active');
+    } else {
+      e.classList.add('edge-dim');
+    }
+  });
+
+  storyOpenId = null;
+  renderDetail(id);
+
+  const panel = document.getElementById('detailPanel');
+  panel.classList.add('open');
+}
+
+function closePanel(){
+  document.getElementById('detailPanel').classList.remove('open');
+}
+
+function renderDetail(id){
+  const d = byId[id];
+  document.getElementById('detailEmpty').style.display = 'none';
+  const content = document.getElementById('detailContent');
+  content.style.display = 'block';
+
+  const parentsChips = (d.parents||[]).map(pid=>{
+    const p = byId[pid];
+    return `<button class="link-chip" onclick="jumpToNode('${pid}')">${p.zh} ${p.gr}</button>`;
+  }).join('') || `<span style="font-size:12.5px;color:var(--ink-soft);">${d.gen==='primordial' ? '無（原初存在）' : '無明確記載的單一親系'}</span>`;
+
+  const kids = childrenOf(id);
+  const kidsChips = kids.length
+    ? kids.map(k=>`<button class="link-chip" onclick="jumpToNode('${k.id}')">${k.zh} ${k.gr}</button>`).join('')
+    : '<span style="font-size:12.5px;color:var(--ink-soft);">（無記載後代）</span>';
+
+  const counterpartRow = d.counterpart ? `
+    <div class="detail-section-title">跨文化對應</div>
+    <div class="link-row"><button class="link-chip" onclick="jumpToNode('${d.counterpart}')">✦ ${byId[d.counterpart].zh} ${byId[d.counterpart].gr}</button></div>
+  ` : '';
+
+  const linksRow = (d.links && d.links.length) ? `
+    <div class="detail-section-title">神話關聯</div>
+    <div class="link-row">${d.links.map(lid=>`<button class="link-chip" onclick="jumpToNode('${lid}')">✧ ${byId[lid].zh} ${byId[lid].gr}</button>`).join('')}</div>
+  ` : '';
+
+  content.innerHTML = `
+    <div class="detail-header">
+      <div class="detail-medallion" style="--ring:var(--${d.gen})">${d.zh.slice(0,1)}</div>
+      <div class="detail-title">
+        <h2>${d.zh}</h2>
+        <div class="gr-name">${d.gr} · 羅馬名：${d.roman}</div>
+      </div>
+    </div>
+    <div class="detail-epithet">「${d.epithet}」</div>
+    <div class="detail-tags">
+      <span class="tag">領域：${d.domain}</span>
+      <span class="tag">象徵：${d.symbol}</span>
+    </div>
+    <div class="detail-story">${d.story}</div>
+    <button class="read-story-btn" id="storyToggleBtn" onclick="toggleStory('${d.id}')">📜 閱讀完整神話故事</button>
+    <div class="full-story-box" id="fullStoryBox"></div>
+    <div class="astro-box">
+      <span class="astro-icon">🔭</span>
+      <div class="astro-text"><span class="astro-label">在夜空中</span>${d.astro || '目前尚無明確對應的天體命名。'}</div>
+    </div>
+    <div class="detail-section-title">父母</div>
+    <div class="link-row">${parentsChips}</div>
+    <div class="detail-section-title">子嗣 / 後代</div>
+    <div class="link-row">${kidsChips}</div>
+    ${counterpartRow}
+    ${linksRow}
+  `;
+}
+
+function jumpToNode(id){
+  const el = document.getElementById('node-'+id);
+  el.scrollIntoView({behavior:'smooth', block:'center', inline:'center'});
+  selectNode(id);
+}
+
+function jumpTo(gen){
+  document.getElementById('sec-'+gen).scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+let storyOpenId = null;
+
+function toggleStory(id){
+  const box = document.getElementById('fullStoryBox');
+  const btn = document.getElementById('storyToggleBtn');
+  if(storyOpenId === id){
+    box.style.display = 'none';
+    box.innerHTML = '';
+    btn.textContent = '📜 閱讀完整神話故事';
+    storyOpenId = null;
+    return;
+  }
+  const d = byId[id];
+  const paragraphs = (d.fullStory||[]).map(p=>`<p>${p}</p>`).join('');
+  box.innerHTML = paragraphs;
+  box.style.display = 'block';
+  btn.textContent = '📜 收起故事';
+  storyOpenId = id;
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+renderNodes();
+window.addEventListener('load', ()=>{
+  drawConnections();
+  setTimeout(drawConnections, 150);
+});
+window.addEventListener('resize', drawConnections);
+document.getElementById('treeWrap').addEventListener('scroll', drawConnections);
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(drawConnections);
+}
