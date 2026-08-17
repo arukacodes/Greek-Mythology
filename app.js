@@ -42,7 +42,7 @@ function playTone(freq, duration, type, peak, delay){
 
 const GEN_NOTES = {
   primordial:261.63, titan:293.66, olympian:329.63, hero:392.00,
-  nature:440.00, zodiac:523.25, troy:587.33, philosophy:659.25
+  nature:440.00, zodiac:523.25, troy:587.33, philosophy:659.25, echoes:698.46
 };
 
 function playSelectSound(gen){
@@ -54,6 +54,12 @@ function playSelectSound(gen){
 function playUnlockChime(){
   playTone(523.25, 0.35, 'triangle', 0.12, 0);
   playTone(659.25, 0.5, 'triangle', 0.12, 0.12);
+}
+
+function playEggChime(){
+  playTone(659.25, 0.3, 'sine', 0.1, 0);
+  playTone(830.61, 0.3, 'sine', 0.09, 0.09);
+  playTone(1046.5, 0.45, 'triangle', 0.1, 0.18);
 }
 
 function playPageSound(direction){
@@ -107,7 +113,7 @@ function updateProgressCounter(){
 }
 
 function renderNodes(){
-  ['primordial','titan','olympian','hero','nature','zodiac','troy','philosophy'].forEach(gen=>{
+  ['primordial','titan','olympian','hero','nature','zodiac','troy','philosophy','echoes'].forEach(gen=>{
     const row = document.querySelector('.gen-row[data-row="'+gen+'"]');
     DATA.filter(d=>d.gen===gen).forEach((d,i)=>{
       const el = document.createElement('div');
@@ -389,6 +395,7 @@ const GEN_META = [
   {id:'zodiac', label:'黃道十二宮', color:'#3D3A6B'},
   {id:'troy', label:'特洛伊戰爭與奧德賽', color:'#6B2E3A'},
   {id:'philosophy', label:'哲學家與經典著作', color:'#5B5850'},
+  {id:'echoes', label:'神話的現代回聲', color:'#8A6D1F'},
 ];
 
 function setupProgressRail(){
@@ -429,4 +436,97 @@ window.addEventListener('resize', drawConnections);
 document.getElementById('treeWrap').addEventListener('scroll', drawConnections);
 if(document.fonts && document.fonts.ready){
   document.fonts.ready.then(drawConnections);
+}
+
+/* ---------- Easter Egg Wall ---------- */
+const EASTER_EGGS = [
+  {icon:'🪐', text:'土星真的有一顆衛星叫「潘」——就卡在土星環的一道縫隙裡。'},
+  {icon:'☄️', text:'小行星「伊卡洛斯」的軌道會週期性飛到離太陽超近的地方，跟神話一模一樣。'},
+  {icon:'🌑', text:'月球上有一座「柏拉圖坑」，隔壁不遠處就是「亞里斯多德坑」，師生倆至今仍是鄰居。'},
+  {icon:'🚀', text:'NASA真的發射了一艘叫「普緒克號」的探測船，去找一顆幾乎全是金屬的小行星。'},
+  {icon:'🌫️', text:'「Panic」（恐慌）這個英文字，就是直接從牧神「潘」的名字來的。'},
+  {icon:'🧪', text:'化學元素「鉭」用坦塔羅斯命名——因為它泡在強酸裡都不會被腐蝕，怎樣都「傷不了」它。'},
+  {icon:'🌟', text:'科學家曾正經提出：太陽可能有一顆看不見的伴星，還把它取名叫「涅墨西斯」（死對頭）。'},
+  {icon:'🛰️', text:'1960年代NASA的通訊衛星取名「Echo」——因為它跟神話裡的厄科一樣，只能反射訊號、不能主動發聲。'},
+  {icon:'🌕', text:'冥王星有一顆衛星叫「倪克斯」，安靜地繞著冥界之王轉。'},
+  {icon:'🪨', text:'土星最大的衛星就叫「泰坦」——整個泰坦神族幾乎承包了土星的衛星命名。'},
+  {icon:'👁️', text:'水瓶座裡有個星雲被暱稱為「上帝之眼」，因為它長得真的很像一隻眼睛在看你。'},
+  {icon:'🕳️', text:'銀河系中心那個超大質量黑洞，就叫「人馬座A*」。'},
+  {icon:'☀️', text:'希臘七賢之首泰勒斯，兩千六百年前就準確預言了一次日食，還讓兩國因此當場停戰。'},
+  {icon:'🌌', text:'雙魚座現在才是春分點真正的位置——地球自轉軸的「歲差」，把它從白羊座慢慢挪過去了。'},
+  {icon:'🦂', text:'天蠍座和獵戶座永遠不會同時出現在夜空——神話裡，獵人俄里翁至今仍在躲避那隻蠍子。'},
+  {icon:'🌠', text:'每年八月的英仙座流星雨，輻射點正好就在——追殺蛇髮女妖梅杜莎的英雄柏修斯的星座裡。'},
+];
+
+const EGG_KEY = 'greekMythTree_eggs_v1';
+let discoveredEggs = new Set();
+try{
+  const raw = localStorage.getItem(EGG_KEY);
+  if(raw) discoveredEggs = new Set(JSON.parse(raw));
+}catch(e){ /* ignore */ }
+
+function renderEggGrid(){
+  const grid = document.getElementById('eggGrid');
+  if(!grid || grid.childElementCount) { updateEggProgress(); return; }
+  EASTER_EGGS.forEach((egg, i)=>{
+    const card = document.createElement('div');
+    card.className = 'egg-card' + (discoveredEggs.has(i) ? ' flipped' : '');
+    card.dataset.index = i;
+    card.innerHTML = `
+      <div class="egg-card-inner">
+        <div class="egg-card-front"><span class="egg-icon-hint">?</span></div>
+        <div class="egg-card-back">
+          <span class="egg-emoji">${egg.icon}</span>
+          <span class="egg-text">${egg.text}</span>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', (ev)=> flipEgg(i, card, ev));
+    grid.appendChild(card);
+  });
+  updateEggProgress();
+}
+
+function flipEgg(i, card, ev){
+  if(discoveredEggs.has(i)) return;
+  discoveredEggs.add(i);
+  try{ localStorage.setItem(EGG_KEY, JSON.stringify([...discoveredEggs])); }catch(e){}
+  card.classList.add('flipped');
+  spawnSparkles(ev.clientX, ev.clientY);
+  playEggChime();
+  updateEggProgress();
+}
+
+function spawnSparkles(x, y){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const glyphs = ['✦','✧','⋆','✨'];
+  for(let k=0; k<8; k++){
+    const s = document.createElement('span');
+    s.className = 'sparkle';
+    s.textContent = glyphs[k % glyphs.length];
+    const angle = (Math.PI * 2 * k) / 8;
+    const dist = 40 + Math.random()*30;
+    s.style.setProperty('--sx', Math.cos(angle)*dist + 'px');
+    s.style.setProperty('--sy', Math.sin(angle)*dist + 'px');
+    s.style.left = x + 'px';
+    s.style.top = y + 'px';
+    s.style.color = k % 2 === 0 ? '#E8C468' : '#fff';
+    document.body.appendChild(s);
+    setTimeout(()=> s.remove(), 850);
+  }
+}
+
+function updateEggProgress(){
+  const el = document.getElementById('eggProgress');
+  if(!el) return;
+  el.textContent = `已發現 ${discoveredEggs.size} / ${EASTER_EGGS.length}`;
+}
+
+function openEggWall(){
+  renderEggGrid();
+  document.getElementById('eggOverlay').classList.add('open');
+}
+
+function closeEggWall(){
+  document.getElementById('eggOverlay').classList.remove('open');
 }

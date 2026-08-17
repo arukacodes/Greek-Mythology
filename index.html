@@ -15,8 +15,21 @@
   <div class="header-controls">
     <p class="progress-counter" id="progressCounter">已探索 0 / 0</p>
     <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" aria-label="切換音效">🔊 音效</button>
+    <button class="egg-toggle" id="eggToggle" onclick="openEggWall()">🥚 彩蛋牆</button>
   </div>
 </header>
+
+<div class="egg-overlay" id="eggOverlay" onclick="if(event.target===this) closeEggWall()">
+  <div class="egg-panel">
+    <button class="egg-close" onclick="closeEggWall()">✕</button>
+    <div class="egg-header">
+      <h2>🥚 神話 × 現實 彩蛋牆</h2>
+      <p class="egg-sub">翻開卡片，看看哪些神話悄悄藏在我們的日常之中</p>
+      <p class="egg-progress" id="eggProgress">已發現 0 / 0</p>
+    </div>
+    <div class="egg-grid" id="eggGrid"></div>
+  </div>
+</div>
 <div class="meander-strip"></div>
 
 <nav class="progress-rail" id="progressRail"></nav>
@@ -30,6 +43,7 @@
   <button data-gen="zodiac" style="--dot:#3D3A6B" onclick="jumpTo('zodiac')"><span class="dot"></span>黃道十二宮</button>
   <button data-gen="troy" style="--dot:#6B2E3A" onclick="jumpTo('troy')"><span class="dot"></span>特洛伊戰爭與奧德賽</button>
   <button data-gen="philosophy" style="--dot:#5B5850" onclick="jumpTo('philosophy')"><span class="dot"></span>哲學家與經典著作</button>
+  <button data-gen="echoes" style="--dot:#8A6D1F" onclick="jumpTo('echoes')"><span class="dot"></span>神話的現代回聲</button>
 </div>
 
 <div class="layout">
@@ -74,6 +88,11 @@
     <div class="gen-section" id="sec-philosophy">
       <div class="gen-label"><span>哲學家與經典著作 Philosophers &amp; Classical Works</span></div>
       <div class="gen-row" data-row="philosophy"></div>
+    </div>
+
+    <div class="gen-section" id="sec-echoes">
+      <div class="gen-label"><span>神話的現代回聲 Modern Echoes of Myth</span></div>
+      <div class="gen-row" data-row="echoes"></div>
     </div>
   </div>
 
