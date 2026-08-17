@@ -530,3 +530,190 @@ function openEggWall(){
 function closeEggWall(){
   document.getElementById('eggOverlay').classList.remove('open');
 }
+
+/* ---------- Search ---------- */
+function genColor(gen){
+  const meta = GEN_META.find(g=>g.id===gen);
+  return meta ? meta.color : '#A6812E';
+}
+
+function openSearch(){
+  document.getElementById('searchOverlay').classList.add('open');
+  const input = document.getElementById('searchInput');
+  input.value = '';
+  renderSearchResults();
+  setTimeout(()=> input.focus(), 50);
+}
+
+function closeSearch(){
+  document.getElementById('searchOverlay').classList.remove('open');
+}
+
+function matchesQuery(d, q){
+  if(!q) return true;
+  return d.zh.toLowerCase().includes(q) || d.gr.toLowerCase().includes(q);
+}
+
+function renderSearchResults(){
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const box = document.getElementById('searchResults');
+  const matches = DATA.filter(d=>matchesQuery(d,q)).slice(0, 30);
+  if(matches.length===0){
+    box.innerHTML = '<div class="util-empty">找不到符合的角色，換個關鍵字試試？</div>';
+    return;
+  }
+  box.innerHTML = matches.map(d=>`
+    <button class="util-result-item" onclick="selectFromSearch('${d.id}')">
+      <span class="util-result-dot" style="--dot-color:${genColor(d.gen)}"></span>
+      <span>
+        <div class="util-result-name">${d.zh}</div>
+        <div class="util-result-gr">${d.gr}</div>
+      </span>
+    </button>
+  `).join('');
+}
+
+function selectFromSearch(id){
+  closeSearch();
+  jumpToNode(id);
+}
+
+/* ---------- Relationship graph + pathfinder ---------- */
+const ADJ = {};
+DATA.forEach(d=>{ ADJ[d.id] = new Set(); });
+DATA.forEach(d=>{
+  (d.parents||[]).forEach(p=>{ if(ADJ[p]){ ADJ[d.id].add(p); ADJ[p].add(d.id); } });
+  (d.links||[]).forEach(l=>{ if(ADJ[l]){ ADJ[d.id].add(l); ADJ[l].add(d.id); } });
+  if(d.counterpart && ADJ[d.counterpart]){ ADJ[d.id].add(d.counterpart); ADJ[d.counterpart].add(d.id); }
+});
+
+function findPath(startId, endId){
+  if(startId === endId) return [startId];
+  const visited = new Set([startId]);
+  const queue = [[startId]];
+  while(queue.length){
+    const path = queue.shift();
+    const node = path[path.length-1];
+    for(const neighbor of (ADJ[node] || [])){
+      if(neighbor === endId) return [...path, neighbor];
+      if(!visited.has(neighbor)){
+        visited.add(neighbor);
+        queue.push([...path, neighbor]);
+      }
+    }
+  }
+  return null;
+}
+
+let pathFromId = null;
+let pathToId = null;
+
+function openPathfinder(){
+  document.getElementById('pathOverlay').classList.add('open');
+  document.getElementById('pathFromInput').value = '';
+  document.getElementById('pathToInput').value = '';
+  document.getElementById('pathFromResults').innerHTML = '';
+  document.getElementById('pathToResults').innerHTML = '';
+  document.getElementById('pathResult').innerHTML = '';
+  pathFromId = null;
+  pathToId = null;
+}
+
+function closePathfinder(){
+  document.getElementById('pathOverlay').classList.remove('open');
+}
+
+function renderPathSuggestions(field){
+  const inputId = field === 'from' ? 'pathFromInput' : 'pathToInput';
+  const resultsId = field === 'from' ? 'pathFromResults' : 'pathToResults';
+  const q = document.getElementById(inputId).value.trim().toLowerCase();
+  const box = document.getElementById(resultsId);
+  if(!q){ box.innerHTML = ''; return; }
+  const matches = DATA.filter(d=>matchesQuery(d,q)).slice(0, 8);
+  if(matches.length===0){
+    box.innerHTML = '<div class="util-empty">沒有符合的角色</div>';
+    return;
+  }
+  box.innerHTML = matches.map(d=>`
+    <button class="util-result-item" onclick="pickPathNode('${field}','${d.id}','${d.zh.replace(/'/g,"\\'")}')">
+      <span class="util-result-dot" style="--dot-color:${genColor(d.gen)}"></span>
+      <span>
+        <div class="util-result-name">${d.zh}</div>
+        <div class="util-result-gr">${d.gr}</div>
+      </span>
+    </button>
+  `).join('');
+}
+
+function pickPathNode(field, id, zh){
+  if(field === 'from'){
+    pathFromId = id;
+    document.getElementById('pathFromInput').value = zh;
+    document.getElementById('pathFromResults').innerHTML = '';
+  } else {
+    pathToId = id;
+    document.getElementById('pathToInput').value = zh;
+    document.getElementById('pathToResults').innerHTML = '';
+  }
+}
+
+function runPathfinder(){
+  const resultBox = document.getElementById('pathResult');
+  if(!pathFromId || !pathToId){
+    resultBox.innerHTML = '<div class="path-none">請先從下拉建議中，各自選一個角色。</div>';
+    return;
+  }
+  const path = findPath(pathFromId, pathToId);
+  if(!path){
+    resultBox.innerHTML = '<div class="path-none">目前收錄的故事裡，這兩位之間還沒有已知的關聯路徑——也許是個值得加進去的新連結？</div>';
+    return;
+  }
+  const chain = path.map(id=>{
+    const d = byId[id];
+    return `<button class="path-chip" style="--dot-color:${genColor(d.gen)}" onclick="jumpToNode('${id}')">${d.zh}</button>`;
+  }).join('<span class="path-chip-arrow">→</span>');
+  resultBox.innerHTML = `
+    <div class="path-result-chain">${chain}</div>
+    <div class="path-degrees">共 ${path.length - 1} 度關聯</div>
+  `;
+  highlightPath(path);
+  closePathfinder();
+}
+
+function highlightPath(path){
+  document.querySelectorAll('.node').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.edge').forEach(e=>{
+    e.classList.remove('edge-active','edge-dim');
+    e.classList.add('edge-dim');
+  });
+  for(let i=0;i<path.length-1;i++){
+    const a = path[i], b = path[i+1];
+    document.querySelectorAll('.edge').forEach(e=>{
+      if((e.dataset.from===a && e.dataset.to===b) || (e.dataset.from===b && e.dataset.to===a)){
+        e.classList.remove('edge-dim');
+        e.classList.add('edge-active');
+        animateEdgeDraw(e);
+      }
+    });
+  }
+  path.forEach(id=>{
+    const el = document.getElementById('node-'+id);
+    if(el) el.classList.add('active');
+  });
+
+  const names = path.map(id=>byId[id].zh).join(' → ');
+  const banner = document.getElementById('pathBanner');
+  document.getElementById('pathBannerText').textContent = `🧭 ${names}`;
+  banner.classList.add('show');
+
+  const firstEl = document.getElementById('node-'+path[0]);
+  if(firstEl) firstEl.scrollIntoView({behavior:'smooth', block:'center', inline:'center'});
+}
+
+function clearPathHighlight(){
+  document.querySelectorAll('.node').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.edge').forEach(e=>{
+    e.classList.remove('edge-active','edge-dim');
+  });
+  document.getElementById('pathBanner').classList.remove('show');
+}

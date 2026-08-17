@@ -16,6 +16,8 @@
     <p class="progress-counter" id="progressCounter">已探索 0 / 0</p>
     <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" aria-label="切換音效">🔊 音效</button>
     <button class="egg-toggle" id="eggToggle" onclick="openEggWall()">🥚 彩蛋牆</button>
+    <button class="egg-toggle" id="searchToggle" onclick="openSearch()">🔍 搜尋</button>
+    <button class="egg-toggle" id="pathToggle" onclick="openPathfinder()">🧭 關係尋路</button>
   </div>
 </header>
 
@@ -30,6 +32,42 @@
     <div class="egg-grid" id="eggGrid"></div>
   </div>
 </div>
+
+<div class="util-overlay" id="searchOverlay" onclick="if(event.target===this) closeSearch()">
+  <div class="util-panel">
+    <button class="util-close" onclick="closeSearch()">✕</button>
+    <h3 class="util-title">🔍 搜尋角色</h3>
+    <input type="text" class="util-input" id="searchInput" placeholder="輸入中文或英文名字…" oninput="renderSearchResults()" autocomplete="off">
+    <div class="util-results" id="searchResults"></div>
+  </div>
+</div>
+
+<div class="util-overlay" id="pathOverlay" onclick="if(event.target===this) closePathfinder()">
+  <div class="util-panel util-panel-wide">
+    <button class="util-close" onclick="closePathfinder()">✕</button>
+    <h3 class="util-title">🧭 關係尋路</h3>
+    <p class="util-sub">輸入兩個角色，看看他們之間隔著幾步關係</p>
+    <div class="path-inputs">
+      <div class="path-field">
+        <input type="text" class="util-input" id="pathFromInput" placeholder="起點角色…" oninput="renderPathSuggestions('from')" autocomplete="off">
+        <div class="util-results" id="pathFromResults"></div>
+      </div>
+      <div class="path-arrow">→</div>
+      <div class="path-field">
+        <input type="text" class="util-input" id="pathToInput" placeholder="終點角色…" oninput="renderPathSuggestions('to')" autocomplete="off">
+        <div class="util-results" id="pathToResults"></div>
+      </div>
+    </div>
+    <button class="path-find-btn" onclick="runPathfinder()">尋找路徑</button>
+    <div class="path-result" id="pathResult"></div>
+  </div>
+</div>
+
+<div class="path-banner" id="pathBanner">
+  <span id="pathBannerText"></span>
+  <button onclick="clearPathHighlight()">✕ 清除路徑</button>
+</div>
+
 <div class="meander-strip"></div>
 
 <nav class="progress-rail" id="progressRail"></nav>
