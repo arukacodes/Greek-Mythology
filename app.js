@@ -5,6 +5,86 @@ function childrenOf(id){
   return DATA.filter(d => d.parents && d.parents.includes(id));
 }
 
+/* ---------- Sound: synthesized in the browser, no audio files needed ---------- */
+const SOUND_KEY = 'greekMythTree_sound_v1';
+let soundOn = true;
+try{
+  const s = localStorage.getItem(SOUND_KEY);
+  if(s !== null) soundOn = s === 'on';
+}catch(e){ /* ignore */ }
+
+let audioCtx = null;
+function getAudioCtx(){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return null;
+  if(!audioCtx) audioCtx = new AC();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playTone(freq, duration, type, peak, delay){
+  if(!soundOn) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  const t0 = ctx.currentTime + (delay||0);
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, t0);
+  gain.gain.setValueAtTime(0, t0);
+  gain.gain.linearRampToValueAtTime(peak||0.12, t0 + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + (duration||0.4));
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(t0);
+  osc.stop(t0 + (duration||0.4) + 0.05);
+}
+
+const GEN_NOTES = {
+  primordial:261.63, titan:293.66, olympian:329.63, hero:392.00,
+  nature:440.00, zodiac:523.25, troy:587.33, philosophy:659.25
+};
+
+function playSelectSound(gen){
+  const base = GEN_NOTES[gen] || 392;
+  playTone(base, 0.5, 'triangle', 0.11, 0);
+  playTone(base*1.5, 0.4, 'sine', 0.04, 0.03);
+}
+
+function playUnlockChime(){
+  playTone(523.25, 0.35, 'triangle', 0.12, 0);
+  playTone(659.25, 0.5, 'triangle', 0.12, 0.12);
+}
+
+function playPageSound(direction){
+  if(!soundOn) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  const t0 = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  const startFreq = direction === 'next' ? 500 : 700;
+  const endFreq = direction === 'next' ? 700 : 500;
+  osc.frequency.setValueAtTime(startFreq, t0);
+  osc.frequency.exponentialRampToValueAtTime(endFreq, t0 + 0.18);
+  gain.gain.setValueAtTime(0, t0);
+  gain.gain.linearRampToValueAtTime(0.06, t0 + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.2);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(t0);
+  osc.stop(t0 + 0.25);
+}
+
+function toggleSound(){
+  soundOn = !soundOn;
+  try{ localStorage.setItem(SOUND_KEY, soundOn ? 'on' : 'off'); }catch(e){}
+  const btn = document.getElementById('soundToggle');
+  if(btn) btn.textContent = soundOn ? '🔊 音效' : '🔇 靜音';
+  if(soundOn) getAudioCtx();
+}
+
 const STORAGE_KEY = 'greekMythTree_visited_v1';
 let visited = new Set();
 try{
@@ -27,7 +107,7 @@ function updateProgressCounter(){
 }
 
 function renderNodes(){
-  ['primordial','titan','olympian','hero','nature','zodiac','troy'].forEach(gen=>{
+  ['primordial','titan','olympian','hero','nature','zodiac','troy','philosophy'].forEach(gen=>{
     const row = document.querySelector('.gen-row[data-row="'+gen+'"]');
     DATA.filter(d=>d.gen===gen).forEach((d,i)=>{
       const el = document.createElement('div');
@@ -141,6 +221,7 @@ function animateEdgeDraw(path){
 
 function selectNode(id){
   currentId = id;
+  const isFirstVisit = !visited.has(id);
   document.querySelectorAll('.node').forEach(n=>n.classList.remove('active'));
   document.getElementById('node-'+id).classList.add('active');
 
@@ -156,6 +237,7 @@ function selectNode(id){
 
   storyOpenId = null;
   markVisited(id);
+  if(isFirstVisit){ playUnlockChime(); } else { playSelectSound(byId[id].gen); }
   renderDetail(id);
 
   const panel = document.getElementById('detailPanel');
@@ -188,7 +270,7 @@ function renderDetail(id){
   ` : '';
 
   const linksRow = (d.links && d.links.length) ? `
-    <div class="detail-section-title">神話關聯</div>
+    <div class="detail-section-title">${d.gen==='philosophy' ? '思想關聯' : '神話關聯'}</div>
     <div class="link-row">${d.links.map(lid=>`<button class="link-chip" onclick="jumpToNode('${lid}')">✧ ${byId[lid].zh} ${byId[lid].gr}</button>`).join('')}</div>
   ` : '';
 
@@ -274,9 +356,9 @@ function renderStoryBox(){
   box.innerHTML = `
     <p>${paras[storyParaIndex]}</p>
     <div class="story-nav">
-      <button class="story-nav-btn" onclick="storyParaIndex=Math.max(0,storyParaIndex-1); renderStoryBox();" ${storyParaIndex===0?'disabled':''}>← 上一段</button>
+      <button class="story-nav-btn" onclick="storyParaIndex=Math.max(0,storyParaIndex-1); playPageSound('prev'); renderStoryBox();" ${storyParaIndex===0?'disabled':''}>← 上一段</button>
       <div class="story-dots">${dots}</div>
-      <button class="story-nav-btn" onclick="storyParaIndex=Math.min(${paras.length-1},storyParaIndex+1); renderStoryBox();" ${storyParaIndex===paras.length-1?'disabled':''}>下一段 →</button>
+      <button class="story-nav-btn" onclick="storyParaIndex=Math.min(${paras.length-1},storyParaIndex+1); playPageSound('next'); renderStoryBox();" ${storyParaIndex===paras.length-1?'disabled':''}>下一段 →</button>
     </div>
     <button class="story-mode-toggle" onclick="storyShowAll=true; renderStoryBox();">顯示全部段落</button>
   `;
@@ -306,6 +388,7 @@ const GEN_META = [
   {id:'nature', label:'自然精靈與野性之神', color:'#4B6B3A'},
   {id:'zodiac', label:'黃道十二宮', color:'#3D3A6B'},
   {id:'troy', label:'特洛伊戰爭與奧德賽', color:'#6B2E3A'},
+  {id:'philosophy', label:'哲學家與經典著作', color:'#5B5850'},
 ];
 
 function setupProgressRail(){
@@ -334,6 +417,10 @@ function setupProgressRail(){
 renderNodes();
 setupRevealObserver();
 setupProgressRail();
+(function initSoundButton(){
+  const btn = document.getElementById('soundToggle');
+  if(btn) btn.textContent = soundOn ? '🔊 音效' : '🔇 靜音';
+})();
 window.addEventListener('load', ()=>{
   drawConnections();
   setTimeout(drawConnections, 150);

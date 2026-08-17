@@ -12,7 +12,10 @@
 <header>
   <h1>希臘神系圖譜</h1>
   <p>從混沌到英雄 — 點擊圖章，探索諸神的血緣與故事</p>
-  <p class="progress-counter" id="progressCounter">已探索 0 / 0</p>
+  <div class="header-controls">
+    <p class="progress-counter" id="progressCounter">已探索 0 / 0</p>
+    <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" aria-label="切換音效">🔊 音效</button>
+  </div>
 </header>
 <div class="meander-strip"></div>
 
@@ -26,6 +29,7 @@
   <button data-gen="nature" style="--dot:#4B6B3A" onclick="jumpTo('nature')"><span class="dot"></span>自然精靈與野性之神</button>
   <button data-gen="zodiac" style="--dot:#3D3A6B" onclick="jumpTo('zodiac')"><span class="dot"></span>黃道十二宮</button>
   <button data-gen="troy" style="--dot:#6B2E3A" onclick="jumpTo('troy')"><span class="dot"></span>特洛伊戰爭與奧德賽</button>
+  <button data-gen="philosophy" style="--dot:#5B5850" onclick="jumpTo('philosophy')"><span class="dot"></span>哲學家與經典著作</button>
 </div>
 
 <div class="layout">
@@ -65,6 +69,11 @@
     <div class="gen-section" id="sec-troy">
       <div class="gen-label"><span>特洛伊戰爭與奧德賽 Trojan War &amp; Odyssey</span></div>
       <div class="gen-row" data-row="troy"></div>
+    </div>
+
+    <div class="gen-section" id="sec-philosophy">
+      <div class="gen-label"><span>哲學家與經典著作 Philosophers &amp; Classical Works</span></div>
+      <div class="gen-row" data-row="philosophy"></div>
     </div>
   </div>
 
