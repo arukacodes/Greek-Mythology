@@ -922,7 +922,11 @@ function checkMilestone(count){
 function showCompletionMoment(){
   const body = document.getElementById('completionBody');
   if(body){
-    body.textContent = `${DATA.length} 個節點，${DATA.length} 次被你看見的瞬間——世界，或許正是由無數個像你這樣的意識，一點一點看見、拼湊出來的。`;
+    body.innerHTML = `
+      <div class="completion-quote">「你未看此花時，此花與汝心同歸於寂；你來看此花時，則此花顏色一時明白起來，便知此花不在你的心外。」</div>
+      <div class="completion-cite">— 王陽明《傳習錄》</div>
+      <div class="completion-closing">${DATA.length} 個節點，${DATA.length} 次「顏色一時明白起來」的瞬間——這座地圖，原本安靜地存在著，而現在，它因為被你看過，才真正完整。</div>
+    `;
   }
   document.getElementById('completionOverlay').classList.add('open');
   playUnlockChime();
