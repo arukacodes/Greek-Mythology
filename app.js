@@ -1248,6 +1248,11 @@ function renderMindMap(){
         <stop offset="0%" stop-color="#F3E9C9" stop-opacity="0.28"/>
         <stop offset="100%" stop-color="#F3E9C9" stop-opacity="0"/>
       </radialGradient>
+      <radialGradient id="sg0" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/><stop offset="22%" stop-color="#FFFFFF" stop-opacity="0.45"/><stop offset="60%" stop-color="#FFFFFF" stop-opacity="0.12"/><stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
+      <radialGradient id="sg1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFF4E0" stop-opacity="0.9"/><stop offset="22%" stop-color="#FFF4E0" stop-opacity="0.45"/><stop offset="60%" stop-color="#FFF4E0" stop-opacity="0.12"/><stop offset="100%" stop-color="#FFF4E0" stop-opacity="0"/></radialGradient>
+      <radialGradient id="sg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#EAF1FF" stop-opacity="0.9"/><stop offset="22%" stop-color="#EAF1FF" stop-opacity="0.45"/><stop offset="60%" stop-color="#EAF1FF" stop-opacity="0.12"/><stop offset="100%" stop-color="#EAF1FF" stop-opacity="0"/></radialGradient>
+      <radialGradient id="sg3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFF9EC" stop-opacity="0.9"/><stop offset="22%" stop-color="#FFF9EC" stop-opacity="0.45"/><stop offset="60%" stop-color="#FFF9EC" stop-opacity="0.12"/><stop offset="100%" stop-color="#FFF9EC" stop-opacity="0"/></radialGradient>
+      <radialGradient id="sg4" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#F3E9C9" stop-opacity="0.9"/><stop offset="22%" stop-color="#F3E9C9" stop-opacity="0.45"/><stop offset="60%" stop-color="#F3E9C9" stop-opacity="0.12"/><stop offset="100%" stop-color="#F3E9C9" stop-opacity="0"/></radialGradient>
     </defs>
     <ellipse cx="180" cy="200" rx="230" ry="190" fill="url(#neb1)"/>
     <ellipse cx="520" cy="180" rx="210" ry="230" fill="url(#neb2)"/>
@@ -1270,15 +1275,21 @@ function renderMindMap(){
     svg += `<path class="mm-thread" d="M ${a.x} ${a.y} L ${b.x} ${b.y}"/>`;
   }
 
+  // Real star colors are near-white with subtle temperature variance (warm/cool), never category-coded
+  const starPalette = ['#FFFFFF', '#FFF4E0', '#EAF1FF', '#FFF9EC', '#F3E9C9'];
   points.forEach((p,i)=>{
     const d = byId[p.id];
-    const color = genColor(d.gen);
+    const paletteIdx = Math.floor(rand() * starPalette.length);
+    const starColor = starPalette[paletteIdx];
+    const brightness = rand(); // magnitude — most stars are dim, a few are bright
+    const isBright = brightness > 0.82;
+    const coreR = isBright ? 2.6 : 1.1 + brightness * 1;
+    const glowR = isBright ? 34 : 14 + brightness * 12;
     const delay = (i * 271) % 4200;
     svg += `
       <g class="mm-star" style="--twinkle-delay:${delay}ms" onclick="jumpFromMindMap('${p.id}')">
-        <circle cx="${p.x}" cy="${p.y}" r="11" fill="${color}" opacity="0.18" class="mm-glow-outer"/>
-        <circle cx="${p.x}" cy="${p.y}" r="6" fill="${color}" opacity="0.4" class="mm-glow-inner"/>
-        <circle cx="${p.x}" cy="${p.y}" r="2.4" fill="#FFFBEF" class="mm-core"/>
+        <circle cx="${p.x}" cy="${p.y}" r="${glowR.toFixed(1)}" fill="url(#sg${paletteIdx})" class="mm-glow-inner"/>
+        <circle cx="${p.x}" cy="${p.y}" r="${coreR.toFixed(1)}" fill="${starColor}" class="mm-core"/>
         <text x="${p.x}" y="${p.y - 15}" text-anchor="middle">${d.zh}</text>
       </g>
     `;
