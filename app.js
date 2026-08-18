@@ -567,8 +567,21 @@ window.addEventListener('load', ()=>{
   drawConnections();
   setTimeout(drawConnections, 150);
 });
-window.addEventListener('resize', drawConnections);
-document.getElementById('treeWrap').addEventListener('scroll', drawConnections);
+
+// drawConnections rebuilds every edge (getBoundingClientRect × 2 per edge) — with 148 nodes
+// that's expensive, and scroll/resize can fire dozens of times per second on touch devices.
+// Throttle to at most once per animation frame so scrolling stays smooth.
+let drawConnectionsRafPending = false;
+function requestDrawConnections(){
+  if(drawConnectionsRafPending) return;
+  drawConnectionsRafPending = true;
+  requestAnimationFrame(()=>{
+    drawConnections();
+    drawConnectionsRafPending = false;
+  });
+}
+window.addEventListener('resize', requestDrawConnections);
+document.getElementById('treeWrap').addEventListener('scroll', requestDrawConnections, {passive:true});
 if(document.fonts && document.fonts.ready){
   document.fonts.ready.then(drawConnections);
 }
