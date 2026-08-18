@@ -590,6 +590,26 @@ svg#connections{
   color:var(--ink);
 }
 
+.concept-diagram{
+  background:#fff;
+  border:1px solid rgba(0,0,0,0.08);
+  border-radius:10px;
+  padding:10px 8px 6px;
+  margin-bottom:16px;
+}
+.concept-diagram svg{
+  display:block;
+  width:100%;
+  height:auto;
+}
+.concept-diagram .diagram-caption{
+  text-align:center;
+  font-size:10.5px;
+  color:var(--ink-soft);
+  margin-top:2px;
+  letter-spacing:0.03em;
+}
+
 .read-story-btn{
   display:flex;
   align-items:center;

@@ -298,6 +298,7 @@ function renderDetail(id){
       <span class="tag">象徵：${d.symbol}</span>
     </div>
     <div class="detail-story"><span class="story-hook">${storyHook}</span>${storyRest}</div>
+    ${d.diagram ? `<div class="concept-diagram">${d.diagram}<div class="diagram-caption">💡 概念圖解</div></div>` : ''}
     <button class="read-story-btn" id="storyToggleBtn" onclick="toggleStory('${d.id}')">📜 閱讀完整神話故事</button>
     <div class="full-story-box" id="fullStoryBox"></div>
     <div class="astro-box">

@@ -604,6 +604,22 @@ const DATA = [
   { id:'republic', gen:'philosophy', zh:'《理想國》', gr:'Politeia', roman:'De Republica', epithet:'西方政治哲學的奠基之作',
     domain:'正義、城邦、教育', symbol:'洞穴寓言', parents:[], links:['plato','themis'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <line x1="0" y1="150" x2="300" y2="150" stroke="#5B5850" stroke-width="2"/>
+      <line x1="260" y1="20" x2="260" y2="150" stroke="#5B5850" stroke-width="2"/>
+      <text x="272" y="35" font-size="9" fill="#6b5c46">牆</text>
+      <ellipse cx="245" cy="95" rx="8" ry="22" fill="#2A2118" opacity="0.5"/>
+      <ellipse cx="228" cy="98" rx="6" ry="18" fill="#2A2118" opacity="0.4"/>
+      <circle cx="160" cy="100" r="9" fill="#B5502E"/>
+      <text x="160" y="85" font-size="9" text-anchor="middle" fill="#6b5c46">火</text>
+      <circle cx="200" cy="128" r="6" fill="#5B5850"/>
+      <line x1="200" y1="134" x2="200" y2="150" stroke="#5B5850" stroke-width="2"/>
+      <circle cx="215" cy="130" r="6" fill="#5B5850"/>
+      <line x1="215" y1="136" x2="215" y2="150" stroke="#5B5850" stroke-width="2"/>
+      <polygon points="0,150 40,150 20,20" fill="#E8C468" opacity="0.5"/>
+      <text x="20" y="14" font-size="9" text-anchor="middle" fill="#8A6D1F">真實世界的光</text>
+      <text x="150" y="166" font-size="8.5" text-anchor="middle" fill="#6b5c46">囚犯只看得見牆上的影子，誤以為那就是全部</text>
+    </svg>`,
     story:'《理想國》是柏拉圖最重要的對話錄，以蘇格拉底與友人的辯論形式展開，探討「什麼是正義」，並提出由哲學家統治的理想城邦藍圖，其中的「洞穴寓言」更是西方思想史上最著名的比喻之一。',
     fullStory:[
       '《理想國》全書以蘇格拉底與一群雅典友人的對話形式展開，表面上是在爭論「正義對個人是否有利」，實際上卻逐步推演出一整套關於靈魂、教育、政治與宇宙秩序的宏大體系。柏拉圖藉蘇格拉底之口主張，正義的城邦與正義的靈魂結構相似，都應該由「理性」居於主導地位——對應到城邦，就是由真正熱愛智慧、不受權力與財富誘惑的「哲學家王」來統治。',
@@ -634,6 +650,22 @@ const DATA = [
   { id:'metaphysics', gen:'philosophy', zh:'《形而上學》', gr:'Metaphysika', roman:'Metaphysica', epithet:'探究存在本身的學問',
     domain:'第一因、存有、本質', symbol:'第一因之鏈', parents:[], links:['aristotle'],
     astro:'目前沒有廣為人知的正式天體命名，但書名「Metaphysics」本身的由來十分特別——並非亞里斯多德本人命名，而是後世編輯者將這部手稿排列在《物理學》（Physics）之後，直譯便是「物理學之後」，機緣巧合下卻精準呼應了書中探討超越具體物質現象的核心主題。',
+    diagram:`<svg viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <circle cx="255" cy="65" r="16" fill="#EFE6CE" stroke="#A6812E" stroke-width="1.5"/>
+      <text x="255" y="69" font-size="9" text-anchor="middle" fill="#2A2118">結果</text>
+      <line x1="239" y1="65" x2="211" y2="65" stroke="#5B5850" stroke-width="1.5"/>
+      <circle cx="195" cy="65" r="16" fill="#EFE6CE" stroke="#A6812E" stroke-width="1.5"/>
+      <text x="195" y="69" font-size="9" text-anchor="middle" fill="#2A2118">因</text>
+      <line x1="179" y1="65" x2="151" y2="65" stroke="#5B5850" stroke-width="1.5"/>
+      <circle cx="135" cy="65" r="16" fill="#EFE6CE" stroke="#A6812E" stroke-width="1.5"/>
+      <text x="135" y="69" font-size="9" text-anchor="middle" fill="#2A2118">因</text>
+      <line x1="119" y1="65" x2="94" y2="65" stroke="#5B5850" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <text x="106" y="55" font-size="14" text-anchor="middle" fill="#6b5c46">…</text>
+      <circle cx="60" cy="65" r="20" fill="#D8C9A0" stroke="#8A6D1F" stroke-width="2"/>
+      <text x="60" y="61" font-size="8" text-anchor="middle" fill="#2A2118">不動的</text>
+      <text x="60" y="71" font-size="8" text-anchor="middle" fill="#2A2118">推動者</text>
+      <text x="150" y="115" font-size="8.5" text-anchor="middle" fill="#6b5c46">因果鏈條不能無限往前推，所以需要一個起點？</text>
+    </svg>`,
     story:'《形而上學》是亞里斯多德探討「存在本身」的著作，提出萬物變化背後存在「第一因」（不動的推動者），這個概念後來深刻影響了中世紀神學對「上帝」的哲學論證。',
     fullStory:[
       '《形而上學》這個書名的由來，其實是一場美麗的意外——這並非亞里斯多德本人為這部手稿所取的標題，而是西元前一世紀的編輯者在整理他的著作時，將這一系列討論抽象存有問題的文本，排列在《物理學》（Physics）之後，因此以希臘文「ta meta ta physika」（意即「物理學之後的那些」）稱之，日後演變成「Metaphysics」一詞。然而這個純屬編排順序的命名，卻意外精準地呼應了全書真正的主題：探討那些超越具體物質現象、關於「存在本身」的根本問題。',
@@ -644,6 +676,19 @@ const DATA = [
   { id:'nicomachean', gen:'philosophy', zh:'《尼各馬可倫理學》', gr:'Ethika Nikomacheia', roman:'Ethica Nicomachea', epithet:'幸福即德性的實踐',
     domain:'德性、幸福、中庸之道', symbol:'天秤與中道', parents:[], links:['aristotle'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <rect x="20" y="55" width="260" height="14" rx="7" fill="#EFE6CE" stroke="#A6812E"/>
+      <rect x="20" y="55" width="86" height="14" rx="7" fill="#D8C9A0"/>
+      <rect x="194" y="55" width="86" height="14" rx="7" fill="#D8C9A0"/>
+      <circle cx="150" cy="62" r="9" fill="#5B5850" stroke="#fff" stroke-width="2"/>
+      <text x="63" y="45" font-size="10" text-anchor="middle" fill="#6b5c46">不足</text>
+      <text x="150" y="45" font-size="10" text-anchor="middle" fill="#2A2118" font-weight="bold">中庸</text>
+      <text x="237" y="45" font-size="10" text-anchor="middle" fill="#6b5c46">過度</text>
+      <text x="63" y="90" font-size="9" text-anchor="middle" fill="#6b5c46">怯懦</text>
+      <text x="150" y="90" font-size="9" text-anchor="middle" fill="#2A2118">勇敢</text>
+      <text x="237" y="90" font-size="9" text-anchor="middle" fill="#6b5c46">魯莽</text>
+      <text x="150" y="115" font-size="8.5" text-anchor="middle" fill="#6b5c46">每種德性，都是兩個極端之間的平衡點</text>
+    </svg>`,
     story:'《尼各馬可倫理學》是亞里斯多德最重要的倫理學著作，主張人生的終極目標是「幸福」（eudaimonia），而幸福並非來自享樂，而是透過長期實踐德性、掌握「中庸之道」而達成。',
     fullStory:[
       '《尼各馬可倫理學》得名於亞里斯多德的兒子尼各馬可，後世相信這部講稿正是由他整理編訂而成。全書開宗明義提出一個根本問題：人生真正追求的終極目的是什麼？亞里斯多德的答案是「幸福」（希臘文 eudaimonia，也常譯為「生命的興盛圓滿」），但他所謂的幸福，並非單純的快樂享受或財富權力，而是一種透過長期實踐良善行為所達到的、整全的生命狀態。',
@@ -675,6 +720,15 @@ const DATA = [
   { id:'stoicism', gen:'philosophy', zh:'斯多葛學派', gr:'Stoicism', roman:'—', epithet:'順應理性與命運的哲學',
     domain:'德性、理性、接受命運', symbol:'畫廊柱廊', parents:[], links:['cynicism'],
     astro:'斯多葛學派晚期最重要的哲學家之一克律西波斯，曾提出宇宙會周期性地被一場「大火」淨化、萬物重新循環再生的宇宙論構想，這個「宇宙輪迴」的想法，與後世某些天文學上關於宇宙循環膨脹收縮的理論，隱約遙相呼應。',
+    diagram:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <circle cx="150" cy="88" r="75" fill="#EFE6CE" stroke="#A6812E" stroke-width="1.5"/>
+      <circle cx="150" cy="88" r="38" fill="#FBF6E9" stroke="#5B5850" stroke-width="1.5"/>
+      <text x="150" y="83" font-size="10" text-anchor="middle" fill="#2A2118" font-weight="bold">操之在我</text>
+      <text x="150" y="97" font-size="8" text-anchor="middle" fill="#6b5c46">判斷、意願、行為</text>
+      <text x="150" y="35" font-size="10" text-anchor="middle" fill="#6b5c46">操之不在我</text>
+      <text x="150" y="48" font-size="8" text-anchor="middle" fill="#8A7A5C">健康、他人看法、生死</text>
+      <text x="150" y="172" font-size="8.5" text-anchor="middle" fill="#6b5c46">智者只把心力放在內圈</text>
+    </svg>`,
     story:'斯多葛學派由芝諾創立，主張德性是唯一真正的善，教導人應區分「能控制之事」與「不能控制之事」，專注前者、坦然接受後者，這套哲學後來深刻影響了羅馬皇帝馬可・奧理略等人。',
     fullStory:[
       '斯多葛學派的創始人芝諾原是塞浦路斯島季蒂昂的商人，據說一次船難令他傾家蕩產，流落雅典，因緣際會接觸哲學後徹底轉向思想生活。他常在雅典市集一處畫著壁畫的柱廊（希臘文Stoa Poikile，「畫廊」）下向學生授課，「斯多葛」（Stoic）這個名稱正是由此而來。芝諾早年曾受教於犬儒學派的克拉特斯，因此斯多葛學派在精神上帶有濃厚的犬儒色彩，卻發展出遠比犬儒更有系統的宇宙論與倫理學架構。',
@@ -837,6 +891,19 @@ const DATA = [
   { id:'freud', gen:'echoes', zh:'佛洛伊德', gr:'Sigmund Freud', roman:'—', epithet:'精神分析學的創始人',
     domain:'潛意識、精神分析', symbol:'診療躺椅與雪茄', parents:[], links:['oedipus','narcissus'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <rect x="0" y="70" width="300" height="110" fill="#B8C4C8" opacity="0.35"/>
+      <line x1="0" y1="70" x2="300" y2="70" stroke="#5B5850" stroke-width="1" stroke-dasharray="4 3"/>
+      <polygon points="150,15 175,70 125,70" fill="#FBF6E9" stroke="#A6812E" stroke-width="1.5"/>
+      <text x="150" y="45" font-size="10" text-anchor="middle" fill="#2A2118">意識</text>
+      <polygon points="125,70 175,70 230,160 70,160" fill="#E8D9A8" stroke="#A6812E" stroke-width="1.5"/>
+      <text x="150" y="90" font-size="10" text-anchor="middle" fill="#2A2118">潛意識</text>
+      <circle cx="120" cy="125" r="20" fill="#FBF6E9" stroke="#8A6D1F" stroke-width="1.2"/>
+      <text x="120" y="129" font-size="9" text-anchor="middle" fill="#2A2118">本我</text>
+      <circle cx="185" cy="125" r="20" fill="#FBF6E9" stroke="#8A6D1F" stroke-width="1.2"/>
+      <text x="185" y="129" font-size="9" text-anchor="middle" fill="#2A2118">超我</text>
+      <text x="150" y="175" font-size="8" text-anchor="middle" fill="#6b5c46">冰山露出水面的，只是很小一部分</text>
+    </svg>`,
     story:'佛洛伊德是精神分析學的創始人，主張人類行為深受潛意識驅力所支配。他從臨床觀察發展出「談話治療」與夢境分析等技術，試圖挖掘潛意識深處的衝突，並借用伊底帕斯與那西瑟斯的故事，為「戀母情結」與「自戀」命名，讓兩則古老神話成為現代心理學最核心的詞彙。',
     fullStory:[
       '佛洛伊德的洞見並非憑空而來，而是源自他早年在巴黎跟隨神經學家沙可研究「歇斯底里症」的臨床觀察——沙可示範了某些看似純屬生理的症狀（如癱瘓、失語），竟能透過催眠暗示誘發或消除，這讓佛洛伊德確信，心理因素能對身體產生真實的影響。返回維也納後，他與同僚布洛伊爾合作治療一位化名「安娜・歐」的年輕病患，發現讓她在半催眠狀態下盡情訴說童年創傷記憶，竟能明顯緩解症狀——安娜・歐本人將這種療法稱為「談話治療」，這正是日後整套精神分析技術的雛形。',
@@ -848,6 +915,14 @@ const DATA = [
   { id:'jung', gen:'echoes', zh:'榮格', gr:'Carl Jung', roman:'—', epithet:'集體潛意識與原型理論的提出者',
     domain:'集體潛意識、原型、靈魂', symbol:'曼陀羅與陰影', parents:[], links:['freud','psyche'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <circle cx="150" cy="92" r="80" fill="#EFE6CE" stroke="#A6812E" stroke-width="1.5"/>
+      <circle cx="150" cy="92" r="52" fill="#E8D9A8" stroke="#8A6D1F" stroke-width="1.3"/>
+      <circle cx="150" cy="92" r="24" fill="#FBF6E9" stroke="#5B5850" stroke-width="1.3"/>
+      <text x="150" y="96" font-size="9" text-anchor="middle" fill="#2A2118">自我</text>
+      <text x="150" y="57" font-size="8.5" text-anchor="middle" fill="#2A2118">個人潛意識</text>
+      <text x="150" y="28" font-size="8.5" text-anchor="middle" fill="#6b5c46">集體潛意識（原型）</text>
+    </svg>`,
     story:'榮格原是佛洛伊德最重要的追隨者，以「字詞聯想測驗」聲名鵲起，後因理論分歧而分道揚鑣，自創「分析心理學」，提出人類共享一套跨文化的「集體潛意識」，而神話與夢境中反覆出現的角色原型（如英雄、智慧老人、陰影），正是這套集體潛意識最直接的展現。',
     fullStory:[
       '榮格在瑞士布爾霍茲利精神病院跟隨布魯勒工作期間，發展出「字詞聯想測驗」——請受試者針對一系列刺激詞彙，說出腦中浮現的第一個聯想詞，並記錄反應時間與遲疑，藉此偵測出受試者潛意識中的「情結」（complex，這個詞正是榮格所創）所在。這套實驗方法讓他聲名鵲起，也引起了佛洛伊德的注意，兩人自一九○七年起展開長達六年的密切合作與通信，佛洛伊德一度將榮格視為精神分析運動的正式接班人。',
@@ -859,6 +934,14 @@ const DATA = [
   { id:'camus', gen:'echoes', zh:'卡繆', gr:'Albert Camus', roman:'—', epithet:'荒謬哲學的代言人',
     domain:'存在主義、荒謬、反抗', symbol:'巨石與陽光', parents:[], links:['sisyphus'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <path d="M30 150 L150 50 L270 150" fill="none" stroke="#5B5850" stroke-width="2"/>
+      <circle cx="150" cy="50" r="10" fill="#B5502E"/>
+      <path d="M60 130 A110 110 0 0 1 240 130" fill="none" stroke="#A6812E" stroke-width="2" stroke-dasharray="6 5"/>
+      <polygon points="240,130 232,120 248,124" fill="#A6812E"/>
+      <text x="150" y="20" font-size="10" text-anchor="middle" fill="#2A2118">石頭快到山頂</text>
+      <text x="150" y="163" font-size="9" text-anchor="middle" fill="#6b5c46">又滾回山腳，重新開始</text>
+    </svg>`,
     story:'卡繆是法國哲學家與作家，在其著名論著《薛西弗斯的神話》中，將西西弗斯永恆推石的懲罰重新詮釋為人類處境的縮影——生命本身或許毫無意義，但正是在明知徒勞、仍選擇繼續推石前行的那一刻，人得以展現最高貴的反抗與自由。他本人始終拒絕「存在主義者」的標籤，並於一九五七年獲頒諾貝爾文學獎。',
     fullStory:[
       '卡繆出生於法屬阿爾及利亞的一個貧困家庭，父親在他未滿一歲時死於第一次世界大戰，他由目不識丁、幾近失聰的母親獨力扶養長大。這段在地中海陽光與貧窮之間長大的經驗，深刻形塑了他日後作品中對「身體的歡愉」與「存在的荒謬」同時抱持的敏銳感受。他曾任記者，替阿爾及爾一家左翼報紙撰稿，二戰期間更投身法國抵抗運動，主編地下報紙《戰鬥報》，在真實的歷史暴力中，進一步淬鍊出他對「荒謬」與「反抗」的思考。',
