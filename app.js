@@ -807,3 +807,67 @@ function clearPathHighlight(){
   });
   document.getElementById('pathBanner').classList.remove('show');
 }
+
+/* ---------- Timeline: only real historical figures with a known year ---------- */
+function formatYear(y){
+  return y < 0 ? `西元前${Math.abs(y)}年` : `西元${y}年`;
+}
+
+function renderTimeline(){
+  const container = document.getElementById('timelineContent');
+  if(container.dataset.built) return;
+  const dated = DATA.filter(d=>d.year !== undefined).sort((a,b)=>a.year-b.year);
+  const ancient = dated.filter(d=>d.year < 1000);
+  const modern = dated.filter(d=>d.year >= 1000);
+
+  function buildEra(label, list){
+    if(!list.length) return '';
+    const minY = list[0].year;
+    const maxY = list[list.length-1].year;
+    const span = Math.max(maxY - minY, 1);
+    const trackWidth = Math.max(list.length * 90, 600);
+    const markers = list.map((d,i)=>{
+      const pct = ((d.year - minY) / span) * 100;
+      const flip = i % 2 === 1;
+      const color = genColor(d.gen);
+      return `
+        <div class="timeline-marker${flip ? ' flip' : ''}" style="left:${pct}%; --dot-color:${color}" onclick="jumpFromTimeline('${d.id}')" title="${d.zh} · ${d.yearLabel}">
+          <div class="timeline-marker-label">
+            <span class="tl-name">${d.zh}</span>
+            ${d.yearLabel}
+          </div>
+        </div>
+      `;
+    }).join('');
+    return `
+      <div class="timeline-era">
+        <div class="timeline-era-label">${label}</div>
+        <div class="timeline-era-range">${formatYear(minY)} — ${formatYear(maxY)}</div>
+        <div class="timeline-scroll">
+          <div class="timeline-track" style="width:${trackWidth}px">${markers}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  const gapNote = (ancient.length && modern.length)
+    ? `<div class="timeline-gap-note">⋯ 中間跳過約 ${modern[0].year - ancient[ancient.length-1].year} 年，沒有收錄的人物 ⋯</div>`
+    : '';
+
+  container.innerHTML = buildEra('古典時代 Ancient', ancient) + gapNote + buildEra('近現代 Modern', modern);
+  container.dataset.built = '1';
+}
+
+function jumpFromTimeline(id){
+  closeTimeline();
+  jumpToNode(id);
+}
+
+function openTimeline(){
+  renderTimeline();
+  document.getElementById('timelineOverlay').classList.add('open');
+}
+
+function closeTimeline(){
+  document.getElementById('timelineOverlay').classList.remove('open');
+}

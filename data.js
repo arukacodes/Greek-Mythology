@@ -552,6 +552,7 @@ const DATA = [
 
   // ---------- PHILOSOPHERS & CLASSICAL WORKS ----------
   { id:'thales', gen:'philosophy', zh:'泰勒斯', gr:'Thales', roman:'—', epithet:'哲學之父',
+    year:-624, yearLabel:'約西元前624年',
     domain:'自然哲學、天文、幾何', symbol:'水與星盤', parents:[], links:[],
     astro:'泰勒斯最著名的事蹟之一，是準確預言了西元前585年的一次日食——這場日食甚至讓交戰中的呂底亞與米底軍隊當場停戰議和，是西方天文史上最早有記載的日食預測。',
     story:'泰勒斯是古希臘公認第一位哲學家，主張水是萬物的本源，開創了以自然原因（而非神話）解釋世界的思考方式，被視為西方哲學與科學的共同起點。',
@@ -562,6 +563,7 @@ const DATA = [
     ]},
 
   { id:'pythagoras', gen:'philosophy', zh:'畢達哥拉斯', gr:'Pythagoras', roman:'—', epithet:'數與和諧的追尋者',
+    year:-570, yearLabel:'約西元前570年',
     domain:'數學、音樂、靈魂學說', symbol:'直角三角形與七弦琴', parents:[], links:[],
     astro:'畢達哥拉斯發現弦長比例與音程之間的數學關係，後世稱為「畢氏音律」，他更進一步主張天體運行同樣遵循和諧的數學比例，這個「天體音樂」（musica universalis）的構想，深深影響了後世數百年的天文學思考。',
     story:'畢達哥拉斯相信萬物的本質是「數」，並發現弦長比例決定音程和諧與否，由此推論宇宙運行同樣遵循數學和諧的法則。他創立的學派亦信奉靈魂轉世，將哲學、數學與宗教修行融為一體。',
@@ -572,6 +574,7 @@ const DATA = [
     ]},
 
   { id:'socrates', gen:'philosophy', zh:'蘇格拉底', gr:'Socrates', roman:'—', epithet:'雅典的牛虻',
+    year:-470, yearLabel:'西元前470年',
     domain:'倫理學、詰問法', symbol:'毒堇之杯', parents:[], links:['athena'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'蘇格拉底終生未曾留下任何著作，卻透過在雅典街頭不斷詰問世人「你真的知道自己在說什麼嗎」，開創了西方哲學最重要的方法論之一。晚年被控腐蝕青年、不敬城邦諸神，最終被判飲鴆而死。',
@@ -582,6 +585,7 @@ const DATA = [
     ]},
 
   { id:'plato', gen:'philosophy', zh:'柏拉圖', gr:'Plato', roman:'—', epithet:'理型論的建構者',
+    year:-428, yearLabel:'西元前428年',
     domain:'形上學、政治哲學', symbol:'洞穴與太陽', parents:[], links:['socrates'],
     astro:'月球上有一座直徑101公里、地形平坦幽暗的著名撞擊坑，就命名為「柏拉圖坑」（Plato crater），是業餘天文愛好者用小型望遠鏡就能輕易觀察到的月面地標之一。',
     story:'柏拉圖是蘇格拉底最重要的學生，在雅典創立「學院」，是西方第一所有制度的高等學府。他主張感官所見的世界只是更高層次「理型」世界的影子，最著名的著作《理想國》以正義為核心，構築了一整套理想城邦的藍圖。',
@@ -592,6 +596,7 @@ const DATA = [
     ]},
 
   { id:'aristotle', gen:'philosophy', zh:'亞里斯多德', gr:'Aristotle', roman:'—', epithet:'萬學之師',
+    year:-384, yearLabel:'西元前384年',
     domain:'邏輯學、倫理學、自然哲學', symbol:'金律與呂克昂學院', parents:[], links:['plato'],
     astro:'月球上另一座著名的撞擊坑「亞里斯多德坑」（Aristoteles crater），與柏拉圖坑一樣清晰可辨，兩人的名字如今仍並列於月球表面的同一片區域。',
     story:'亞里斯多德是柏拉圖學院裡最傑出的學生，後來自立門戶創辦呂克昂學院，並曾親自教導年少的亞歷山大大帝。他的研究幾乎涵蓋當時所有知識領域，被後世尊為「萬學之師」。',
@@ -698,6 +703,7 @@ const DATA = [
 
   // ---------- CLASSICAL PHILOSOPHICAL SCHOOLS ----------
   { id:'sophism', gen:'philosophy', zh:'智者學派', gr:'Sophists', roman:'—', epithet:'收費授徒的雄辯之師',
+    year:-490, yearLabel:'約西元前490年（普羅塔哥拉斯）',
     domain:'修辭學、相對主義', symbol:'講壇與硬幣', parents:[], links:['socrates'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'智者學派是活躍於雅典的一群收費授課的職業教師，教導公民辯論與修辭之術，代表人物普羅塔哥拉斯提出「人是萬物的尺度」，主張真理因人而異，與蘇格拉底堅持「客觀真理可被詰問求得」的立場形成鮮明對立。',
@@ -708,6 +714,7 @@ const DATA = [
     ]},
 
   { id:'cynicism', gen:'philosophy', zh:'犬儒學派', gr:'Cynicism', roman:'—', epithet:'拋棄一切世俗虛飾的苦行者',
+    year:-445, yearLabel:'約西元前445年（安提斯泰尼）',
     domain:'簡樸生活、自然而活', symbol:'木桶與破斗篷', parents:[], links:['socrates'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'犬儒學派由蘇格拉底的學生安提斯泰尼創立，最著名的代表人物第歐根尼主張拋棄一切世俗財富與社會虛飾，回歸自然簡樸的生活，據說他住在一只木桶裡，白天提著燈籠在雅典街頭「尋找一個誠實的人」。',
@@ -718,6 +725,7 @@ const DATA = [
     ]},
 
   { id:'stoicism', gen:'philosophy', zh:'斯多葛學派', gr:'Stoicism', roman:'—', epithet:'順應理性與命運的哲學',
+    year:-334, yearLabel:'約西元前334年（芝諾）',
     domain:'德性、理性、接受命運', symbol:'畫廊柱廊', parents:[], links:['cynicism'],
     astro:'斯多葛學派晚期最重要的哲學家之一克律西波斯，曾提出宇宙會周期性地被一場「大火」淨化、萬物重新循環再生的宇宙論構想，這個「宇宙輪迴」的想法，與後世某些天文學上關於宇宙循環膨脹收縮的理論，隱約遙相呼應。',
     diagram:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
@@ -737,6 +745,7 @@ const DATA = [
     ]},
 
   { id:'epicureanism', gen:'philosophy', zh:'伊比鳩魯學派', gr:'Epicureanism', roman:'—', epithet:'追求心靈寧靜的快樂主義',
+    year:-341, yearLabel:'西元前341年（伊比鳩魯）',
     domain:'快樂、無懼、原子論', symbol:'花園與原子', parents:[], links:[],
     astro:'伊比鳩魯是最早期系統性主張「宇宙中存在無數個世界」的思想家之一——他在《致希羅多德的信》中提出，構成萬物的原子數量無窮，因此宇宙中必然存在無數個類似地球的世界，這個構想比現代天文學發現系外行星，早了兩千多年。',
     story:'伊比鳩魯創立的學派主張，人生真正的快樂並非縱情享樂，而是透過節制慾望、遠離恐懼（尤其是對死亡的恐懼），達到心靈的寧靜安穩，他在雅典郊外購置了一座花園，與弟子共同過著簡樸而愉悅的群居生活。',
@@ -747,6 +756,7 @@ const DATA = [
     ]},
 
   { id:'skepticism', gen:'philosophy', zh:'懷疑學派', gr:'Skepticism (Pyrrhonism)', roman:'—', epithet:'懸置判斷以求心安',
+    year:-360, yearLabel:'約西元前360年（皮浪）',
     domain:'存疑、心靈平靜', symbol:'天秤兩端等重', parents:[], links:[],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'懷疑學派由皮浪創立，主張人類感官與理性皆不可靠，任何命題都能找到同樣有力的反面論證，因此智者應對一切事物「懸置判斷」，不輕易斷言真假，唯有如此才能擺脫武斷信念帶來的焦慮，獲得心靈的寧靜。',
@@ -889,6 +899,7 @@ const DATA = [
 
   // ---------- MODERN THINKERS WHO BORROWED THE MYTHS ----------
   { id:'freud', gen:'echoes', zh:'佛洛伊德', gr:'Sigmund Freud', roman:'—', epithet:'精神分析學的創始人',
+    year:1856, yearLabel:'1856年',
     domain:'潛意識、精神分析', symbol:'診療躺椅與雪茄', parents:[], links:['oedipus','narcissus'],
     astro:'目前沒有廣為人知的正式天體命名。',
     diagram:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
@@ -913,6 +924,7 @@ const DATA = [
     ]},
 
   { id:'jung', gen:'echoes', zh:'榮格', gr:'Carl Jung', roman:'—', epithet:'集體潛意識與原型理論的提出者',
+    year:1875, yearLabel:'1875年',
     domain:'集體潛意識、原型、靈魂', symbol:'曼陀羅與陰影', parents:[], links:['freud','psyche'],
     astro:'目前沒有廣為人知的正式天體命名。',
     diagram:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
@@ -932,6 +944,7 @@ const DATA = [
     ]},
 
   { id:'camus', gen:'echoes', zh:'卡繆', gr:'Albert Camus', roman:'—', epithet:'荒謬哲學的代言人',
+    year:1913, yearLabel:'1913年',
     domain:'存在主義、荒謬、反抗', symbol:'巨石與陽光', parents:[], links:['sisyphus'],
     astro:'目前沒有廣為人知的正式天體命名。',
     diagram:`<svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
@@ -951,6 +964,7 @@ const DATA = [
     ]},
 
   { id:'rosenthal', gen:'echoes', zh:'羅森塔爾', gr:'Robert Rosenthal', roman:'—', epithet:'證實「期待能改變現實」的心理學家',
+    year:1933, yearLabel:'1933年',
     domain:'教育心理學、自我實現預言', symbol:'教室與成績單', parents:[], links:['pygmalion'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'羅森塔爾是美國心理學家，先以「聰明老鼠」實驗發現實驗者的期待會不自覺影響研究結果，一九六八年進一步在課堂中證實教師對學生的期待同樣能實質影響學業表現，將這則古老的雕像神話，轉化為一套經過科學檢驗、卻也持續引發爭議的心理學效應。',
@@ -962,6 +976,7 @@ const DATA = [
     ]},
 
   { id:'campbell', gen:'echoes', zh:'坎伯', gr:'Joseph Campbell', roman:'—', epithet:'提出「英雄旅程」的神話學者',
+    year:1904, yearLabel:'1904年',
     domain:'比較神話學、英雄的旅程', symbol:'千面英雄', parents:[], links:['odysseus','jung'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'坎伯是美國神話學者，深受榮格「集體潛意識」啟發，在《千面英雄》一書中比較世界各地的神話故事，歸納出一套跨文化共通的敘事結構「英雄的旅程」，這套架構後來深刻影響了現代電影劇本寫作，喬治・盧卡斯便曾公開表示《星際大戰》的故事結構深受坎伯啟發。',
@@ -974,6 +989,7 @@ const DATA = [
 
   // ---------- MODERN PHILOSOPHY ----------
   { id:'nietzsche', gen:'modernphil', zh:'尼采', gr:'Friedrich Nietzsche', roman:'—', epithet:'宣告「上帝已死」的哲學家',
+    year:1844, yearLabel:'1844年',
     domain:'權力意志、超人、永恆輪迴', symbol:'太陽與深淵', parents:[], links:['apollo','dionysus'],
     astro:'目前沒有廣為人知的正式天體命名。',
     diagram:`<svg viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
@@ -995,6 +1011,7 @@ const DATA = [
     ]},
 
   { id:'sartre', gen:'modernphil', zh:'沙特', gr:'Jean-Paul Sartre', roman:'—', epithet:'「他人即地獄」的存在主義旗手',
+    year:1905, yearLabel:'1905年',
     domain:'存在主義、自由、責任', symbol:'咖啡館與空椅子', parents:[], links:['camus'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'沙特最出名的一句話「他人即地獄」常被當成「我討厭所有人」的厭世宣言來引用，但他原意其實是在說：我們太容易活在別人的眼光和評價裡，把自己活丟了。他主張「存在先於本質」——人不是先有一個固定的「本質」再去生活，而是要靠自己不斷做出的選擇，把自己「活」成一個什麼樣的人。',
@@ -1005,6 +1022,7 @@ const DATA = [
     ]},
 
   { id:'beauvoir', gen:'modernphil', zh:'波伏娃', gr:'Simone de Beauvoir', roman:'—', epithet:'「並非生而為女人」的存在主義女性主義者',
+    year:1908, yearLabel:'1908年',
     domain:'女性主義、他者、自由', symbol:'第二性', parents:[], links:['sartre'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'波伏娃那句「並非生而為女人，而是變成女人」，是現代女性主義理論最常被引用的一句話——她想說的是，「女性該是什麼樣子」這件事，很大程度上是被社會一步步「教」出來的，而不是天生注定。她與沙特維持了長達五十年、拒絕傳統婚姻形式的開放式伴侶關係，兩人一起把存在主義哲學活成了一種生活實驗。',
@@ -1015,6 +1033,7 @@ const DATA = [
     ]},
 
   { id:'wittgenstein', gen:'modernphil', zh:'維根斯坦', gr:'Ludwig Wittgenstein', roman:'—', epithet:'「語言的界限就是世界的界限」',
+    year:1889, yearLabel:'1889年',
     domain:'語言哲學、邏輯', symbol:'梯子與家族相似性', parents:[], links:[],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'維根斯坦一輩子寫了兩套幾乎互相推翻的哲學體系，前期認為語言就像一張精確的地圖，能對應真實世界的邏輯結構；後期卻推翻自己，主張語言更像一場場「遊戲」，同一個詞在不同場合的用法天差地別，壓根沒有一個統一不變的意思——這也是為什麼我們日常吵架，很多時候根本不是觀點不同，而是雙方對同一個詞的理解就不一樣。',
@@ -1025,6 +1044,7 @@ const DATA = [
     ]},
 
   { id:'arendt', gen:'modernphil', zh:'漢娜・鄂蘭', gr:'Hannah Arendt', roman:'—', epithet:'提出「平庸之惡」的政治哲學家',
+    year:1906, yearLabel:'1906年',
     domain:'極權主義、責任、平庸之惡', symbol:'法庭玻璃箱', parents:[], links:[],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'鄂蘭在耶路撒冷旁聽納粹戰犯艾希曼的審判後，提出了震驚學界的「平庸之惡」——她發現眼前這個策劃運送數百萬人上刑場的凶手，看起來完全不是電影裡那種猙獰的惡魔，反而是個平庸無奇、只會說「我只是奉命行事」的小職員。她的結論很不舒服，卻很貼地：最可怕的惡，很多時候不是出於深仇大恨，而是出於「停止思考、只顧服從」。',
@@ -1035,6 +1055,7 @@ const DATA = [
     ]},
 
   { id:'foucault', gen:'modernphil', zh:'傅柯', gr:'Michel Foucault', roman:'—', epithet:'揭露「權力無所不在」的思想家',
+    year:1926, yearLabel:'1926年',
     domain:'權力、規訓、監視', symbol:'環形監獄', parents:[], links:[],
     astro:'目前沒有廣為人知的正式天體命名。',
     diagram:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
@@ -1059,6 +1080,7 @@ const DATA = [
     ]},
 
   { id:'rawls', gen:'modernphil', zh:'羅爾斯', gr:'John Rawls', roman:'—', epithet:'提出「無知之幕」的正義理論家',
+    year:1921, yearLabel:'1921年',
     domain:'正義、公平、社會契約', symbol:'蒙眼布幕', parents:[], links:['themis'],
     astro:'目前沒有廣為人知的正式天體命名。',
     diagram:`<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
@@ -1079,6 +1101,7 @@ const DATA = [
     ]},
 
   { id:'singer', gen:'modernphil', zh:'彼得・辛格', gr:'Peter Singer', roman:'—', epithet:'提出「溺水兒童」思想實驗的效益主義者',
+    year:1946, yearLabel:'1946年',
     domain:'應用倫理學、效益主義、動物權利', symbol:'淺水池與名牌西裝', parents:[], links:[],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'辛格提出一個簡單到有點尷尬的思想實驗：如果你穿著名牌西裝走過一個淺水池，看到一個小孩快淹死了，你會不會因為怕弄髒西裝而猶豫要不要下水救？多數人立刻回答「當然會救，衣服重要個屁」。辛格接著追問：那你為什麼願意花錢買名牌衣服，卻不願意把同樣一筆錢捐給能救活遠方孩子生命的慈善機構？距離，真的能改變一條命的價值嗎？',
@@ -1091,6 +1114,7 @@ const DATA = [
   // ---------- CROSS-CULTURAL CONNECTIONS ----------
   // crossType: 'syncretism' (real historical religious fusion), 'cognate' (linguistic common root), 'parallel' (same era, no direct contact — deliberately drawn with NO edge)
   { id:'serapis', gen:'crosscultural', zh:'塞拉皮斯', gr:'Serapis', roman:'—', epithet:'一位「被設計」出來的融合神', crossType:'syncretism',
+    year:-280, yearLabel:'約西元前280年（托勒密一世創立）',
     domain:'冥界、豐饒、王權正當性', symbol:'糧倉量器與三頭犬', parents:[], syncretism:['zeus','dionysus'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'塞拉皮斯是托勒密一世為了同時安撫希臘與埃及臣民，刻意打造出來的融合神——外貌像宙斯，卻揉合了埃及冥神歐西里斯與聖牛阿匹斯的神格，是史上少見「由統治者主動策劃」的宗教融合案例，而不是文化自然交流的結果。',
@@ -1109,6 +1133,7 @@ const DATA = [
     ]},
 
   { id:'hermes_trismegistus', gen:'crosscultural', zh:'赫米斯·特里斯墨吉斯忒斯', gr:'Hermes Trismegistus', roman:'—', epithet:'「三重偉大」的融合智者', crossType:'syncretism',
+    year:200, yearLabel:'約西元200年（《赫米斯文集》成書）',
     domain:'祕傳智慧、煉金術、占星學', symbol:'綠寶石板', parents:[], syncretism:['hermes','thoth'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'赫米斯·特里斯墨吉斯忒斯是荷米斯與托特徹底融合後誕生的全新神秘人物——「特里斯墨吉斯忒斯」意為「三重偉大」，據傳是一系列談論煉金術、占星與宇宙奧祕的祕傳文獻的作者，這套思想體系後來被稱為「赫米斯主義」，深深影響了文藝復興時期歐洲的神祕學傳統。',
@@ -1136,6 +1161,7 @@ const DATA = [
     ]},
 
   { id:'confucius', gen:'crosscultural', zh:'孔子', gr:'Confucius', roman:'—', epithet:'軸心時代的東方聖賢', crossType:'parallel',
+    year:-551, yearLabel:'西元前551年',
     domain:'倫理、禮、仁', symbol:'論語竹簡', parents:[], parallel:['socrates'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'孔子與蘇格拉底生活在幾乎同一個歷史時期（相差約八十年），卻分別在毫不知情彼此存在的情況下，各自於東西方發展出成熟的倫理思想體系。這種「不同文明幾乎同時、卻互不知情地邁向哲學成熟」的現象，被稱為「軸心時代」，孔子與蘇格拉底之間並沒有任何直接的歷史連結，只是時代上的巧合並置。',
@@ -1145,6 +1171,7 @@ const DATA = [
     ]},
 
   { id:'buddha', gen:'crosscultural', zh:'佛陀', gr:'Siddhartha Gautama', roman:'—', epithet:'軸心時代的覺悟者', crossType:'parallel',
+    year:-563, yearLabel:'約西元前563年（傳統紀年，具爭議）',
     domain:'苦、解脫、中道', symbol:'菩提樹', parents:[], parallel:['socrates','stoicism'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'佛陀（悉達多·喬達摩）與蘇格拉底同屬「軸心時代」，生活年代甚至比蘇格拉底還要早上一個世代。他提出的「中道」與斯多葛學派主張的「心靈平靜」，時常被拿來做主題上的比較，但兩者之間同樣沒有任何歷史上的直接接觸，純粹是不同文明各自發展出的相似洞見。',
@@ -1154,6 +1181,7 @@ const DATA = [
     ]},
 
   { id:'zoroaster', gen:'crosscultural', zh:'瑣羅亞斯德', gr:'Zoroaster', roman:'—', epithet:'軸心時代的波斯先知', crossType:'parallel',
+    year:-628, yearLabel:'約西元前628年（估計，眾說紛紜）',
     domain:'善惡二元、光明神', symbol:'聖火', parents:[], parallel:['socrates'],
     astro:'目前沒有廣為人知的正式天體命名。',
     story:'瑣羅亞斯德是古波斯宗教瑣羅亞斯德教的創立者，生活年代眾說紛紜，提出善神阿胡拉·馬茲達與惡神安格拉·曼紐永恆對抗的二元宇宙觀，這套「善惡二元對抗」的架構，日後透過波斯帝國與地中海世界的接觸，間接影響了猶太教、基督教乃至希臘化時代的宗教想像。',

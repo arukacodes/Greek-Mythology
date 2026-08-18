@@ -18,6 +18,7 @@
     <button class="egg-toggle" id="eggToggle" onclick="openEggWall()">🥚 彩蛋牆</button>
     <button class="egg-toggle" id="searchToggle" onclick="openSearch()">🔍 搜尋</button>
     <button class="egg-toggle" id="pathToggle" onclick="openPathfinder()">🧭 關係尋路</button>
+    <button class="egg-toggle" id="timelineToggle" onclick="openTimeline()">📅 時間軸</button>
   </div>
 </header>
 
@@ -66,6 +67,15 @@
 <div class="path-banner" id="pathBanner">
   <span id="pathBannerText"></span>
   <button onclick="clearPathHighlight()">✕ 清除路徑</button>
+</div>
+
+<div class="util-overlay" id="timelineOverlay" onclick="if(event.target===this) closeTimeline()">
+  <div class="util-panel util-panel-timeline">
+    <button class="util-close" onclick="closeTimeline()">✕</button>
+    <h3 class="util-title">📅 真實歷史時間軸</h3>
+    <p class="util-sub">只收錄有明確歷史年代的人物——神話角色沒有「出生年份」，不在此列</p>
+    <div id="timelineContent"></div>
+  </div>
 </div>
 
 <div class="meander-strip"></div>
