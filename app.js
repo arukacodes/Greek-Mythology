@@ -1219,8 +1219,11 @@ function renderMindMap(){
   const cx = size/2, cy = size/2;
   const n = order.length;
 
-  // Deterministic pseudo-random (seeded) so the same visited set always renders the same galaxy
+  // Deterministic pseudo-random, seeded from the actual exploration path —
+  // same visited set always renders the same galaxy, but different explorers get different galaxies
   let seed = 42;
+  order.forEach(id=>{ for(let k=0;k<id.length;k++){ seed = (seed + id.charCodeAt(k) * (k+7)) % 999983; } });
+  if(seed <= 0) seed = 42;
   const rand = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
 
   // Multi-arm spiral galaxy: fewer stars = fewer arms, so small collections don't look sparse/broken
@@ -1261,6 +1264,14 @@ function renderMindMap(){
         <stop offset="0%" stop-color="#C9A75C" stop-opacity="0.22"/>
         <stop offset="100%" stop-color="#C9A75C" stop-opacity="0"/>
       </radialGradient>
+      <radialGradient id="neb5" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#3D5A8A" stop-opacity="0.24"/>
+        <stop offset="100%" stop-color="#3D5A8A" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="neb6" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#8A5A2E" stop-opacity="0.22"/>
+        <stop offset="100%" stop-color="#8A5A2E" stop-opacity="0"/>
+      </radialGradient>
       <radialGradient id="nebCore" cx="50%" cy="50%" r="50%">
         <stop offset="0%" stop-color="#F3E9C9" stop-opacity="0.28"/>
         <stop offset="100%" stop-color="#F3E9C9" stop-opacity="0"/>
@@ -1271,12 +1282,24 @@ function renderMindMap(){
       <radialGradient id="sg3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFF9EC" stop-opacity="0.9"/><stop offset="22%" stop-color="#FFF9EC" stop-opacity="0.45"/><stop offset="60%" stop-color="#FFF9EC" stop-opacity="0.12"/><stop offset="100%" stop-color="#FFF9EC" stop-opacity="0"/></radialGradient>
       <radialGradient id="sg4" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#F3E9C9" stop-opacity="0.9"/><stop offset="22%" stop-color="#F3E9C9" stop-opacity="0.45"/><stop offset="60%" stop-color="#F3E9C9" stop-opacity="0.12"/><stop offset="100%" stop-color="#F3E9C9" stop-opacity="0"/></radialGradient>
     </defs>
-    <ellipse cx="180" cy="200" rx="230" ry="190" fill="url(#neb1)"/>
-    <ellipse cx="520" cy="180" rx="210" ry="230" fill="url(#neb2)"/>
-    <ellipse cx="380" cy="520" rx="250" ry="210" fill="url(#neb3)"/>
-    <ellipse cx="140" cy="500" rx="190" ry="170" fill="url(#neb4)"/>
-    <ellipse cx="${cx}" cy="${cy}" rx="140" ry="140" fill="url(#nebCore)"/>
   `;
+
+  // Nebula clouds: pick a random subset of hues, place/size them randomly — seeded by exploration path,
+  // so the backdrop itself is unique per explorer, not just the star positions
+  const nebulaIds = ['neb1','neb2','neb3','neb4','neb5','neb6'];
+  for(let i=nebulaIds.length-1; i>0; i--){
+    const j = Math.floor(rand() * (i+1));
+    [nebulaIds[i], nebulaIds[j]] = [nebulaIds[j], nebulaIds[i]];
+  }
+  const numNebulae = 4 + Math.floor(rand() * 2); // 4 or 5 clouds
+  for(let i=0; i<numNebulae; i++){
+    const nx = 90 + rand() * (size - 180);
+    const ny = 90 + rand() * (size - 180);
+    const nrx = 170 + rand() * 100;
+    const nry = 170 + rand() * 100;
+    svg += `<ellipse cx="${nx.toFixed(0)}" cy="${ny.toFixed(0)}" rx="${nrx.toFixed(0)}" ry="${nry.toFixed(0)}" fill="url(#${nebulaIds[i]})"/>`;
+  }
+  svg += `<ellipse cx="${cx}" cy="${cy}" rx="140" ry="140" fill="url(#nebCore)"/>`;
 
   // Decorative background starfield — small dim static stars, non-interactive, seeded deterministically
   for(let i=0; i<90; i++){
