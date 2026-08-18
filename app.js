@@ -51,6 +51,41 @@ function playSelectSound(gen){
   playTone(base*1.5, 0.4, 'sine', 0.04, 0.03);
 }
 
+/* ---------- Sound easter egg: click through every tier in ascending pitch order to play a hidden scale ---------- */
+const SCALE_ORDER = Object.keys(GEN_NOTES); // already ascending pitch order: primordial → ... → crosscultural
+let scaleProgress = -1;
+
+function checkScaleEasterEgg(gen){
+  const idx = SCALE_ORDER.indexOf(gen);
+  if(idx === -1) return;
+  if(idx === scaleProgress) return; // repeat click within the current tier — harmless, no change
+  if(idx === scaleProgress + 1){
+    scaleProgress = idx;
+  } else if(idx === 0){
+    scaleProgress = 0; // restart the sequence from the first tier
+  } else {
+    scaleProgress = -1; // wrong tier — broken sequence
+    return;
+  }
+  if(scaleProgress === SCALE_ORDER.length - 1){
+    setTimeout(playScaleCompleteFanfare, 350);
+    scaleProgress = -1;
+  }
+}
+
+function playScaleCompleteFanfare(){
+  if(!soundOn) return;
+  const notes = Object.values(GEN_NOTES);
+  notes.forEach((freq, i)=>{
+    playTone(freq, 0.2, 'triangle', 0.09, i * 0.065);
+  });
+  setTimeout(()=>{
+    playTone(notes[notes.length-1] * 2, 0.7, 'sine', 0.13, 0);
+    playTone(notes[0] * 2, 0.7, 'triangle', 0.06, 0);
+    showMilestoneToast({text:'你彈奏了一段完整的音階——從創世的低音，到跨文化連結的最高音。', author:'🎵 音效彩蛋'});
+  }, notes.length * 65);
+}
+
 function playUnlockChime(){
   playTone(523.25, 0.35, 'triangle', 0.12, 0);
   playTone(659.25, 0.5, 'triangle', 0.12, 0.12);
@@ -282,6 +317,7 @@ function selectNode(id){
   storyOpenId = null;
   markVisited(id);
   if(isFirstVisit){ playUnlockChime(); } else { playSelectSound(byId[id].gen); }
+  checkScaleEasterEgg(byId[id].gen);
   renderDetail(id);
   maybeSurfaceQuote();
 
