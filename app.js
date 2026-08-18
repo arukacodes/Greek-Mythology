@@ -42,7 +42,7 @@ function playTone(freq, duration, type, peak, delay){
 
 const GEN_NOTES = {
   primordial:261.63, titan:293.66, olympian:329.63, hero:392.00,
-  nature:440.00, zodiac:523.25, troy:587.33, philosophy:659.25, echoes:698.46, modernphil:783.99
+  nature:440.00, zodiac:523.25, troy:587.33, philosophy:659.25, echoes:698.46, modernphil:783.99, crosscultural:830.61
 };
 
 function playSelectSound(gen){
@@ -112,8 +112,14 @@ function updateProgressCounter(){
   el.textContent = `已探索 ${visited.size} / ${DATA.length}`;
 }
 
+const CROSS_TYPE_META = {
+  syncretism: {label:'融合', color:'var(--cross-syncretism)'},
+  cognate: {label:'同源', color:'var(--cross-cognate)'},
+  parallel: {label:'平行', color:'var(--cross-parallel)'},
+};
+
 function renderNodes(){
-  ['primordial','titan','olympian','hero','nature','zodiac','troy','philosophy','echoes','modernphil'].forEach(gen=>{
+  ['primordial','titan','olympian','hero','nature','zodiac','troy','philosophy','echoes','modernphil','crosscultural'].forEach(gen=>{
     const row = document.querySelector('.gen-row[data-row="'+gen+'"]');
     DATA.filter(d=>d.gen===gen).forEach((d,i)=>{
       const el = document.createElement('div');
@@ -122,10 +128,12 @@ function renderNodes(){
       el.setAttribute('data-gen', gen);
       el.style.setProperty('--stagger', (i%10)*45+'ms');
       if(d.isRoman) el.setAttribute('data-roman', 'true');
+      const typeMeta = d.crossType ? CROSS_TYPE_META[d.crossType] : null;
       el.innerHTML = `
         <div class="medallion"><span class="zh">${d.zh}</span></div>
         <div class="gr">${d.gr}</div>
         ${d.isRoman ? '<span class="roman-badge">羅馬 ROMAN</span>' : ''}
+        ${typeMeta ? `<span class="type-badge" style="--badge-color:${typeMeta.color}">${typeMeta.label}</span>` : ''}
       `;
       el.addEventListener('click', ()=>selectNode(d.id));
       row.appendChild(el);
@@ -208,6 +216,32 @@ function drawConnections(){
       svg.appendChild(path);
     });
   });
+
+  // Cross-cultural: syncretism (strong, solid) and cognate (linguistic, dashed) — 'parallel' intentionally gets no edge
+  ['syncretism','cognate'].forEach(field=>{
+    const edgeClass = field === 'syncretism' ? 'edge-syncretism' : 'edge-cognate';
+    DATA.forEach(node=>{
+      if(!node[field] || node[field].length===0) return;
+      node[field].forEach(targetId=>{
+        const aEl = document.getElementById('node-'+node.id);
+        const bEl = document.getElementById('node-'+targetId);
+        if(!aEl || !bEl) return;
+        const ar = aEl.getBoundingClientRect();
+        const br = bEl.getBoundingClientRect();
+        const x1 = ar.left + ar.width/2 - wrapRect.left + wrap.scrollLeft;
+        const y1 = ar.top + ar.height/2 - wrapRect.top + wrap.scrollTop;
+        const x2 = br.left + br.width/2 - wrapRect.left + wrap.scrollLeft;
+        const y2 = br.top + br.height/2 - wrapRect.top + wrap.scrollTop;
+        const midY = (y1+y2)/2;
+        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+        path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
+        path.setAttribute('class', 'edge ' + edgeClass);
+        path.dataset.from = node.id;
+        path.dataset.to = targetId;
+        svg.appendChild(path);
+      });
+    });
+  });
 }
 
 let currentId = null;
@@ -215,7 +249,7 @@ let currentId = null;
 function animateEdgeDraw(path){
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const len = path.getTotalLength();
-  const isDashedType = path.classList.contains('edge-counterpart') || path.classList.contains('edge-zodiac');
+  const isDashedType = path.classList.contains('edge-counterpart') || path.classList.contains('edge-zodiac') || path.classList.contains('edge-cognate');
   path.style.transition = 'none';
   if(!isDashedType){ path.style.strokeDasharray = len; }
   path.style.strokeDashoffset = len;
@@ -254,6 +288,25 @@ function closePanel(){
   document.getElementById('detailPanel').classList.remove('open');
 }
 
+const CROSS_BANNER_META = {
+  syncretism: {icon:'🔗', label:'歷史上真實融合', desc:'兩位神祇在歷史上被正式合併、視為同一位神明的不同面貌，不是後世學者的比附。'},
+  cognate: {icon:'🗣️', label:'語言學同源', desc:'名字源自同一個史前詞根，是比較語言學考證出的親緣關係，而非文化互相借用。'},
+  parallel: {icon:'⏳', label:'軸心時代平行', desc:'活躍於同一段歷史時期，但目前沒有證據顯示彼此有過直接接觸——純屬時代上的巧合並置。'},
+};
+
+// Reciprocal lookup: find all crosscultural nodes that point AT this id via syncretism/cognate/parallel
+function crossLinksTo(id){
+  const result = {syncretism:[], cognate:[], parallel:[]};
+  DATA.forEach(d=>{
+    ['syncretism','cognate','parallel'].forEach(field=>{
+      if(d[field] && d[field].includes(id) && d.id !== id){
+        result[field].push(d.id);
+      }
+    });
+  });
+  return result;
+}
+
 function renderDetail(id){
   const d = byId[id];
   document.getElementById('detailEmpty').style.display = 'none';
@@ -280,6 +333,38 @@ function renderDetail(id){
     <div class="link-row">${d.links.map(lid=>`<button class="link-chip" onclick="jumpToNode('${lid}')">✧ ${byId[lid].zh} ${byId[lid].gr}</button>`).join('')}</div>
   ` : '';
 
+  // Cross-cultural: the big attention-grabbing banner for nodes that ARE one of these three types
+  const crossBanner = d.crossType ? (()=>{
+    const meta = CROSS_BANNER_META[d.crossType];
+    const targets = (d[d.crossType]||[]).map(tid=>byId[tid]).filter(Boolean);
+    const targetNames = targets.map(t=>t.zh).join('、');
+    return `
+      <div class="cross-banner cross-banner-${d.crossType}">
+        <span class="cross-icon">${meta.icon}</span>
+        <div>
+          <div class="cross-label">${meta.label}${targetNames ? ' · 對應 ' + targetNames : ''}</div>
+          <div class="cross-desc">${meta.desc}</div>
+        </div>
+      </div>
+      <div class="cross-links-row">${targets.map(t=>`<button class="cross-chip" style="--chip-color:${CROSS_TYPE_META[d.crossType].color}" onclick="jumpToNode('${t.id}')">${t.zh} ${t.gr}</button>`).join('')}</div>
+    `;
+  })() : '';
+
+  // Reciprocal: for Greek-side nodes (e.g. Zeus, Hermes, Socrates) that RECEIVE cross-cultural connections
+  const incoming = crossLinksTo(id);
+  const incomingRows = ['syncretism','cognate','parallel'].map(field=>{
+    if(!incoming[field].length) return '';
+    const meta = CROSS_BANNER_META[field];
+    const chips = incoming[field].map(tid=>{
+      const t = byId[tid];
+      return `<button class="cross-chip" style="--chip-color:${CROSS_TYPE_META[field].color}" onclick="jumpToNode('${tid}')">${meta.icon} ${t.zh} ${t.gr}</button>`;
+    }).join('');
+    return `
+      <div class="detail-section-title">${meta.label}</div>
+      <div class="cross-links-row">${chips}</div>
+    `;
+  }).join('');
+
   const storyParts = d.story.split('。');
   const storyHook = storyParts[0] ? storyParts[0] + '。' : d.story;
   const storyRest = storyParts.slice(1).join('。');
@@ -293,6 +378,7 @@ function renderDetail(id){
       </div>
     </div>
     <div class="detail-epithet">「${d.epithet}」</div>
+    ${crossBanner}
     <div class="detail-tags">
       <span class="tag">領域：${d.domain}</span>
       <span class="tag">象徵：${d.symbol}</span>
@@ -311,6 +397,7 @@ function renderDetail(id){
     <div class="link-row">${kidsChips}</div>
     ${counterpartRow}
     ${linksRow}
+    ${incomingRows}
   `;
 }
 
@@ -398,6 +485,7 @@ const GEN_META = [
   {id:'philosophy', label:'哲學家與經典著作', color:'#5B5850'},
   {id:'echoes', label:'神話的現代回聲', color:'#8A6D1F'},
   {id:'modernphil', label:'現代哲學', color:'#43575C'},
+  {id:'crosscultural', label:'跨文化連結', color:'#9C6B3E'},
 ];
 
 function setupProgressRail(){
