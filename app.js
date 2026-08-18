@@ -281,6 +281,7 @@ function selectNode(id){
   markVisited(id);
   if(isFirstVisit){ playUnlockChime(); } else { playSelectSound(byId[id].gen); }
   renderDetail(id);
+  maybeSurfaceQuote();
 
   const panel = document.getElementById('detailPanel');
   panel.classList.add('open');
@@ -905,6 +906,21 @@ const QUOTE_POOL = [
   {text:'如其在上，如其在下。', author:'赫米斯主義箴言'},
   {text:'你不知道自己此刻有沒有被看著。', author:'傅柯'},
   {text:'凝視深淵過久，深淵將回以凝視。', author:'尼采'},
+  {text:'語言的界限，就是世界的界限。', author:'維根斯坦'},
+  {text:'對於不可言說之事，必須保持沉默。', author:'維根斯坦'},
+  {text:'哲學始於驚奇。', author:'亞里斯多德'},
+  {text:'死亡與我們毫不相干。', author:'伊比鳩魯'},
+  {text:'我們必須想像薛西弗斯是幸福的。', author:'卡繆'},
+  {text:'平庸之惡，往往始於停止思考。', author:'漢娜・鄂蘭（意譯）'},
+  {text:'正義是社會制度的首要美德。', author:'羅爾斯'},
+  {text:'知識就是權力。', author:'傅柯（意譯）'},
+  {text:'人注定自由。', author:'沙特'},
+  {text:'並非生而為女人，而是變成女人。', author:'波伏娃'},
+  {text:'距離，不該決定生命的價值。', author:'彼得・辛格（意譯）'},
+  {text:'直到你讓潛意識變得有意識，它將指引你的人生，而你稱其為命運。', author:'榮格'},
+  {text:'水是萬物的本源。', author:'泰勒斯'},
+  {text:'萬物皆數。', author:'畢達哥拉斯'},
+  {text:'成為你自己。', author:'尼采'},
 ];
 
 const MILESTONE_COUNTS = [25, 50, 75, 100];
@@ -970,11 +986,18 @@ function checkMilestone(count){
   if(MILESTONE_COUNTS.includes(count)){
     showMilestoneToast(pickRandomQuote());
     lastQuoteAt = count;
-  } else if(count - lastQuoteAt >= 2 && Math.random() < 0.35){
-    showMilestoneToast(pickRandomQuote());
-    lastQuoteAt = count;
   }
   if(count === DATA.length) showCompletionMoment();
+}
+
+let selectionCount = 0;
+let lastRandomQuoteAt = 0;
+function maybeSurfaceQuote(){
+  selectionCount++;
+  if(selectionCount - lastRandomQuoteAt >= 2 && Math.random() < 0.35){
+    showMilestoneToast(pickRandomQuote());
+    lastRandomQuoteAt = selectionCount;
+  }
 }
 
 function showCompletionMoment(){
