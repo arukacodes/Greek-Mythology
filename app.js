@@ -75,15 +75,19 @@ function checkScaleEasterEgg(gen){
 
 function playScaleCompleteFanfare(){
   if(!soundOn) return;
-  const notes = Object.values(GEN_NOTES);
-  notes.forEach((freq, i)=>{
-    playTone(freq, 0.2, 'triangle', 0.09, i * 0.065);
+  // A clean two-octave C-major-pentatonic run, purpose-built for pleasantness —
+  // the raw per-tier click pitches (GEN_NOTES) include an F and Ab that break the pentatonic feel and sound "off"
+  const fanfareNotes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+  fanfareNotes.forEach((freq, i)=>{
+    playTone(freq, 0.22, 'triangle', 0.09, i * 0.075);
   });
+  const chordDelay = fanfareNotes.length * 0.075 + 0.06;
   setTimeout(()=>{
-    playTone(notes[notes.length-1] * 2, 0.7, 'sine', 0.13, 0);
-    playTone(notes[0] * 2, 0.7, 'triangle', 0.06, 0);
+    playTone(1046.50, 1.0, 'sine', 0.11, 0);   // C6
+    playTone(1318.51, 1.0, 'sine', 0.08, 0);   // E6
+    playTone(1568.00, 1.0, 'sine', 0.07, 0);   // G6
     showMilestoneToast({text:'你彈奏了一段完整的音階——從創世的低音，到跨文化連結的最高音。', author:'🎵 音效彩蛋'});
-  }, notes.length * 65);
+  }, chordDelay * 1000);
 }
 
 function playUnlockChime(){
