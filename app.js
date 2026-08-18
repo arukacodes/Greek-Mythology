@@ -266,6 +266,8 @@ function selectNode(id){
   const isFirstVisit = !visited.has(id);
   document.querySelectorAll('.node').forEach(n=>n.classList.remove('active'));
   document.getElementById('node-'+id).classList.add('active');
+  const pathBanner = document.getElementById('pathBanner');
+  if(pathBanner){ pathBanner.classList.remove('show'); clearTimeout(pathBannerTimer); }
 
   document.querySelectorAll('.edge').forEach(e=>{
     e.classList.remove('edge-active','edge-dim');
@@ -792,6 +794,7 @@ function runPathfinder(){
   closePathfinder();
 }
 
+let pathBannerTimer = null;
 function highlightPath(path){
   document.querySelectorAll('.node').forEach(n=>n.classList.remove('active'));
   document.querySelectorAll('.edge').forEach(e=>{
@@ -817,6 +820,8 @@ function highlightPath(path){
   const banner = document.getElementById('pathBanner');
   document.getElementById('pathBannerText').textContent = `🧭 ${names}`;
   banner.classList.add('show');
+  clearTimeout(pathBannerTimer);
+  pathBannerTimer = setTimeout(()=> banner.classList.remove('show'), 7000);
 
   const firstEl = document.getElementById('node-'+path[0]);
   if(firstEl) firstEl.scrollIntoView({behavior:'smooth', block:'center', inline:'center'});
@@ -828,6 +833,7 @@ function clearPathHighlight(){
     e.classList.remove('edge-active','edge-dim');
   });
   document.getElementById('pathBanner').classList.remove('show');
+  clearTimeout(pathBannerTimer);
 }
 
 /* ---------- Timeline: only real historical figures with a known year ---------- */
@@ -926,11 +932,15 @@ const QUOTE_POOL = [
   {text:'未經檢視的人生，是不值得活的。', author:'蘇格拉底'},
   {text:'智慧的開端，是承認自己的無知。', author:'蘇格拉底（意譯）'},
   {text:'我不能教任何人任何事，我只能使他們思考。', author:'蘇格拉底（意譯）'},
+  {text:'凡人所行之惡，皆因無知，而非本意。', author:'蘇格拉底（意譯，主智論）'},
   {text:'哲學是對死亡的練習。', author:'柏拉圖《斐多篇》'},
   {text:'洞穴之外，才是真實的世界。', author:'柏拉圖（意譯）'},
+  {text:'無知不是罪惡的根源，而是缺乏教育的結果。', author:'柏拉圖（意譯）'},
   {text:'正義是每個人做好自己份內的事。', author:'柏拉圖《理想國》'},
   {text:'人是天生的政治動物。', author:'亞里斯多德《政治學》'},
   {text:'我們的德性，來自我們反覆做的事。', author:'亞里斯多德（意譯）'},
+  {text:'友誼，是兩個身體共享同一個靈魂。', author:'亞里斯多德（傳為）'},
+  {text:'教育的根是苦澀的，但果實是甜美的。', author:'亞里斯多德（傳為）'},
   {text:'幸福是靈魂合乎德性的實現活動。', author:'亞里斯多德《尼各馬可倫理學》'},
   {text:'人是萬物的尺度。', author:'普羅塔哥拉斯'},
   {text:'請你閃到一邊去，別擋住我的陽光。', author:'第歐根尼'},
@@ -947,18 +957,22 @@ const QUOTE_POOL = [
   {text:'控制怒氣。', author:'德爾菲神諭'},
   {text:'有節制。', author:'德爾菲神諭'},
   {text:'追求智慧。', author:'德爾菲神諭'},
-  {text:'殺不死我的，使我更強大。', author:'尼采'},
   {text:'沒有事實，只有詮釋。', author:'尼采'},
   {text:'存在先於本質。', author:'沙特'},
   {text:'自由是我們對自己選擇的絕對責任。', author:'沙特'},
   {text:'改變人生的，不是自由本身，而是如何運用自由。', author:'波伏娃（意譯）'},
   {text:'若沒有自由，就不會有真正的美德。', author:'波伏娃（意譯）'},
+  {text:'壓迫若不曾在受壓迫者身上尋求同謀，便無法真正遂行。', author:'波伏娃（意譯）'},
   {text:'一隻甲蟲，只有你自己看得見盒子裡的甲蟲。', author:'維根斯坦（意譯）'},
   {text:'世界是事實的總和，而非事物的總和。', author:'維根斯坦《邏輯哲學論》'},
+  {text:'哲學問題具有這樣的形式：我找不到出路。', author:'維根斯坦《哲學研究》'},
+  {text:'凡是能被顯示的，就不能被說出。', author:'維根斯坦《邏輯哲學論》'},
   {text:'思考的無能，往往導致行動上的邪惡。', author:'漢娜・鄂蘭（意譯）'},
   {text:'邪惡最大的危害，在於使人遺忘了自己是誰。', author:'漢娜・鄂蘭（意譯）'},
+  {text:'極權主義最理想的臣民，不是堅信的信徒，而是分不清事實與虛構界線的人。', author:'漢娜・鄂蘭（意譯）'},
   {text:'我不是在寫歷史，我是在寫現在。', author:'傅柯（意譯）'},
   {text:'瘋狂與理性的界線，是由社會所畫下的。', author:'傅柯（意譯）'},
+  {text:'在每個社會，話語的生產，都受到一定程序所控制、篩選與再分配。', author:'傅柯（意譯）'},
   {text:'每個人都擁有基於正義而不可侵犯的權利。', author:'羅爾斯《正義論》'},
   {text:'社會合作的公平條件，應由自由平等的人們共同合理接受。', author:'羅爾斯（意譯）'},
   {text:'痛苦的能力，才是道德關懷的門檻。', author:'彼得・辛格（意譯）'},
@@ -968,29 +982,33 @@ const QUOTE_POOL = [
   {text:'若沒有道德律的立法者，「應該」這個詞便失去了根基。', author:'伊莉莎白・安斯庫姆（意譯）'},
   {text:'情感不是理性的對立面，而是判斷的一種形式。', author:'瑪莎・納思邦（意譯）'},
   {text:'脆弱，是人類繁盛不可或缺的一部分，而非需要消除的弱點。', author:'瑪莎・納思邦（意譯）'},
-  {text:'己所不欲，勿施於人。', author:'孔子《論語》'},
   {text:'知之為知之，不知為不知，是知也。', author:'孔子《論語》'},
-  {text:'學而不思則罔，思而不學則殆。', author:'孔子《論語》'},
-  {text:'三人行，必有我師焉。', author:'孔子《論語》'},
   {text:'過猶不及。', author:'孔子《論語》'},
   {text:'溫故而知新，可以為師矣。', author:'孔子《論語》'},
-  {text:'上善若水。', author:'老子《道德經》'},
+  {text:'不患人之不己知，患不知人也。', author:'孔子《論語》'},
+  {text:'君子和而不同，小人同而不和。', author:'孔子《論語》'},
   {text:'知人者智，自知者明。', author:'老子《道德經》'},
   {text:'天下難事，必作於易；天下大事，必作於細。', author:'老子《道德經》'},
   {text:'為學日益，為道日損。', author:'老子《道德經》'},
   {text:'知足者富。', author:'老子《道德經》'},
   {text:'大道至簡。', author:'老子《道德經》（意譯）'},
+  {text:'信言不美，美言不信。', author:'老子《道德經》'},
+  {text:'多言數窮，不如守中。', author:'老子《道德經》'},
   {text:'一切法從心生。', author:'《法句經》'},
   {text:'以恨止恨，恨不能止；唯有愛，能止息恨。', author:'《法句經》'},
   {text:'憤怒如同抓住熱炭想丟向他人，先燙傷的是自己。', author:'佛教教義（意譯）'},
   {text:'過去心不可得，現在心不可得，未來心不可得。', author:'《金剛經》'},
   {text:'善思、善言、善行。', author:'瑣羅亞斯德教箴言'},
   {text:'知是行之始，行是知之成。', author:'王陽明《傳習錄》'},
-  {text:'不知周之夢為蝴蝶與，蝴蝶之夢為周與？', author:'莊子《齊物論》'},
   {text:'天地與我並生，萬物與我為一。', author:'莊子《齊物論》'},
+  {text:'吾生也有涯，而知也無涯。', author:'莊子《養生主》'},
+  {text:'汝身非汝有也，是天地之委形也。', author:'莊子《知北遊》'},
+  {text:'至人無己，神人無功，聖人無名。', author:'莊子《逍遙遊》'},
   {text:'冬天到了，我才知道，我心裡有個不可戰勝的夏天。', author:'卡繆'},
   {text:'荒謬，產生於人類的呼喚與世界不合理的沉默之間的對峙。', author:'卡繆（意譯）'},
+  {text:'一個人的一生，或許可以歸結為他從未忘記的三、四個意象。', author:'卡繆（意譯）'},
   {text:'誰向外看，是在做夢；誰向內看，是清醒的。', author:'榮格'},
+  {text:'在每個成年人心中，都藏著一個仍在成長、永遠不會完成的孩子。', author:'榮格（意譯）'},
   {text:'我們往往在想像中受的苦，比現實中更多。', author:'塞內卡'},
   {text:'生命如同一個故事，重要的不是長短，而是內容是否精彩。', author:'塞內卡'},
   {text:'別在死前，稱任何人是幸福的。', author:'梭倫（希臘七賢）'},
