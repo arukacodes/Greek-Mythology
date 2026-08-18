@@ -678,13 +678,20 @@ function renderEggGrid(){
 }
 
 function flipEgg(i, card, ev){
-  if(discoveredEggs.has(i)) return;
-  discoveredEggs.add(i);
-  try{ localStorage.setItem(EGG_KEY, JSON.stringify([...discoveredEggs])); }catch(e){}
+  const isFlipped = card.classList.contains('flipped');
+  if(isFlipped){
+    // already revealed — clicking again just flips it back over, no re-triggering effects
+    card.classList.remove('flipped');
+    return;
+  }
   card.classList.add('flipped');
-  spawnSparkles(ev.clientX, ev.clientY);
-  playEggChime();
-  updateEggProgress();
+  if(!discoveredEggs.has(i)){
+    discoveredEggs.add(i);
+    try{ localStorage.setItem(EGG_KEY, JSON.stringify([...discoveredEggs])); }catch(e){}
+    spawnSparkles(ev.clientX, ev.clientY);
+    playEggChime();
+    updateEggProgress();
+  }
 }
 
 function spawnSparkles(x, y){
