@@ -1200,29 +1200,86 @@ function renderMindMap(){
 
   const size = 700;
   const cx = size/2, cy = size/2;
-  const goldenAngle = 137.5 * Math.PI / 180;
-  const scale = Math.min(20, 300 / Math.sqrt(order.length + 1));
+  const n = order.length;
+
+  // Deterministic pseudo-random (seeded) so the same visited set always renders the same galaxy
+  let seed = 42;
+  const rand = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+
+  // Multi-arm spiral galaxy: fewer stars = fewer arms, so small collections don't look sparse/broken
+  const numArms = n < 6 ? 1 : (n < 18 ? 2 : 3);
+  const maxRadius = 300;
 
   const points = order.map((id, i)=>{
-    const angle = i * goldenAngle;
-    const radius = scale * Math.sqrt(i + 1);
-    return { id, x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
+    const arm = i % numArms;
+    const posInArm = Math.floor(i / numArms);
+    const countInArm = Math.ceil(n / numArms);
+    const t = countInArm <= 1 ? 0.5 : posInArm / (countInArm - 1);
+    const winding = 2.6 * Math.PI; // how many radians each arm sweeps outward
+    const baseAngle = (arm * (2 * Math.PI / numArms)) + t * winding;
+    const radius = 28 + t * maxRadius;
+    // organic scatter so it doesn't look like a rigid mathematical curve
+    const jitterAngle = (rand() - 0.5) * 0.5;
+    const jitterRadius = (rand() - 0.5) * (24 + t * 30);
+    const angle = baseAngle + jitterAngle;
+    const r = Math.max(10, radius + jitterRadius);
+    return { id, x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
   });
 
-  let svg = `<svg class="mind-map-svg" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">`;
+  let svg = `<svg class="mind-map-svg" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="neb1" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#6B4A8A" stop-opacity="0.30"/>
+        <stop offset="100%" stop-color="#6B4A8A" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="neb2" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#2E8A6B" stop-opacity="0.24"/>
+        <stop offset="100%" stop-color="#2E8A6B" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="neb3" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#8A2E5C" stop-opacity="0.24"/>
+        <stop offset="100%" stop-color="#8A2E5C" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="neb4" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#C9A75C" stop-opacity="0.22"/>
+        <stop offset="100%" stop-color="#C9A75C" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="nebCore" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#F3E9C9" stop-opacity="0.28"/>
+        <stop offset="100%" stop-color="#F3E9C9" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="180" cy="200" rx="230" ry="190" fill="url(#neb1)"/>
+    <ellipse cx="520" cy="180" rx="210" ry="230" fill="url(#neb2)"/>
+    <ellipse cx="380" cy="520" rx="250" ry="210" fill="url(#neb3)"/>
+    <ellipse cx="140" cy="500" rx="190" ry="170" fill="url(#neb4)"/>
+    <ellipse cx="${cx}" cy="${cy}" rx="140" ry="140" fill="url(#nebCore)"/>
+  `;
+
+  // Decorative background starfield — small dim static stars, non-interactive, seeded deterministically
+  for(let i=0; i<90; i++){
+    const bx = rand() * size, by = rand() * size;
+    const br = 0.5 + rand() * 1.2;
+    const bo = 0.12 + rand() * 0.28;
+    const delay = Math.floor(rand() * 5000);
+    svg += `<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="${br.toFixed(1)}" fill="#EFE6CE" opacity="${bo.toFixed(2)}" class="mm-bg-star" style="--twinkle-delay:${delay}ms"/>`;
+  }
 
   for(let i=0; i<points.length-1; i++){
     const a = points[i], b = points[i+1];
     svg += `<path class="mm-thread" d="M ${a.x} ${a.y} L ${b.x} ${b.y}"/>`;
   }
 
-  points.forEach(p=>{
+  points.forEach((p,i)=>{
     const d = byId[p.id];
     const color = genColor(d.gen);
+    const delay = (i * 271) % 4200;
     svg += `
-      <g class="mm-star" onclick="jumpFromMindMap('${p.id}')">
-        <circle cx="${p.x}" cy="${p.y}" r="5" fill="${color}" opacity="0.9"/>
-        <text x="${p.x}" y="${p.y - 9}" text-anchor="middle">${d.zh}</text>
+      <g class="mm-star" style="--twinkle-delay:${delay}ms" onclick="jumpFromMindMap('${p.id}')">
+        <circle cx="${p.x}" cy="${p.y}" r="11" fill="${color}" opacity="0.18" class="mm-glow-outer"/>
+        <circle cx="${p.x}" cy="${p.y}" r="6" fill="${color}" opacity="0.4" class="mm-glow-inner"/>
+        <circle cx="${p.x}" cy="${p.y}" r="2.4" fill="#FFFBEF" class="mm-core"/>
+        <text x="${p.x}" y="${p.y - 15}" text-anchor="middle">${d.zh}</text>
       </g>
     `;
   });
