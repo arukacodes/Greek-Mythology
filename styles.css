@@ -254,12 +254,19 @@ header p{
   border:1.5px solid var(--gold);
   transform:rotateY(180deg);
   flex-direction:column;
-  gap:6px;
+  justify-content:flex-start;
+  gap:5px;
+  overflow-y:auto;
+  padding:12px 9px 10px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(166,129,46,0.5) transparent;
 }
-.egg-card-back .egg-emoji{ font-size:22px; }
+.egg-card-back::-webkit-scrollbar{ width:4px; }
+.egg-card-back::-webkit-scrollbar-thumb{ background:rgba(166,129,46,0.5); border-radius:4px; }
+.egg-card-back .egg-emoji{ font-size:20px; flex-shrink:0; }
 .egg-card-back .egg-text{
-  font-size:11.5px;
-  line-height:1.5;
+  font-size:10.5px;
+  line-height:1.45;
   color:#2A2118;
   font-family:'Noto Sans TC',sans-serif;
 }
