@@ -42,7 +42,7 @@ function playTone(freq, duration, type, peak, delay){
 
 const GEN_NOTES = {
   primordial:261.63, titan:293.66, olympian:329.63, hero:392.00,
-  nature:440.00, zodiac:523.25, troy:587.33, philosophy:659.25, echoes:698.46
+  nature:440.00, zodiac:523.25, troy:587.33, philosophy:659.25, echoes:698.46, modernphil:783.99
 };
 
 function playSelectSound(gen){
@@ -113,7 +113,7 @@ function updateProgressCounter(){
 }
 
 function renderNodes(){
-  ['primordial','titan','olympian','hero','nature','zodiac','troy','philosophy','echoes'].forEach(gen=>{
+  ['primordial','titan','olympian','hero','nature','zodiac','troy','philosophy','echoes','modernphil'].forEach(gen=>{
     const row = document.querySelector('.gen-row[data-row="'+gen+'"]');
     DATA.filter(d=>d.gen===gen).forEach((d,i)=>{
       const el = document.createElement('div');
@@ -397,6 +397,7 @@ const GEN_META = [
   {id:'troy', label:'特洛伊戰爭與奧德賽', color:'#6B2E3A'},
   {id:'philosophy', label:'哲學家與經典著作', color:'#5B5850'},
   {id:'echoes', label:'神話的現代回聲', color:'#8A6D1F'},
+  {id:'modernphil', label:'現代哲學', color:'#43575C'},
 ];
 
 function setupProgressRail(){

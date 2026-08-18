@@ -16,6 +16,7 @@
   --troy:#6B2E3A;
   --philosophy:#5B5850;
   --echoes:#8A6D1F;
+  --modernphil:#43575C;
   --card-bg:#FBF6E9;
 }
 
@@ -484,6 +485,7 @@ svg#connections{
 .node[data-gen="troy"] .medallion{ --ring:var(--troy); }
 .node[data-gen="philosophy"] .medallion{ --ring:var(--philosophy); }
 .node[data-gen="echoes"] .medallion{ --ring:var(--echoes); }
+.node[data-gen="modernphil"] .medallion{ --ring:var(--modernphil); }
 .node[data-roman="true"] .medallion{ border-style:dashed; }
 .node .roman-badge{
   display:inline-block;
