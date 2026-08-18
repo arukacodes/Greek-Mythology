@@ -1315,3 +1315,34 @@ function renderMindMap(){
   svg += `</svg>`;
   content.innerHTML = svg;
 }
+
+/* ---------- Reset exploration progress ---------- */
+function resetExploration(){
+  const confirmed = confirm('確定要重置探索軌跡嗎？這會清空「已探索」進度與意識地圖上的星星，且無法復原。（彩蛋牆的翻牌記錄不受影響）');
+  if(!confirmed) return;
+
+  visited.clear();
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+
+  document.querySelectorAll('.node.visited').forEach(el=>el.classList.remove('visited'));
+  document.querySelectorAll('.node.active').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.edge').forEach(e=>{
+    e.classList.remove('edge-active','edge-dim');
+  });
+
+  updateProgressCounter();
+  selectionCount = 0;
+  lastQuoteAt = 0;
+  lastRandomQuoteAt = 0;
+
+  const toast = document.getElementById('milestoneToast');
+  if(toast) toast.classList.remove('show');
+  const completion = document.getElementById('completionOverlay');
+  if(completion) completion.classList.remove('open');
+  closePanel();
+
+  // Force the mind map to rebuild from scratch next time it's opened
+  const mmContent = document.getElementById('mindMapContent');
+  if(mmContent){ mmContent.dataset.built = ''; }
+  renderMindMap();
+}

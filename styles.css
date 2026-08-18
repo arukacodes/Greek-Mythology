@@ -1148,6 +1148,21 @@ footer{
   line-height:1.9;
   padding:50px 20px;
 }
+.mm-reset-link{
+  display:inline-block;
+  margin-top:8px;
+  background:none;
+  border:none;
+  color:#9d97c2;
+  font-size:11px;
+  font-family:'Noto Sans TC',sans-serif;
+  cursor:pointer;
+  text-decoration:underline;
+  text-underline-offset:2px;
+  opacity:0.75;
+  transition:opacity .15s ease, color .15s ease;
+}
+.mm-reset-link:hover{ opacity:1; color:#c9a75c; }
 .mm-star{ cursor:pointer; }
 .mm-star .mm-core{
   animation:mm-twinkle 3s ease-in-out infinite;
