@@ -99,11 +99,13 @@ try{
 }catch(e){ /* localStorage unavailable — progress just won't persist */ }
 
 function markVisited(id){
+  const isNew = !visited.has(id);
   visited.add(id);
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify([...visited])); }catch(e){}
   const el = document.getElementById('node-'+id);
   if(el) el.classList.add('visited');
   updateProgressCounter();
+  if(isNew) checkMilestone(visited.size);
 }
 
 function updateProgressCounter(){
@@ -889,4 +891,102 @@ function openTimeline(){
 
 function closeTimeline(){
   document.getElementById('timelineOverlay').classList.remove('open');
+}
+
+/* ---------- Milestone quotes ---------- */
+const MILESTONE_QUOTES = [
+  {at:25, text:'存在即是被感知。', author:'喬治・貝克萊'},
+  {at:50, text:'我們每個人的意識深處，都共享著同一套原型。', author:'榮格（意譯）'},
+  {at:75, text:'道可道，非常道。', author:'老子'},
+  {at:100, text:'認識你自己。', author:'德爾菲神諭 · 蘇格拉底'},
+];
+
+let milestoneTimer = null;
+function showMilestoneToast(text, author){
+  const toast = document.getElementById('milestoneToast');
+  if(!toast) return;
+  document.getElementById('milestoneText').textContent = `「${text}」`;
+  document.getElementById('milestoneAuthor').textContent = `— ${author}`;
+  toast.classList.add('show');
+  playEggChime();
+  clearTimeout(milestoneTimer);
+  milestoneTimer = setTimeout(()=> toast.classList.remove('show'), 5500);
+}
+
+function checkMilestone(count){
+  const m = MILESTONE_QUOTES.find(q=>q.at===count);
+  if(m) showMilestoneToast(m.text, m.author);
+  if(count === DATA.length) showCompletionMoment();
+}
+
+function showCompletionMoment(){
+  const body = document.getElementById('completionBody');
+  if(body){
+    body.textContent = `${DATA.length} 個節點，${DATA.length} 次被你看見的瞬間——世界，或許正是由無數個像你這樣的意識，一點一點看見、拼湊出來的。`;
+  }
+  document.getElementById('completionOverlay').classList.add('open');
+  playUnlockChime();
+}
+
+function closeCompletion(){
+  document.getElementById('completionOverlay').classList.remove('open');
+}
+
+/* ---------- Consciousness Map: a personal constellation built from visit order ---------- */
+function openMindMap(){
+  renderMindMap();
+  document.getElementById('mindMapOverlay').classList.add('open');
+}
+
+function closeMindMap(){
+  document.getElementById('mindMapOverlay').classList.remove('open');
+}
+
+function jumpFromMindMap(id){
+  closeMindMap();
+  jumpToNode(id);
+}
+
+function renderMindMap(){
+  const content = document.getElementById('mindMapContent');
+  const progressEl = document.getElementById('mindMapProgress');
+  const order = [...visited]; // Set preserves insertion order = order first visited
+  progressEl.textContent = `已建構 ${order.length} / ${DATA.length} 個意識座標`;
+
+  if(order.length === 0){
+    content.innerHTML = `<div class="mind-map-empty">你尚未點亮任何一顆星<br>回到樹上，點開任何一位角色，這裡就會開始有東西</div>`;
+    return;
+  }
+
+  const size = 700;
+  const cx = size/2, cy = size/2;
+  const goldenAngle = 137.5 * Math.PI / 180;
+  const scale = Math.min(20, 300 / Math.sqrt(order.length + 1));
+
+  const points = order.map((id, i)=>{
+    const angle = i * goldenAngle;
+    const radius = scale * Math.sqrt(i + 1);
+    return { id, x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
+  });
+
+  let svg = `<svg class="mind-map-svg" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">`;
+
+  for(let i=0; i<points.length-1; i++){
+    const a = points[i], b = points[i+1];
+    svg += `<path class="mm-thread" d="M ${a.x} ${a.y} L ${b.x} ${b.y}"/>`;
+  }
+
+  points.forEach(p=>{
+    const d = byId[p.id];
+    const color = genColor(d.gen);
+    svg += `
+      <g class="mm-star" onclick="jumpFromMindMap('${p.id}')">
+        <circle cx="${p.x}" cy="${p.y}" r="5" fill="${color}" opacity="0.9"/>
+        <text x="${p.x}" y="${p.y - 9}" text-anchor="middle">${d.zh}</text>
+      </g>
+    `;
+  });
+
+  svg += `</svg>`;
+  content.innerHTML = svg;
 }

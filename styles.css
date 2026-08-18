@@ -1136,3 +1136,97 @@ footer{
   .path-inputs{ flex-direction:column; }
   .path-arrow{ display:none; }
 }
+
+/* ---------- Consciousness Map ---------- */
+.mind-map-panel{ width:min(720px, 100%); }
+.mind-map-svg{ display:block; width:100%; height:auto; }
+.mind-map-empty{
+  text-align:center;
+  color:#b9b3d6;
+  font-size:13px;
+  line-height:1.9;
+  padding:50px 20px;
+}
+.mm-star{ cursor:pointer; }
+.mm-star circle{ transition:r .15s ease, opacity .15s ease; }
+.mm-star:hover circle{ r:7; opacity:1; }
+.mm-star text{
+  font-size:7.5px;
+  fill:#cfc9ea;
+  font-family:'Noto Sans TC',sans-serif;
+  pointer-events:none;
+}
+.mm-thread{
+  fill:none;
+  stroke:#E8C468;
+  stroke-width:0.8;
+  opacity:0.4;
+}
+
+/* ---------- Milestone toast ---------- */
+.milestone-toast{
+  position:fixed;
+  right:18px;
+  bottom:22px;
+  z-index:80;
+  max-width:280px;
+  background:linear-gradient(160deg,#23264a,#171935);
+  border:1px solid rgba(166,129,46,0.5);
+  border-radius:12px;
+  padding:14px 16px;
+  box-shadow:0 16px 40px rgba(0,0,0,0.4);
+  opacity:0;
+  transform:translateY(12px);
+  pointer-events:none;
+  transition:opacity .5s ease, transform .5s ease;
+}
+.milestone-toast.show{ opacity:1; transform:translateY(0); }
+.milestone-text{
+  font-family:'Noto Serif TC',serif;
+  font-size:13px;
+  color:#F3E9C9;
+  line-height:1.6;
+  margin-bottom:4px;
+}
+.milestone-author{
+  font-size:11px;
+  color:#9d97c2;
+  text-align:right;
+}
+
+/* ---------- Completion moment ---------- */
+.completion-panel{
+  text-align:center;
+  padding-top:44px;
+}
+.completion-icon{ font-size:44px; margin-bottom:14px; }
+.completion-title{
+  font-family:'Noto Serif TC',serif;
+  color:#F3E9C9;
+  font-size:clamp(19px,4vw,24px);
+  margin:0 0 16px;
+}
+.completion-body{
+  color:#cfc9ea;
+  font-size:13.5px;
+  line-height:2;
+  max-width:440px;
+  margin:0 auto 26px;
+}
+.completion-cta{
+  padding:11px 22px;
+  border-radius:999px;
+  border:1px solid var(--gold);
+  background:rgba(166,129,46,0.18);
+  color:#F3E9C9;
+  font-family:'Noto Serif TC',serif;
+  font-weight:700;
+  font-size:13.5px;
+  cursor:pointer;
+  transition:background .15s ease, transform .15s ease;
+}
+.completion-cta:hover{ background:rgba(166,129,46,0.32); transform:translateY(-1px); }
+
+@media (max-width:600px){
+  .milestone-toast{ left:14px; right:14px; max-width:none; }
+}

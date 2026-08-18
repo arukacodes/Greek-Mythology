@@ -19,6 +19,7 @@
     <button class="egg-toggle" id="searchToggle" onclick="openSearch()">🔍 搜尋</button>
     <button class="egg-toggle" id="pathToggle" onclick="openPathfinder()">🧭 關係尋路</button>
     <button class="egg-toggle" id="timelineToggle" onclick="openTimeline()">📅 時間軸</button>
+    <button class="egg-toggle" id="mindMapToggle" onclick="openMindMap()">🌌 意識地圖</button>
   </div>
 </header>
 
@@ -75,6 +76,33 @@
     <h3 class="util-title">📅 真實歷史時間軸</h3>
     <p class="util-sub">只收錄有明確歷史年代的人物——神話角色沒有「出生年份」，不在此列</p>
     <div id="timelineContent"></div>
+  </div>
+</div>
+
+<div class="egg-overlay" id="mindMapOverlay" onclick="if(event.target===this) closeMindMap()">
+  <div class="egg-panel mind-map-panel">
+    <button class="egg-close" onclick="closeMindMap()">✕</button>
+    <div class="egg-header">
+      <h2>🌌 你的意識地圖</h2>
+      <p class="egg-sub">只有你親自點開過的角色，會在這裡留下一顆星</p>
+      <p class="egg-progress" id="mindMapProgress">已建構 0 / 0 個意識座標</p>
+    </div>
+    <div id="mindMapContent"></div>
+  </div>
+</div>
+
+<div class="milestone-toast" id="milestoneToast">
+  <div class="milestone-text" id="milestoneText"></div>
+  <div class="milestone-author" id="milestoneAuthor"></div>
+</div>
+
+<div class="egg-overlay" id="completionOverlay" onclick="if(event.target===this) closeCompletion()">
+  <div class="egg-panel completion-panel">
+    <button class="egg-close" onclick="closeCompletion()">✕</button>
+    <div class="completion-icon">🌌</div>
+    <h2 class="completion-title">你已經點亮了整座意識地圖</h2>
+    <p class="completion-body" id="completionBody"></p>
+    <button class="completion-cta" onclick="closeCompletion(); openMindMap();">查看你的意識地圖 →</button>
   </div>
 </div>
 
