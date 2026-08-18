@@ -1192,6 +1192,7 @@ footer{
   font-size:11px;
   color:#9d97c2;
   text-align:right;
+  transition:opacity .3s ease;
 }
 
 /* ---------- Completion moment ---------- */

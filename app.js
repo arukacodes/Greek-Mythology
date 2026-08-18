@@ -915,22 +915,62 @@ function pickRandomQuote(){
 }
 
 let milestoneTimer = null;
+/* ---------- Scramble-reveal: text materializes character by character out of ancient-glyph static ---------- */
+const SCRAMBLE_GLYPHS = 'αβγδεζηθικλμνξοπρστυφχψω✦✧⋆※〜';
+
+function scrambleReveal(el, finalText, totalDuration){
+  if(!el) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    el.textContent = finalText;
+    return;
+  }
+  const chars = finalText.split('');
+  const n = chars.length;
+  let lockedCount = 0;
+  let frame = 0;
+  const framesPerLock = Math.max(1, Math.floor((totalDuration / 35) / n));
+  clearInterval(el._scrambleInterval);
+  el._scrambleInterval = setInterval(()=>{
+    frame++;
+    let display = '';
+    for(let i=0; i<n; i++){
+      if(chars[i] === ' ' || i < lockedCount){
+        display += chars[i];
+      } else {
+        display += SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
+      }
+    }
+    el.textContent = display;
+    if(frame % framesPerLock === 0) lockedCount++;
+    if(lockedCount >= n){
+      el.textContent = finalText;
+      clearInterval(el._scrambleInterval);
+    }
+  }, 35);
+}
+
 function showMilestoneToast(quote){
   const toast = document.getElementById('milestoneToast');
   if(!toast) return;
-  document.getElementById('milestoneText').textContent = `「${quote.text}」`;
-  document.getElementById('milestoneAuthor').textContent = `— ${quote.author}`;
+  const textEl = document.getElementById('milestoneText');
+  const authorEl = document.getElementById('milestoneAuthor');
+  authorEl.style.opacity = '0';
   toast.classList.add('show');
   playEggChime();
+  scrambleReveal(textEl, `「${quote.text}」`, 750);
+  setTimeout(()=>{
+    authorEl.textContent = `— ${quote.author}`;
+    authorEl.style.opacity = '1';
+  }, 800);
   clearTimeout(milestoneTimer);
-  milestoneTimer = setTimeout(()=> toast.classList.remove('show'), 5500);
+  milestoneTimer = setTimeout(()=> toast.classList.remove('show'), 6200);
 }
 
 function checkMilestone(count){
   if(MILESTONE_COUNTS.includes(count)){
     showMilestoneToast(pickRandomQuote());
     lastQuoteAt = count;
-  } else if(count - lastQuoteAt >= 4 && Math.random() < 0.14){
+  } else if(count - lastQuoteAt >= 2 && Math.random() < 0.35){
     showMilestoneToast(pickRandomQuote());
     lastQuoteAt = count;
   }
@@ -941,10 +981,15 @@ function showCompletionMoment(){
   const body = document.getElementById('completionBody');
   if(body){
     body.innerHTML = `
-      <div class="completion-quote">「你未看此花時，此花與汝心同歸於寂；你來看此花時，則此花顏色一時明白起來，便知此花不在你的心外。」</div>
-      <div class="completion-cite">— 王陽明《傳習錄》</div>
-      <div class="completion-closing">${DATA.length} 個節點，${DATA.length} 次「顏色一時明白起來」的瞬間——這座地圖，原本安靜地存在著，而現在，它因為被你看過，才真正完整。</div>
+      <div class="completion-quote" id="completionQuoteText" style="min-height:5.5em;"></div>
+      <div class="completion-cite" id="completionCite" style="opacity:0; transition:opacity .5s ease;">— 王陽明《傳習錄》</div>
+      <div class="completion-closing" id="completionClosing" style="opacity:0; transition:opacity .6s ease;">${DATA.length} 個節點，${DATA.length} 次「顏色一時明白起來」的瞬間——這座地圖，原本安靜地存在著，而現在，它因為被你看過，才真正完整。</div>
     `;
+    scrambleReveal(document.getElementById('completionQuoteText'), '「你未看此花時，此花與汝心同歸於寂；你來看此花時，則此花顏色一時明白起來，便知此花不在你的心外。」', 1600);
+    setTimeout(()=>{
+      document.getElementById('completionCite').style.opacity = '1';
+      document.getElementById('completionClosing').style.opacity = '1';
+    }, 1700);
   }
   document.getElementById('completionOverlay').classList.add('open');
   playUnlockChime();
