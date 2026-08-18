@@ -959,7 +959,8 @@ footer{
   line-height:1.3;
 }
 .timeline-marker-label .tl-name{ color:var(--ink); font-weight:700; display:block; }
-.timeline-marker.flip .timeline-marker-label{ top:auto; bottom:14px; }
+.timeline-marker.lane1 .timeline-marker-label{ top:auto; bottom:14px; }
+.timeline-marker.lane2 .timeline-marker-label{ top:38px; }
 .timeline-gap-note{
   text-align:center;
   font-size:11px;
@@ -969,8 +970,8 @@ footer{
 }
 .timeline-scroll{
   overflow-x:auto;
-  padding-bottom:70px;
-  padding-top:20px;
+  padding-bottom:90px;
+  padding-top:30px;
 }
 .timeline-inner{ position:relative; min-width:640px; height:1px; }
 

@@ -864,14 +864,15 @@ function renderTimeline(){
     if(!list.length) return '';
     const minY = list[0].year;
     const maxY = list[list.length-1].year;
-    const span = Math.max(maxY - minY, 1);
-    const trackWidth = Math.max(list.length * 90, 600);
+    const n = list.length;
+    const trackWidth = Math.max(n * 130, 600);
     const markers = list.map((d,i)=>{
-      const pct = ((d.year - minY) / span) * 100;
-      const flip = i % 2 === 1;
+      // rank-based even spacing (not year-proportional) so dense clusters never overlap
+      const pct = n === 1 ? 50 : (i / (n - 1)) * 100;
+      const lane = i % 3;
       const color = genColor(d.gen);
       return `
-        <div class="timeline-marker${flip ? ' flip' : ''}" style="left:${pct}%; --dot-color:${color}" onclick="jumpFromTimeline('${d.id}')" title="${d.zh} · ${d.yearLabel}">
+        <div class="timeline-marker lane${lane}" style="left:${pct}%; --dot-color:${color}" onclick="jumpFromTimeline('${d.id}')" title="${d.zh} · ${d.yearLabel}">
           <div class="timeline-marker-label">
             <span class="tl-name">${d.zh}</span>
             ${d.yearLabel}
@@ -882,7 +883,7 @@ function renderTimeline(){
     return `
       <div class="timeline-era">
         <div class="timeline-era-label">${label}</div>
-        <div class="timeline-era-range">${formatYear(minY)} — ${formatYear(maxY)}</div>
+        <div class="timeline-era-range">${formatYear(minY)} — ${formatYear(maxY)}（依先後順序等距排列，非精確年份比例）</div>
         <div class="timeline-scroll">
           <div class="timeline-track" style="width:${trackWidth}px">${markers}</div>
         </div>

@@ -811,6 +811,15 @@ const DATA = [
     year:980, yearLabel:'980年',
     domain:'形上學、醫學、邏輯學', symbol:'醫典與飛人思想實驗', parents:[], links:['aristotle'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <circle cx="150" cy="70" r="18" fill="#EFE6CE" stroke="#A6812E" stroke-width="1.5"/>
+      <rect x="138" y="62" width="24" height="6" fill="#5B5850"/>
+      <line x1="150" y1="88" x2="150" y2="120" stroke="#5B5850" stroke-width="2"/>
+      <line x1="150" y1="95" x2="130" y2="115" stroke="#5B5850" stroke-width="2"/>
+      <line x1="150" y1="95" x2="170" y2="115" stroke="#5B5850" stroke-width="2"/>
+      <text x="150" y="30" font-size="9" text-anchor="middle" fill="#2A2118">懸浮、蒙眼、感官全無</text>
+      <text x="150" y="145" font-size="8.5" text-anchor="middle" fill="#6b5c46">卻依然確信「我存在」</text>
+    </svg>`,
     story:'伊本・西那是伊斯蘭黃金時代最重要的哲學家與醫學家之一，他融合亞里斯多德哲學與伊斯蘭神學，寫下的《醫典》長達數百年是歐洲大學的標準醫學教材，他對亞里斯多德的注釋，更是中世紀歐洲重新認識這位古希臘哲人的重要橋樑。',
     fullStory:[
       '伊本・西那生於中亞布哈拉附近，據說十歲便已背誦完整部《古蘭經》，青少年時期自學醫學，十八歲時已是當地聞名的醫師。他一生著述超過兩百部作品，橫跨哲學、醫學、邏輯學、天文學等領域，其中《醫典》系統性地整理了古希臘、羅馬與伊斯蘭世界的醫學知識，長達近六百年，一直是歐洲各大學醫學系的標準教材，直到十七世紀才逐漸被取代。',
@@ -1107,6 +1116,20 @@ const DATA = [
     year:1882, yearLabel:'1882年',
     domain:'意識流、現代主義、神話結構', symbol:'都柏林街景與《尤利西斯》', parents:[], links:['odysseus','campbell'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <text x="80" y="20" font-size="9" text-anchor="middle" fill="#2A2118" font-weight="bold">《奧德賽》24卷</text>
+      <text x="220" y="20" font-size="9" text-anchor="middle" fill="#2A2118" font-weight="bold">《尤利西斯》18章</text>
+      <circle cx="80" cy="50" r="8" fill="#EFE6CE" stroke="#A6812E"/>
+      <circle cx="220" cy="50" r="8" fill="#D8C9A0" stroke="#8A6D1F"/>
+      <line x1="88" y1="50" x2="212" y2="50" stroke="#5B5850" stroke-width="1" stroke-dasharray="2 4"/>
+      <circle cx="80" cy="80" r="8" fill="#EFE6CE" stroke="#A6812E"/>
+      <circle cx="220" cy="80" r="8" fill="#D8C9A0" stroke="#8A6D1F"/>
+      <line x1="88" y1="80" x2="212" y2="80" stroke="#5B5850" stroke-width="1" stroke-dasharray="2 4"/>
+      <circle cx="80" cy="110" r="8" fill="#EFE6CE" stroke="#A6812E"/>
+      <circle cx="220" cy="110" r="8" fill="#D8C9A0" stroke="#8A6D1F"/>
+      <line x1="88" y1="110" x2="212" y2="110" stroke="#5B5850" stroke-width="1" stroke-dasharray="2 4"/>
+      <text x="150" y="140" font-size="8.5" text-anchor="middle" fill="#6b5c46">十年漂泊，濃縮成一天</text>
+    </svg>`,
     story:'喬伊斯的《尤利西斯》堪稱二十世紀文學裡，與《奧德賽》關係最直接的一次現代回應——全書十八個章節，逐一對應荷馬史詩的二十四卷結構，卻把奧德修斯歷經十年漂泊的冒險，濃縮成一位都柏林小市民在一天之內的平凡遊蕩。',
     fullStory:[
       '喬伊斯的《尤利西斯》出版於一九二二年，書名直接取自奧德修斯的羅馬名「尤利西斯」，全書描寫主角利奧波德・布魯姆在都柏林度過的極其平凡的一天——從早晨出門買早餐，到深夜返家就寢，書中幾乎每一個章節，都精心對應著《奧德賽》裡的一段情節：布魯姆走進酒館的段落，呼應著奧德修斯闖入獨眼巨人洞穴的驚險；他在報社閒晃的片刻，暗中對應著風神埃俄羅斯贈予的風袋。',
@@ -1118,6 +1141,17 @@ const DATA = [
     year:1901, yearLabel:'1901年',
     domain:'精神分析、鏡像階段、語言與慾望', symbol:'鏡子與能指鏈', parents:[], links:['freud','narcissus'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <circle cx="90" cy="80" r="10" fill="#EFE6CE" stroke="#A6812E"/>
+      <circle cx="90" cy="95" r="4" fill="#EFE6CE" stroke="#A6812E"/>
+      <circle cx="80" cy="90" r="3" fill="#EFE6CE" stroke="#A6812E"/>
+      <circle cx="100" cy="88" r="3" fill="#EFE6CE" stroke="#A6812E"/>
+      <text x="90" y="130" font-size="8.5" text-anchor="middle" fill="#6b5c46">破碎的身體感知</text>
+      <line x1="150" y1="50" x2="150" y2="140" stroke="#5B5850" stroke-width="2"/>
+      <circle cx="210" cy="85" r="22" fill="#D8C9A0" stroke="#8A6D1F" stroke-width="2"/>
+      <text x="210" y="90" font-size="9" text-anchor="middle" fill="#2A2118">完整倒影</text>
+      <text x="210" y="130" font-size="8.5" text-anchor="middle" fill="#6b5c46">鏡中「誤認」出的自我</text>
+    </svg>`,
     story:'拉岡是二十世紀最具爭議、也最具影響力的精神分析學家之一，他打著「回歸佛洛伊德」的旗號，卻用結構語言學徹底翻新了精神分析的語彙。他最著名的「鏡像階段」理論，主張嬰兒正是透過鏡中的倒影，才第一次拼湊出「自我」的雛形——這與那西瑟斯愛上水中倒影的神話，形成了一次意味深長的跨時代呼應。',
     fullStory:[
       '拉岡在法國精神分析學界掀起了一場堪稱「地震」的理論革命——他公開宣稱自己的工作是「回歸佛洛伊德」（retour à Freud），主張後繼的精神分析學者早已扭曲、簡化了佛洛伊德原本的洞見，唯有重新回到佛洛伊德的文本本身，才能挖掘出被忽略的深層意涵。然而諷刺的是，他「回歸」的方式，卻是引入結構語言學、黑格爾哲學等佛洛伊德本人從未使用過的全新工具，某種程度上，這場「回歸」更像是一次徹底的再造。',
@@ -1130,6 +1164,16 @@ const DATA = [
     year:1788, yearLabel:'1788年',
     domain:'意志與表象、悲觀主義、東方哲學的西方橋樑', symbol:'貴賓犬與《奧義書》', parents:[], links:['nietzsche','buddha'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <rect x="20" y="20" width="260" height="60" rx="6" fill="#EFE6CE" stroke="#A6812E" stroke-width="1.5"/>
+      <text x="150" y="46" font-size="11" text-anchor="middle" fill="#2A2118">表象</text>
+      <text x="150" y="62" font-size="8" text-anchor="middle" fill="#6b5c46">我們所感知到的世界</text>
+      <line x1="150" y1="80" x2="150" y2="100" stroke="#5B5850" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <rect x="20" y="100" width="260" height="55" rx="6" fill="#D8C9A0" stroke="#8A6D1F" stroke-width="1.5"/>
+      <text x="150" y="126" font-size="11" text-anchor="middle" fill="#2A2118">意志</text>
+      <text x="150" y="142" font-size="8" text-anchor="middle" fill="#6b5c46">盲目、永不止息的驅力</text>
+      <text x="150" y="165" font-size="8.5" text-anchor="middle" fill="#6b5c46">表象之下，是永不停歇的意志在運作</text>
+    </svg>`,
     story:'叔本華主張，我們所認識的整個世界，終究只是「我的表象」——一切經驗都必須先通過感知與理智的加工，才能被我們把握，世界本身的真實面貌，是一股盲目、無止盡掙扎的「意志」。他是西方第一位認真研讀《奧義書》、並公開承認深受佛學啟發的重要哲學家，也是尼采青年時期最重要的精神導師。',
     fullStory:[
       '叔本華的代表作《作為意志和表象的世界》開篇第一句，就是他哲學體系最精煉的濃縮：「世界是我的表象」——他繼承並改造了康德的認識論，主張我們永遠無法直接認識「物自身」，我們所經驗到的整個世界，包括時間、空間與因果關係，其實都是我們的感知與理智，替一個更深層的實在加工、建構出來的表象。這個立場，某種程度上與貝克萊「存在即是被感知」遙相呼應，只是叔本華更進一步追問：在這層表象之下，究竟藏著什麼？',
@@ -1185,6 +1229,16 @@ const DATA = [
     year:1889, yearLabel:'1889年',
     domain:'語言哲學、邏輯', symbol:'梯子與家族相似性', parents:[], links:[],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <line x1="110" y1="150" x2="110" y2="30" stroke="#5B5850" stroke-width="3"/>
+      <line x1="190" y1="150" x2="190" y2="30" stroke="#5B5850" stroke-width="3"/>
+      <line x1="110" y1="130" x2="190" y2="130" stroke="#A6812E" stroke-width="3"/>
+      <line x1="110" y1="100" x2="190" y2="100" stroke="#A6812E" stroke-width="3"/>
+      <line x1="110" y1="70" x2="190" y2="70" stroke="#A6812E" stroke-width="3"/>
+      <line x1="110" y1="40" x2="190" y2="40" stroke="#A6812E" stroke-width="3"/>
+      <text x="150" y="20" font-size="9" text-anchor="middle" fill="#2A2118">爬上去之後</text>
+      <text x="150" y="165" font-size="8.5" text-anchor="middle" fill="#6b5c46">要懂得把梯子踢開</text>
+    </svg>`,
     story:'維根斯坦一輩子寫了兩套幾乎互相推翻的哲學體系，前期認為語言就像一張精確的地圖，能對應真實世界的邏輯結構；後期卻推翻自己，主張語言更像一場場「遊戲」，同一個詞在不同場合的用法天差地別，壓根沒有一個統一不變的意思——這也是為什麼我們日常吵架，很多時候根本不是觀點不同，而是雙方對同一個詞的理解就不一樣。',
     fullStory:[
       '維根斯坦前期最重要的著作《邏輯哲學論》，試圖證明語言的結構可以像一張精確地圖那樣，一一對應真實世界的邏輯結構——只要語言用得夠精確，所有哲學爭論理論上都能被「說清楚」，或者被證明「根本沒有意義、純粹是語言用錯了」。他甚至在書的結尾留下一句著名的話，大意是：讀完這本書的人應該把這本書當成一把用完就該丟掉的梯子——爬上去之後，要懂得把梯子踢開。',
@@ -1294,6 +1348,20 @@ const DATA = [
   { id:'dyaus_pita', gen:'crosscultural', zh:'提烏斯神', gr:'Dyaus Pitṛ', roman:'—', epithet:'吠陀天父，宙斯的語言學親戚', crossType:'cognate',
     domain:'天空、父權', symbol:'天空與雷聲', parents:[], cognate:['zeus'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <circle cx="150" cy="30" r="22" fill="#D8C9A0" stroke="#8A6D1F" stroke-width="2"/>
+      <text x="150" y="34" font-size="9" text-anchor="middle" fill="#2A2118">*Dyeus</text>
+      <line x1="150" y1="52" x2="80" y2="100" stroke="#5B5850" stroke-width="1.2"/>
+      <line x1="150" y1="52" x2="150" y2="100" stroke="#5B5850" stroke-width="1.2"/>
+      <line x1="150" y1="52" x2="220" y2="100" stroke="#5B5850" stroke-width="1.2"/>
+      <circle cx="80" cy="115" r="18" fill="#EFE6CE" stroke="#A6812E"/>
+      <text x="80" y="119" font-size="8" text-anchor="middle" fill="#2A2118">宙斯</text>
+      <circle cx="150" cy="115" r="18" fill="#EFE6CE" stroke="#A6812E"/>
+      <text x="150" y="119" font-size="8" text-anchor="middle" fill="#2A2118">提烏斯</text>
+      <circle cx="220" cy="115" r="18" fill="#EFE6CE" stroke="#A6812E"/>
+      <text x="220" y="119" font-size="8" text-anchor="middle" fill="#2A2118">提爾</text>
+      <text x="150" y="150" font-size="8.5" text-anchor="middle" fill="#6b5c46">同一個史前詞根，分化成三個名字</text>
+    </svg>`,
     story:'提烏斯是印度吠陀經典裡最古老的天空與父神之一，他的名字「Dyaus Pitṛ」與希臘語的「Zeus Pater」（宙斯之父稱）、拉丁語的「Jupiter」，其實共享同一個原始印歐語詞根——這不是文化借用，而是比較語言學證實的同源關係，證明希臘與印度神話系統，源自數千年前同一支史前語族的共同信仰。',
     fullStory:[
       '語言學家透過比較梵語、希臘語、拉丁語等多種印歐語系語言，重建出一個史前的「原始印歐語」，並發現許多語言裡的神祇名稱，其實能追溯回同一個共同詞根。「Dyeus」正是其中最著名的一個——它演變成了梵語的「Dyaus」、希臘語裡宙斯的敬稱「Zeus Pater」（意為「天父宙斯」）、拉丁語的「Jupiter」（本義同樣是「天父」）。這意味著，希臘人、羅馬人與印度雅利安人的祖先，很可能在數千年前，曾共同信奉同一位「天空父神」，隨著這支史前民族逐漸遷徙分化，同一個神祇的名字與形象，才在不同地區各自演變出宙斯、朱庇特、提烏斯這些看似毫不相干的面貌。',
@@ -1354,6 +1422,17 @@ const DATA = [
     year:1472, yearLabel:'1472年',
     domain:'心學、知行合一、良知', symbol:'山中賞花', parents:[], parallel:['jung','buddha'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <circle cx="90" cy="75" r="26" fill="none" stroke="#8a8578" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <text x="90" y="70" font-size="8" text-anchor="middle" fill="#6b5c46">未看見時</text>
+      <text x="90" y="84" font-size="8" text-anchor="middle" fill="#6b5c46">同歸於寂</text>
+      <line x1="130" y1="75" x2="170" y2="75" stroke="#A6812E" stroke-width="1.5"/>
+      <polygon points="165,70 175,75 165,80" fill="#A6812E"/>
+      <circle cx="220" cy="75" r="26" fill="#EFE6CE" stroke="#A6812E" stroke-width="2"/>
+      <text x="220" y="70" font-size="8" text-anchor="middle" fill="#2A2118">看見時</text>
+      <text x="220" y="84" font-size="8" text-anchor="middle" fill="#2A2118">顏色明白</text>
+      <text x="150" y="130" font-size="8.5" text-anchor="middle" fill="#6b5c46">花不在心外</text>
+    </svg>`,
     story:'王陽明是明代最重要的哲學家之一，創立「心學」，主張「心即理」——世間的道理不在心外的事物之中，而就在每個人心中。他那句著名的「你未看此花時，此花與汝心同歸於寂」，幾乎是東方哲學裡最詩意的一則「存在即是被感知」。',
     fullStory:[
       '王陽明早年篤信程朱理學，一度依照朱熹「格物致知」的教導，對著竹子整整靜坐七天七夜，試圖窮究竹子背後的「理」，最終不僅一無所獲，還因此病倒——這段經歷被後世稱為「陽明格竹」，也成為他日後徹底反思、另闢蹊徑的起點。',
@@ -1366,6 +1445,17 @@ const DATA = [
     year:-369, yearLabel:'約西元前369年（生卒年具爭議）',
     domain:'齊物、逍遙、相對主義', symbol:'蝴蝶與大鵬鳥', parents:[], parallel:['socrates','skepticism'],
     astro:'目前沒有廣為人知的正式天體命名。',
+    diagram:`<svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+      <circle cx="90" cy="75" r="30" fill="#EFE6CE" stroke="#A6812E" stroke-width="1.5"/>
+      <text x="90" y="72" font-size="10" text-anchor="middle" fill="#2A2118">莊周</text>
+      <text x="90" y="86" font-size="8" text-anchor="middle" fill="#6b5c46">醒著</text>
+      <text x="150" y="70" font-size="16" text-anchor="middle" fill="#8A6D1F">?</text>
+      <line x1="130" y1="75" x2="170" y2="75" stroke="#5B5850" stroke-width="1" stroke-dasharray="3 3"/>
+      <circle cx="210" cy="75" r="30" fill="#D8C9A0" stroke="#8A6D1F" stroke-width="1.5"/>
+      <text x="210" y="72" font-size="10" text-anchor="middle" fill="#2A2118">蝴蝶</text>
+      <text x="210" y="86" font-size="8" text-anchor="middle" fill="#6b5c46">夢中</text>
+      <text x="150" y="130" font-size="8.5" text-anchor="middle" fill="#6b5c46">誰在夢誰？</text>
+    </svg>`,
     story:'莊子是道家最重要的思想家之一，生卒年與亞里斯多德幾乎完全重疊，卻對彼此的存在一無所知。他最著名的「莊周夢蝶」寓言，探討真實與虛幻的界線該如何劃定，兩千多年後，這個提問竟與貝克萊的「存在即是被感知」遙相呼應。',
     fullStory:[
       '莊子，本名莊周，生活於戰國時期的宋國，確切生卒年至今仍有爭議，但主流推估約落在西元前369年至前286年之間——這個時間範圍，幾乎與古希臘的亞里斯多德（西元前384年至前322年）完全重疊。兩人統治著相隔萬里的兩個世界，彼此的思想體系裡完全沒有對方存在過的痕跡，卻不約而同地，都在同一個世紀裡，將人類的理性思辨推向了各自文明的高峰。',
