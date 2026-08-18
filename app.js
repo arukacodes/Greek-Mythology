@@ -894,19 +894,32 @@ function closeTimeline(){
 }
 
 /* ---------- Milestone quotes ---------- */
-const MILESTONE_QUOTES = [
-  {at:25, text:'存在即是被感知。', author:'喬治・貝克萊'},
-  {at:50, text:'我們每個人的意識深處，都共享著同一套原型。', author:'榮格（意譯）'},
-  {at:75, text:'道可道，非常道。', author:'老子'},
-  {at:100, text:'認識你自己。', author:'德爾菲神諭 · 蘇格拉底'},
+const QUOTE_POOL = [
+  {text:'存在即是被感知。', author:'喬治・貝克萊'},
+  {text:'我們每個人的意識深處，都共享著同一套原型。', author:'榮格（意譯）'},
+  {text:'道可道，非常道。', author:'老子'},
+  {text:'認識你自己。', author:'德爾菲神諭'},
+  {text:'我唯一知道的，就是我一無所知。', author:'蘇格拉底'},
+  {text:'你未看此花時，此花與汝心同歸於寂；你來看此花時，則此花顏色一時明白起來。', author:'王陽明《傳習錄》'},
+  {text:'一切唯心造。', author:'《華嚴經》'},
+  {text:'如其在上，如其在下。', author:'赫米斯主義箴言'},
+  {text:'你不知道自己此刻有沒有被看著。', author:'傅柯'},
+  {text:'凝視深淵過久，深淵將回以凝視。', author:'尼采'},
 ];
 
+const MILESTONE_COUNTS = [25, 50, 75, 100];
+let lastQuoteAt = 0;
+
+function pickRandomQuote(){
+  return QUOTE_POOL[Math.floor(Math.random() * QUOTE_POOL.length)];
+}
+
 let milestoneTimer = null;
-function showMilestoneToast(text, author){
+function showMilestoneToast(quote){
   const toast = document.getElementById('milestoneToast');
   if(!toast) return;
-  document.getElementById('milestoneText').textContent = `「${text}」`;
-  document.getElementById('milestoneAuthor').textContent = `— ${author}`;
+  document.getElementById('milestoneText').textContent = `「${quote.text}」`;
+  document.getElementById('milestoneAuthor').textContent = `— ${quote.author}`;
   toast.classList.add('show');
   playEggChime();
   clearTimeout(milestoneTimer);
@@ -914,8 +927,13 @@ function showMilestoneToast(text, author){
 }
 
 function checkMilestone(count){
-  const m = MILESTONE_QUOTES.find(q=>q.at===count);
-  if(m) showMilestoneToast(m.text, m.author);
+  if(MILESTONE_COUNTS.includes(count)){
+    showMilestoneToast(pickRandomQuote());
+    lastQuoteAt = count;
+  } else if(count - lastQuoteAt >= 4 && Math.random() < 0.14){
+    showMilestoneToast(pickRandomQuote());
+    lastQuoteAt = count;
+  }
   if(count === DATA.length) showCompletionMoment();
 }
 
