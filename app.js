@@ -394,7 +394,8 @@ function selectNode(id){
   currentId = id;
   const isFirstVisit = !visited.has(id);
   document.querySelectorAll('.node').forEach(n=>n.classList.remove('active'));
-  document.getElementById('node-'+id).classList.add('active');
+  const selfEl = document.getElementById('node-'+id);
+  if(selfEl) selfEl.classList.add('active');
   const pathBanner = document.getElementById('pathBanner');
   if(pathBanner){ pathBanner.classList.remove('show'); clearTimeout(pathBannerTimer); }
 
@@ -702,7 +703,7 @@ function nextPhilo(){
 
 function jumpToNode(id){
   const el = document.getElementById('node-'+id);
-  el.scrollIntoView({behavior:'smooth', block:'center', inline:'center'});
+  if(el) el.scrollIntoView({behavior:'smooth', block:'center', inline:'center'});
   selectNode(id);
 }
 
@@ -1092,6 +1093,14 @@ function revealEgg(i, card){
     spawnSparkles(rect.left + rect.width/2, rect.top + rect.height/2);
     playEggChime();
     updateEggProgress();
+    if(discoveredEggs.size === EASTER_EGGS.length){
+      setTimeout(()=>{
+        showMilestoneToast({
+          text:'塵歸塵，土歸土——但你已經把每一粒都親手拂去過了。',
+          author:'🧩 塵封軼聞・全數拂去'
+        });
+      }, 500);
+    }
   }
 }
 
@@ -1957,3 +1966,28 @@ function resetExploration(){
   if(mmContent){ mmContent.dataset.built = ''; }
   renderMindMap();
 }
+
+/* ---------- Hidden treasures: things left for the curious to find ---------- */
+
+// 1. Tab title changes when you look away, and waits for you to come back
+(function setupTabTitleEasterEgg(){
+  const originalTitle = document.title;
+  const awayTitle = '眾神仍在等你 👁️';
+  document.addEventListener('visibilitychange', ()=>{
+    document.title = document.hidden ? awayTitle : originalTitle;
+  });
+})();
+
+// 2. A note for whoever opens the console
+console.log('%c眾神之外', 'font-size:26px; font-weight:900; color:#A6812E; font-family:serif; letter-spacing:0.1em;');
+console.log('%c你發現了一個不屬於凡人視野的角落。', 'font-size:12px; color:#6B4A2F;');
+console.log('%c這棵樹裡藏著比看起來更多的東西——蛇夫座從未出現在畫面上，卻始終在資料裡等人搜尋到它。', 'font-size:11px; color:#8a8578;');
+console.log('%c在這裡輸入 easterEgg() 試試看。', 'font-size:11px; color:#8a8578;');
+window.easterEgg = function(){
+  const q = QUOTE_POOL[Math.floor(Math.random() * QUOTE_POOL.length)];
+  console.log('%c'+q.text, 'font-size:14px; color:#A6812E; font-style:italic;');
+  console.log('%c—— '+q.author, 'font-size:11px; color:#8a8578;');
+  try{ playEggChime(); }catch(e){}
+  try{ spawnSparkles(window.innerWidth/2, window.innerHeight/2); }catch(e){}
+  return '✦ 願你在探索裡，也找到自己的答案。';
+};
