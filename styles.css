@@ -106,7 +106,7 @@ header p{
   display:inline-flex;
   align-items:center;
   padding:5px 13px;
-  border-radius:999px;
+  border-radius:12px 15px 12px 4px;
   border:1px solid rgba(166,129,46,0.35);
   background:rgba(166,129,46,0.07);
   color:#EFE6CE;
@@ -115,7 +115,18 @@ header p{
   font-weight:600;
   letter-spacing:0.03em;
   cursor:pointer;
+  position:relative;
   transition:background .15s ease, transform .15s ease, border-color .15s ease;
+}
+.egg-toggle::after{
+  content:'';
+  position:absolute;
+  left:50%;
+  bottom:-5px;
+  width:1.5px;
+  height:5px;
+  background:rgba(166,129,46,0.5);
+  transform:translateX(-50%);
 }
 .egg-toggle:hover{
   background:rgba(166,129,46,0.16);
@@ -287,7 +298,7 @@ header p{
   font-size:13px;
   font-weight:700;
   padding:8px 16px;
-  border-radius:999px;
+  border-radius:16px 20px 16px 6px;
   border:1.5px solid var(--dot,var(--gold));
   background:var(--card-bg);
   color:var(--ink);
@@ -295,7 +306,19 @@ header p{
   display:flex;
   align-items:center;
   gap:8px;
+  position:relative;
   transition:transform .15s ease, box-shadow .15s ease;
+}
+.legend button::after{
+  content:'';
+  position:absolute;
+  left:50%;
+  bottom:-6px;
+  width:1.5px;
+  height:6px;
+  background:var(--dot,var(--gold));
+  opacity:0.5;
+  transform:translateX(-50%);
 }
 .legend button:hover{ transform:translateY(-2px); box-shadow:0 4px 10px rgba(0,0,0,0.12); }
 .legend .dot{ width:10px; height:10px; border-radius:50%; background:var(--dot,var(--gold)); display:inline-block; }
