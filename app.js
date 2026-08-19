@@ -126,7 +126,10 @@ function toggleSound(){
   soundOn = !soundOn;
   try{ localStorage.setItem(SOUND_KEY, soundOn ? 'on' : 'off'); }catch(e){}
   const btn = document.getElementById('soundToggle');
-  if(btn) btn.textContent = soundOn ? '🔊 音效' : '🔇 靜音';
+  if(btn){
+    btn.textContent = soundOn ? '🔊' : '🔇';
+    btn.classList.toggle('muted', !soundOn);
+  }
   if(soundOn) getAudioCtx();
 }
 
@@ -637,7 +640,10 @@ setupRevealObserver();
 setupProgressRail();
 (function initSoundButton(){
   const btn = document.getElementById('soundToggle');
-  if(btn) btn.textContent = soundOn ? '🔊 音效' : '🔇 靜音';
+  if(btn){
+    btn.textContent = soundOn ? '🔊' : '🔇';
+    btn.classList.toggle('muted', !soundOn);
+  }
 })();
 window.addEventListener('load', ()=>{
   drawConnections();
