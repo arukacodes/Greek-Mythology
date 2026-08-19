@@ -525,6 +525,7 @@ function renderDetail(id){
       <span class="astro-icon">🔭</span>
       <div class="astro-text"><span class="astro-label">在夜空中</span>${d.astro || '目前尚無明確對應的天體命名。'}</div>
     </div>
+    ${NODE_EGG_LOOKUP[id] ? `<button class="egg-hint-badge" onclick="jumpToEggFromNode('${id}')">🏺 這裡藏著 ${NODE_EGG_LOOKUP[id].length} 條關於${d.zh}的塵封軼聞 →</button>` : ''}
     <div class="detail-section-title">父母</div>
     <div class="link-row">${parentsChips}</div>
     <div class="detail-section-title">子嗣 / 後代</div>
@@ -987,6 +988,30 @@ const EASTER_EGGS = [
   {icon:'⚔️', text:'寫下《沉思錄》、被後世譽為「哲學家皇帝」的馬可・奧理略，在位期間卻也曾下令鎮壓、迫害當時剛剛興起的基督教信徒。'},
 ];
 
+// Maps an EASTER_EGGS array index to a node id, only where the fact is unambiguously about ONE character —
+// used to surface a "塵封軼聞" hint badge on that node's detail panel, linking back to the egg wall.
+const EGG_NODE_MAP = {
+  0:'pan', 1:'icarus', 3:'psyche', 4:'pan', 5:'tantalus', 6:'nemesis', 7:'echo', 8:'nyx',
+  10:'aquarius', 12:'thales', 13:'pisces', 15:'perseus', 16:'freud', 17:'nietzsche', 18:'foucault',
+  19:'rawls', 22:'serapis', 23:'singer', 24:'capricorn', 25:'aphrodite', 26:'uranus', 27:'chiron',
+  29:'hermes', 30:'calypso', 31:'epicureanism', 32:'wittgenstein', 33:'hermes_trismegistus',
+  35:'hypatia', 36:'anscombe', 37:'wollstonecraft', 38:'nussbaum', 39:'tyr', 41:'zhuangzi',
+  42:'wittgenstein', 43:'zoroaster', 45:'wangyangming', 46:'buddha', 47:'cynicism', 48:'cynicism',
+  49:'socrates', 50:'zhuangzi', 51:'pythagoras', 52:'stoicism', 53:'wittgenstein', 54:'socrates',
+  55:'priam', 56:'medusa', 57:'eros', 58:'osiris', 59:'chiron', 60:'metis', 61:'hestia',
+  62:'epimetheus', 63:'ariadne', 64:'camus', 65:'wittgenstein', 66:'anscombe', 68:'rawls',
+  69:'diotima', 70:'stoicism', 71:'plato', 72:'socrates', 73:'nietzsche', 74:'schopenhauer',
+  75:'sartre', 76:'stoicism', 77:'confucius', 78:'zhuangzi', 79:'wangyangming', 80:'joyce',
+  81:'freud', 82:'lacan', 83:'camus', 84:'aristotle', 85:'jung', 86:'wittgenstein',
+  87:'botticelli', 88:'caravaggio', 89:'rodin', 90:'ibnsina', 91:'confucius', 92:'nietzsche',
+  93:'camus', 94:'wittgenstein', 95:'stoicism',
+};
+// Reverse index: node id -> array of egg indices, built once for fast lookup in renderDetail
+const NODE_EGG_LOOKUP = {};
+Object.entries(EGG_NODE_MAP).forEach(([eggIdx, nodeId])=>{
+  (NODE_EGG_LOOKUP[nodeId] = NODE_EGG_LOOKUP[nodeId] || []).push(Number(eggIdx));
+});
+
 const EGG_KEY = 'greekMythTree_eggs_v1';
 let discoveredEggs = new Set();
 try{
@@ -999,35 +1024,70 @@ function renderEggGrid(){
   if(!grid || grid.childElementCount) { updateEggProgress(); return; }
   EASTER_EGGS.forEach((egg, i)=>{
     const card = document.createElement('div');
-    card.className = 'egg-card' + (discoveredEggs.has(i) ? ' flipped' : '');
+    card.className = 'egg-card' + (discoveredEggs.has(i) ? ' revealed' : '');
     card.dataset.index = i;
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', discoveredEggs.has(i) ? egg.text : '塵封的軼聞，滑動或按 Enter 拂去塵埃');
     card.innerHTML = `
-      <div class="egg-card-inner">
-        <div class="egg-card-front"><span class="egg-icon-hint">?</span></div>
-        <div class="egg-card-back">
-          <span class="egg-emoji">${egg.icon}</span>
-          <span class="egg-text">${egg.text}</span>
-        </div>
+      <div class="egg-content">
+        <span class="egg-emoji">${egg.icon}</span>
+        <span class="egg-text">${egg.text}</span>
       </div>
+      <div class="egg-dust"></div>
+      <div class="egg-dust-hint">拂去塵埃</div>
     `;
-    card.addEventListener('click', (ev)=> flipEgg(i, card, ev));
+    setupDustWipe(card, i);
     grid.appendChild(card);
   });
   updateEggProgress();
 }
 
-function flipEgg(i, card, ev){
-  const isFlipped = card.classList.contains('flipped');
-  if(isFlipped){
-    // already revealed — clicking again just flips it back over, no re-triggering effects
-    card.classList.remove('flipped');
-    return;
+function setupDustWipe(card, i){
+  const dust = card.querySelector('.egg-dust');
+  if(!dust || discoveredEggs.has(i)) return; // already revealed, no gesture needed
+
+  const THRESHOLD = 240;
+  let wiping = false;
+  let lastX = 0, lastY = 0;
+  let accumulated = 0;
+
+  function onPointerDown(ev){
+    wiping = true;
+    lastX = ev.clientX; lastY = ev.clientY;
+    if(card.setPointerCapture){ try{ card.setPointerCapture(ev.pointerId); }catch(e){} }
   }
-  card.classList.add('flipped');
+  function onPointerMove(ev){
+    if(!wiping) return;
+    const dx = ev.clientX - lastX, dy = ev.clientY - lastY;
+    accumulated += Math.sqrt(dx*dx + dy*dy);
+    lastX = ev.clientX; lastY = ev.clientY;
+    dust.style.opacity = Math.max(0, 1 - accumulated / THRESHOLD);
+    if(accumulated >= THRESHOLD) revealEgg(i, card);
+  }
+  function onPointerEnd(){ wiping = false; }
+
+  card.addEventListener('pointerdown', onPointerDown);
+  card.addEventListener('pointermove', onPointerMove);
+  card.addEventListener('pointerup', onPointerEnd);
+  card.addEventListener('pointercancel', onPointerEnd);
+  card.addEventListener('keydown', (ev)=>{
+    if(ev.key === 'Enter' || ev.key === ' '){
+      ev.preventDefault();
+      revealEgg(i, card);
+    }
+  });
+}
+
+function revealEgg(i, card){
+  if(card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  card.setAttribute('aria-label', EASTER_EGGS[i].text);
   if(!discoveredEggs.has(i)){
     discoveredEggs.add(i);
     try{ localStorage.setItem(EGG_KEY, JSON.stringify([...discoveredEggs])); }catch(e){}
-    spawnSparkles(ev.clientX, ev.clientY);
+    const rect = card.getBoundingClientRect();
+    spawnSparkles(rect.left + rect.width/2, rect.top + rect.height/2);
     playEggChime();
     updateEggProgress();
   }
@@ -1056,6 +1116,22 @@ function updateEggProgress(){
   const el = document.getElementById('eggProgress');
   if(!el) return;
   el.textContent = `已發現 ${discoveredEggs.size} / ${EASTER_EGGS.length}`;
+}
+
+function jumpToEggFromNode(nodeId){
+  const eggIndices = NODE_EGG_LOOKUP[nodeId];
+  if(!eggIndices || !eggIndices.length) return;
+  const targetIndex = eggIndices[0];
+  openEggWall();
+  setTimeout(()=>{
+    const card = document.querySelector('.egg-card[data-index="'+targetIndex+'"]');
+    if(!card) return;
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    revealEgg(targetIndex, card);
+    card.style.outline = '2px solid var(--gold)';
+    card.style.outlineOffset = '3px';
+    setTimeout(()=>{ card.style.outline = ''; card.style.outlineOffset = ''; }, 2200);
+  }, 150);
 }
 
 function openEggWall(){
