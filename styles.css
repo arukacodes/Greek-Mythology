@@ -332,25 +332,6 @@ header p{
   transition:opacity .12s linear;
 }
 .egg-card.revealed .egg-dust{ opacity:0 !important; pointer-events:none; transition:opacity .4s ease; }
-.egg-dust-hint{
-  position:absolute;
-  inset:0;
-  z-index:3;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  gap:4px;
-  color:rgba(239,230,206,0.75);
-  font-family:'Cinzel', 'Noto Serif TC', serif;
-  font-size:9.5px;
-  letter-spacing:0.08em;
-  text-align:center;
-  pointer-events:none;
-  transition:opacity .2s ease;
-}
-.egg-dust-hint::before{ content:'✦'; font-size:16px; opacity:0.6; }
-.egg-card.revealed .egg-dust-hint{ display:none; }
 .egg-card:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
 @media (prefers-reduced-motion: reduce){
   .egg-dust{ transition:none; }
@@ -822,27 +803,31 @@ svg#connections{
   font-family:'Cinzel', serif;
 }
 
-.egg-hint-badge{
+.egg-seal-wrap{
+  display:flex;
+  justify-content:flex-end;
+  margin:-4px 0 16px;
+}
+.egg-seal{
+  width:32px;
+  height:32px;
+  flex-shrink:0;
+  border-radius:50%;
+  border:1px solid rgba(166,129,46,0.3);
+  background:radial-gradient(circle at 35% 30%, rgba(166,129,46,0.16), rgba(166,129,46,0.05));
+  color:var(--ink-soft);
+  font-size:14px;
   display:flex;
   align-items:center;
-  gap:8px;
-  width:100%;
-  padding:10px 14px;
-  margin-bottom:18px;
-  border-radius:10px;
-  border:1px dashed rgba(166,129,46,0.5);
-  background:rgba(166,129,46,0.06);
-  color:var(--ink);
-  font-family:'Noto Serif TC', serif;
-  font-size:12px;
-  text-align:left;
+  justify-content:center;
   cursor:pointer;
-  transition:background .15s ease, border-color .15s ease, transform .15s ease;
+  opacity:0.55;
+  transition:opacity .2s ease, transform .2s ease;
 }
-.egg-hint-badge:hover{
-  background:rgba(166,129,46,0.14);
-  border-color:rgba(166,129,46,0.75);
-  transform:translateY(-1px);
+.egg-seal:hover, .egg-seal:focus-visible{
+  opacity:1;
+  transform:scale(1.1);
+  outline:none;
 }
 
 .detail-tags{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
