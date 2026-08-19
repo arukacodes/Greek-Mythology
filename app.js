@@ -171,7 +171,8 @@ function renderNodes(){
       if(d.isRoman) el.setAttribute('data-roman', 'true');
       const typeMeta = d.crossType ? CROSS_TYPE_META[d.crossType] : null;
       el.innerHTML = `
-        <div class="medallion"><span class="zh">${d.zh}</span></div>
+        <div class="medallion">${generateConstellationSVG(d.id, 64)}</div>
+        <div class="node-name">${d.zh}</div>
         <div class="gr">${d.gr}</div>
         ${d.isRoman ? '<span class="roman-badge">羅馬 ROMAN</span>' : ''}
         ${typeMeta ? `<span class="type-badge" style="--badge-color:${typeMeta.color}">${typeMeta.label}</span>` : ''}
@@ -183,7 +184,80 @@ function renderNodes(){
   updateProgressCounter();
 }
 
+/* ---------- Constellation medallion: replaces the plain circle with a unique dot-and-line glyph per node ---------- */
+function generateConstellationSVG(id, size){
+  size = size || 64;
+  let seed = 0;
+  for(let i=0;i<id.length;i++){ seed = (seed * 31 + id.charCodeAt(i)) % 999983; }
+  if(seed <= 0) seed += 999983;
+  const rand = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+
+  // The 12 zodiac signs get their own traditional/simplified constellation outlines instead of a
+  // random humanoid template — these are the one tier that corresponds to real, named star patterns.
+  const ZODIAC_SHAPES = {
+    aries:       [[0.15,0.60],[0.35,0.45],[0.55,0.35],[0.75,0.40]],
+    taurus:      [[0.20,0.25],[0.35,0.55],[0.50,0.42],[0.65,0.55],[0.82,0.22]],
+    gemini:      [[0.30,0.15],[0.25,0.40],[0.32,0.65],[0.28,0.90],[0.55,0.85],[0.60,0.60],[0.68,0.35],[0.72,0.12]],
+    cancer:      [[0.30,0.80],[0.45,0.55],[0.50,0.25],[0.62,0.50],[0.78,0.75]],
+    leo:         [[0.25,0.20],[0.20,0.35],[0.28,0.50],[0.42,0.45],[0.65,0.55],[0.85,0.45],[0.70,0.28]],
+    virgo:       [[0.20,0.30],[0.35,0.50],[0.50,0.35],[0.65,0.55],[0.55,0.75],[0.75,0.85]],
+    libra:       [[0.25,0.65],[0.42,0.42],[0.50,0.20],[0.58,0.42],[0.75,0.65]],
+    scorpio:     [[0.15,0.20],[0.22,0.35],[0.28,0.50],[0.35,0.62],[0.45,0.70],[0.55,0.74],[0.65,0.70],[0.70,0.58],[0.62,0.45]],
+    sagittarius: [[0.20,0.70],[0.35,0.50],[0.50,0.30],[0.65,0.45],[0.55,0.60],[0.75,0.55],[0.85,0.35]],
+    capricorn:   [[0.15,0.35],[0.45,0.25],[0.85,0.55],[0.50,0.70]],
+    aquarius:    [[0.50,0.20],[0.42,0.40],[0.55,0.50],[0.35,0.60],[0.50,0.72],[0.30,0.85]],
+    pisces:      [[0.15,0.25],[0.30,0.40],[0.45,0.55],[0.60,0.50],[0.75,0.60],[0.85,0.80]],
+  };
+
+  // Hand-designed constellation silhouettes (normalized 0–1, already in stroke order) —
+  // evokes real constellation shapes (dipper, zigzag, ring, crown, hook, star) rather than a random scatter
+  // Humanoid-figure silhouettes (normalized 0–1, already in stroke order) — head near the top, limbs
+  // spreading below, evoking a person/god's pose (à la Orion or Hercules) rather than an abstract shape.
+  // Point counts vary per template (6–11) so density differs node to node, not fixed at one number.
+  const TEMPLATES = [
+    [[0.5,0.12],[0.22,0.32],[0.5,0.50],[0.78,0.32],[0.30,0.90],[0.70,0.90]],                                                              // simple figure, arms out, legs apart (6 pts)
+    [[0.5,0.15],[0.75,0.32],[0.62,0.55],[0.85,0.60],[0.50,0.68],[0.30,0.55],[0.18,0.75]],                                                 // seated / enthroned figure (7 pts)
+    [[0.5,0.15],[0.32,0.28],[0.20,0.45],[0.42,0.42],[0.58,0.42],[0.80,0.45],[0.68,0.28],[0.5,0.75]],                                      // crouching / compact figure (8 pts)
+    [[0.5,0.10],[0.30,0.24],[0.42,0.38],[0.18,0.15],[0.60,0.42],[0.82,0.28],[0.90,0.12],[0.55,0.62],[0.72,0.90],[0.35,0.88]],             // warrior, one arm raised (10 pts)
+    [[0.5,0.10],[0.28,0.20],[0.08,0.32],[0.30,0.35],[0.5,0.45],[0.72,0.35],[0.92,0.32],[0.70,0.20],[0.58,0.55],[0.68,0.85],[0.35,0.82]],  // winged / outstretched figure (11 pts)
+  ];
+
+  const isZodiac = !!ZODIAC_SHAPES[id];
+  const template = isZodiac ? ZODIAC_SHAPES[id] : TEMPLATES[Math.floor(rand() * TEMPLATES.length)];
+  const jitterAmt = isZodiac ? 0.02 : 0.06;
+  const rotation = isZodiac ? 0 : rand() * Math.PI * 2;
+  const scale = isZodiac ? 1.0 : (0.88 + rand() * 0.16);
+  const cos = Math.cos(rotation), sin = Math.sin(rotation);
+  const margin = size * 0.18;
+  const usable = size - margin*2;
+  const cx = size/2, cy = size/2;
+
+  const points = template.map(([tx,ty])=>{
+    const jx = tx + (rand()-0.5) * jitterAmt;
+    const jy = ty + (rand()-0.5) * jitterAmt;
+    const px = (jx - 0.5) * usable * scale;
+    const py = (jy - 0.5) * usable * scale;
+    const rx = px*cos - py*sin;
+    const ry = px*sin + py*cos;
+    return { x: cx + rx, y: cy + ry, r: 1.3 + rand() * 1.3 };
+  });
+
+  let lines = '';
+  for(let i=0;i<points.length-1;i++){
+    const a = points[i], b = points[i+1];
+    lines += `<line x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" stroke="var(--ring, var(--gold))" stroke-width="1" opacity="0.55"/>`;
+  }
+  let dots = '';
+  points.forEach(p=>{
+    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*2.4).toFixed(1)}" fill="var(--ring, var(--gold))" opacity="0.22"/>`;
+    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${p.r.toFixed(1)}" fill="var(--ring, var(--gold))"/>`;
+  });
+
+  return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${lines}${dots}</svg>`;
+}
+
 function drawConnections(){
+
   const wrap = document.getElementById('treeWrap');
   const svg = document.getElementById('connections');
   const wrapRect = wrap.getBoundingClientRect();
