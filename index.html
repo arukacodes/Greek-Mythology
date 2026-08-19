@@ -13,7 +13,7 @@
   <h1>眾神之外</h1>
   <p>從混沌到當代 — 一部仍在生長的神話、思想與創作圖譜</p>
   <div class="header-controls">
-    <p class="progress-counter" id="progressCounter">已探索 0 / 0</p>
+    <span class="progress-counter" id="progressCounter"><span class="dot"></span>已探索 0 / 0</span>
     <button class="egg-toggle" id="eggToggle" onclick="openEggWall()">🥚 彩蛋牆</button>
     <button class="egg-toggle" id="searchToggle" onclick="openSearch()">🔍 搜尋</button>
     <button class="egg-toggle" id="pathToggle" onclick="openPathfinder()">🧭 關係尋路</button>
@@ -28,7 +28,7 @@
     <div class="egg-header">
       <h2>🥚 神話 × 現實 彩蛋牆</h2>
       <p class="egg-sub">翻開卡片，看看哪些神話悄悄藏在我們的日常之中</p>
-      <p class="egg-progress" id="eggProgress">已發現 0 / 0</p>
+      <span class="egg-progress" id="eggProgress"><span class="dot"></span>已發現 0 / 0</span>
     </div>
     <div class="egg-grid" id="eggGrid"></div>
   </div>
@@ -83,7 +83,7 @@
     <div class="egg-header">
       <h2>🌌 你的意識地圖</h2>
       <p class="egg-sub">只有你親自點開過的角色，會在這裡留下一顆星</p>
-      <p class="egg-progress" id="mindMapProgress">已建構 0 / 0 個意識座標</p>
+      <span class="egg-progress" id="mindMapProgress"><span class="dot"></span>已建構 0 / 0 個意識座標</span>
       <button class="mm-reset-link" onclick="resetExploration()">🔄 重置探索軌跡</button>
     </div>
     <div id="mindMapContent"></div>

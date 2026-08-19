@@ -5,6 +5,17 @@ function childrenOf(id){
   return DATA.filter(d => d.parents && d.parents.includes(id));
 }
 
+// Extract one memorable keyword/signature phrase for a character (ADHD-friendly memory hook)
+function getSignature(d){
+  // Use epithet if it's short enough (5 chars or less)
+  if(d.epithet && d.epithet.length <= 6) return d.epithet;
+  // Otherwise extract first meaningful phrase from story (before the first comma or period)
+  const firstClause = d.story.split(/[，。]/)[0];
+  if(firstClause && firstClause.length <= 10) return firstClause.replace(/^(祂|他|她|它)是/, '');
+  // Fallback: truncate epithet
+  return d.epithet ? d.epithet.slice(0, 5) + (d.epithet.length > 5 ? '…' : '') : '';
+}
+
 /* ---------- Sound: synthesized in the browser, no audio files needed ---------- */
 const SOUND_KEY = 'greekMythTree_sound_v1';
 let soundOn = true;
@@ -176,6 +187,7 @@ function renderNodes(){
       el.innerHTML = `
         <div class="medallion">${generateConstellationSVG(d.id, 64)}</div>
         <div class="node-name">${d.zh}</div>
+        <div class="node-sig">${getSignature(d)}</div>
         <div class="gr">${d.gr}</div>
         ${d.isRoman ? '<span class="roman-badge">羅馬 ROMAN</span>' : ''}
         ${typeMeta ? `<span class="type-badge" style="--badge-color:${typeMeta.color}">${typeMeta.label}</span>` : ''}
@@ -495,7 +507,7 @@ function renderDetail(id){
 
   content.innerHTML = `
     <div class="detail-header">
-      <div class="detail-medallion" style="--ring:var(--${d.gen})">${d.zh.slice(0,1)}</div>
+      <div class="detail-medallion" style="--ring:var(--${d.gen})">${generateConstellationSVG(d.id, 48)}</div>
       <div class="detail-title">
         <h2>${d.zh}</h2>
         <div class="gr-name">${d.gr} · 羅馬名：${d.roman}</div>
