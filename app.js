@@ -174,7 +174,7 @@ const CROSS_TYPE_META = {
 };
 
 function renderNodes(){
-  ['primordial','titan','olympian','hero','nature','zodiac','troy','philosophy','echoes','modernphil','crosscultural'].forEach(gen=>{
+  ['primordial','titan','olympian','hero','nature','zodiac','troy','mythconcepts','philosophy','modernphil','psychology','arts','crosscultural'].forEach(gen=>{
     const row = document.querySelector('.gen-row[data-row="'+gen+'"]');
     DATA.filter(d=>d.gen===gen).forEach((d,i)=>{
       const el = document.createElement('div');
@@ -729,9 +729,11 @@ const GEN_META = [
   {id:'nature', label:'自然精靈與山林諸神', color:'#4B6B3A'},
   {id:'zodiac', label:'黃道十二宮', color:'#3D3A6B'},
   {id:'troy', label:'特洛伊戰爭與奧德賽', color:'#6B2E3A'},
+  {id:'mythconcepts', label:'神話衍生的現代概念', color:'#8A6D1F'},
   {id:'philosophy', label:'古典哲學', color:'#5B5850'},
-  {id:'echoes', label:'神話的現代回聲', color:'#8A6D1F'},
   {id:'modernphil', label:'現代哲學', color:'#43575C'},
+  {id:'psychology', label:'現代心理學', color:'#6B3F6B'},
+  {id:'arts', label:'藝術與文學的回聲', color:'#8A4A5C'},
   {id:'crosscultural', label:'跨文化連結', color:'#9C6B3E'},
 ];
 

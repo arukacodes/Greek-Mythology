@@ -15,7 +15,9 @@
   --zodiac:#3D3A6B;
   --troy:#6B2E3A;
   --philosophy:#5B5850;
-  --echoes:#8A6D1F;
+  --mythconcepts:#8A6D1F;
+  --psychology:#6B3F6B;
+  --arts:#8A4A5C;
   --modernphil:#43575C;
   --crosscultural:#9C6B3E;
   --cross-syncretism:#A6812E;
@@ -585,7 +587,9 @@ svg#connections{
 .node[data-gen="zodiac"] .medallion{ --ring:var(--zodiac); }
 .node[data-gen="troy"] .medallion{ --ring:var(--troy); }
 .node[data-gen="philosophy"] .medallion{ --ring:var(--philosophy); }
-.node[data-gen="echoes"] .medallion{ --ring:var(--echoes); }
+.node[data-gen="mythconcepts"] .medallion{ --ring:var(--mythconcepts); }
+.node[data-gen="psychology"] .medallion{ --ring:var(--psychology); }
+.node[data-gen="arts"] .medallion{ --ring:var(--arts); }
 .node[data-gen="modernphil"] .medallion{ --ring:var(--modernphil); }
 .node[data-gen="crosscultural"] .medallion{ --ring:var(--crosscultural); }
 .node .roman-badge{
