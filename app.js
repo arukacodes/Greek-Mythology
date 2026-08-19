@@ -535,6 +535,110 @@ function renderDetail(id){
   `;
 }
 
+/* ---------- Philosophical Choices: interactive dilemmas linking back to real thinkers in the tree ---------- */
+const PHILO_DILEMMAS = [
+  {
+    q:'一輛失控電車即將撞死五個人，你可以拉下拉桿讓電車轉向，但這樣會撞死另一名原本安全的路人。你會怎麼做？',
+    options:[
+      {label:'拉下拉桿，犧牲一人救五人', reveal:'singer', text:'這接近效益主義的計算邏輯——彼得・辛格主張，道德判斷應以「整體痛苦與幸福的總量」為依歸，救五人比救一人，帶來更大的整體福祉。'},
+      {label:'不拉拉桿，讓電車照原路撞向五人', reveal:'laozi', text:'這呼應了老子「無為」的精神——不主動介入、不讓自己的手沾上原本不屬於自己的因果，順應事物本有的走向，而非強行插手改變命運。'}
+    ]
+  },
+  {
+    q:'如果可以無限次、一字不差地重複過完全相同的一生——包括所有的痛苦與遺憾——你會願意嗎？',
+    options:[
+      {label:'願意，我會對這一生說「是」', reveal:'nietzsche', text:'這正是尼采「永恆輪迴」的思想實驗——他認為，唯有真正熱愛自己生命的人，才敢於對這樣的重複坦然說「是」，這是他衡量一個人是否肯定生命的終極尺度。'},
+      {label:'不願意，人生的痛苦不值得重複', reveal:'schopenhauer', text:'這呼應了叔本華的悲觀哲學——他認為人生本質是一場在痛苦與無聊之間擺盪的鐘擺，短暫的滿足只會迅速讓位給新的空虛，重複只會讓這場擺盪加倍。'}
+    ]
+  },
+  {
+    q:'假設你要為一個全新的社會設計規則，但你不知道自己出生後會是富人還是窮人、健康還是殘疾、屬於多數還是少數群體，你會怎麼設計？',
+    options:[
+      {label:'我會設計出對最弱勢者最有利的制度，因為我可能就是那個人', reveal:'rawls', text:'你剛剛親自完成了羅爾斯著名的「無知之幕」思想實驗——他主張，唯有在不知道自己會落在社會哪個位置的前提下所做出的選擇，才是真正公平的正義原則。'}
+    ]
+  },
+  {
+    q:'一艘船的木板被逐一替換，最終全船的木板都換過一輪——這還是原來的那艘船嗎？',
+    options:[
+      {label:'不是了，構成船的物質已經完全不同', reveal:'zhuangzi', text:'這呼應了莊子「萬物皆流、齊物」的世界觀——執著於「這個東西是不是原本那個東西」，某種程度上正是一種尚未看透萬物本無固定自性的執念。'},
+      {label:'還是同一艘船，重要的是設計與功能的延續', reveal:'aristotle', text:'這接近亞里斯多德的「形式因」概念——他認為一件事物的本質，在於它的形式與目的，而非構成它的具體物質，物質可以替換，形式的延續才是同一性的關鍵。'}
+    ]
+  },
+  {
+    q:'有一台機器，只要接上它，就能讓你體驗到完美、真實無比的快樂人生，但那全部都是虛擬模擬出來的。你會願意接上去、從此不再拔下來嗎？',
+    options:[
+      {label:'願意，快樂本身就是人生最高的善', reveal:'epicureanism', text:'這接近伊比鳩魯學派的立場——他們主張，快樂（尤其是免於痛苦與恐懼的心靈寧靜）本身就是人生追求的終極目標，若機器真能提供這一切，又何必拒絕？'},
+      {label:'不願意，就算痛苦，我也想要真實的人生', reveal:'sartre', text:'這呼應了沙特的存在主義立場——人的尊嚴在於自由地選擇、並為自己的選擇負責，一個被機器預先寫定的「假人生」，即使快樂，也剝奪了真正屬於你自己的自由。'}
+    ]
+  },
+  {
+    q:'如果能選擇，你想活在一個舒適、卻虛假的幻覺裡，還是走出去，面對可能令人不安的真相？',
+    options:[
+      {label:'我想知道真相，即使它令人不安', reveal:'republic', text:'這正是柏拉圖《理想國》裡著名的「洞穴寓言」——他認為，哲學家的責任正是掙脫束縛、走出洞穴，即便洞外的陽光起初刺眼難耐，也好過一輩子盯著牆上的影子。'}
+    ]
+  },
+  {
+    q:'突然收到一個你完全無法改變、也無法挽回的壞消息，你的第一反應通常是什麼？',
+    options:[
+      {label:'先花時間憤怒、抗拒，接受需要過程', reveal:'camus', text:'這接近卡繆式的態度——他主張真正誠實面對「荒謬」，不該是壓抑情緒、假裝雲淡風輕，而是先如實承認世界的不合理與自己的憤怒，才談得上後續「即便如此，仍要選擇繼續前行」。'},
+      {label:'盡快接受，把心力放回自己還能控制的事情上', reveal:'stoicism', text:'這正是斯多葛學派的核心主張——區分「操之在我者」與「操之不在我者」，把注意力收回到自己真正能掌控的事物上，是斯多葛式心靈平靜的起點。'}
+    ]
+  },
+  {
+    q:'如果你此刻正在做一場極其真實的夢，夢裡的你完全感覺不出任何破綻——這件事，重要嗎？',
+    options:[
+      {label:'不重要，只要我此刻的感知是完整而真實的', reveal:'wangyangming', text:'這呼應了王陽明「心外無物」的立場——他主張「你未看此花時，此花與汝心同歸於寂」，事物的存在，本就與你的心念、感知緊密相繫，「是否為夢」的區分，也許本身就不是最核心的問題。'},
+      {label:'重要，我仍然想知道自己所處的到底是不是真實世界', reveal:'skepticism', text:'這接近懷疑學派的態度——面對無法徹底證實或證偽的命題，最誠實的立場，是承認自己的不確定，並持續懸置判斷，而不是輕易接受一個無法驗證的答案。'}
+    ]
+  },
+  {
+    q:'如果堅持自己認為正確的信念，會為你招致社會嚴厲的懲罰甚至死刑，你會選擇妥協求生，還是堅持到底？',
+    options:[
+      {label:'我會堅持自己的信念，即使代價是生命', reveal:'socrates', text:'這正是蘇格拉底本人的真實選擇——被雅典法庭判處死刑後，朋友曾提議賄賂獄卒助他越獄，他卻拒絕了，堅持自己一貫教導的「遵守城邦法律」的原則，飲下毒酒，慷慨赴死。'}
+    ]
+  }
+];
+let philoIndex = 0;
+
+function openPhilo(){
+  philoIndex = Math.floor(Math.random() * PHILO_DILEMMAS.length);
+  renderPhilo();
+  document.getElementById('philoOverlay').classList.add('open');
+}
+function closePhilo(){
+  document.getElementById('philoOverlay').classList.remove('open');
+}
+function renderPhilo(){
+  const d = PHILO_DILEMMAS[philoIndex];
+  document.getElementById('philoContent').innerHTML = `
+    <p class="philo-question">${d.q}</p>
+    <div class="philo-options">
+      ${d.options.map((o,i)=>`<button class="philo-opt-btn" onclick="choosePhilo(${i})">${o.label}</button>`).join('')}
+    </div>
+  `;
+}
+function choosePhilo(i){
+  const d = PHILO_DILEMMAS[philoIndex];
+  const o = d.options[i];
+  const person = byId[o.reveal];
+  document.getElementById('philoContent').innerHTML = `
+    <p class="philo-question philo-question-dim">${d.q}</p>
+    <div class="philo-reveal">
+      <p class="philo-reveal-label">你的選擇，呼應了——</p>
+      <p class="philo-reveal-name">${person ? person.zh : ''}</p>
+      <p class="philo-reveal-text">${o.text}</p>
+      <div class="philo-reveal-actions">
+        ${person ? `<button class="philo-jump-btn" onclick="closePhilo(); jumpToNode('${o.reveal}');">前往認識 ${person.zh} →</button>` : ''}
+        <button class="philo-next-btn" onclick="nextPhilo()">下一題 →</button>
+      </div>
+    </div>
+  `;
+}
+function nextPhilo(){
+  philoIndex = (philoIndex + 1) % PHILO_DILEMMAS.length;
+  renderPhilo();
+}
+
 function jumpToNode(id){
   const el = document.getElementById('node-'+id);
   el.scrollIntoView({behavior:'smooth', block:'center', inline:'center'});

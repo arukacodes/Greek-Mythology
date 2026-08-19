@@ -30,10 +30,11 @@
   </div>
   <p class="oracle-sub">From chaos, the gods awaken... From myth, the world breathes...</p>
   <div class="header-controls">
-    <button class="egg-toggle" id="eggToggle" onclick="openEggWall()">🥚 彩蛋牆</button>
-    <button class="egg-toggle" id="searchToggle" onclick="openSearch()">🔍 搜尋</button>
-    <button class="egg-toggle" id="timelineToggle" onclick="openTimeline()">📅 時間軸</button>
-    <button class="egg-toggle" id="mindMapToggle" onclick="openMindMap()">🌌 意識地圖</button>
+    <button class="egg-toggle" id="eggToggle" onclick="openEggWall()">🥚 彩蛋牆 <span class="btn-en">Easter Eggs</span></button>
+    <button class="egg-toggle" id="searchToggle" onclick="openSearch()">🔍 搜尋 <span class="btn-en">Search</span></button>
+    <button class="egg-toggle" id="timelineToggle" onclick="openTimeline()">📅 時間軸 <span class="btn-en">Timeline</span></button>
+    <button class="egg-toggle" id="mindMapToggle" onclick="openMindMap()">🌌 意識地圖 <span class="btn-en">Consciousness Map</span></button>
+    <button class="egg-toggle" id="philoToggle" onclick="openPhilo()">🎭 哲學抉擇 <span class="btn-en">Choices</span></button>
   </div>
 </header>
 
@@ -90,6 +91,15 @@
     <h3 class="util-title">📅 真實歷史時間軸</h3>
     <p class="util-sub">只收錄有明確歷史年代的人物——神話角色沒有「出生年份」，不在此列</p>
     <div id="timelineContent"></div>
+  </div>
+</div>
+
+<div class="util-overlay" id="philoOverlay" onclick="if(event.target===this) closePhilo()">
+  <div class="util-panel util-panel-wide">
+    <button class="util-close" onclick="closePhilo()">✕</button>
+    <h3 class="util-title">🎭 哲學抉擇</h3>
+    <p class="util-sub">沒有標準答案——選完之後，看看你的選擇呼應了樹上哪位思想家</p>
+    <div id="philoContent"></div>
   </div>
 </div>
 
