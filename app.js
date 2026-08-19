@@ -52,8 +52,9 @@ function playTone(freq, duration, type, peak, delay){
 }
 
 const GEN_NOTES = {
-  primordial:261.63, titan:293.66, olympian:329.63, hero:392.00,
-  nature:440.00, zodiac:523.25, troy:587.33, philosophy:659.25, echoes:698.46, modernphil:783.99, crosscultural:830.61
+  primordial:261.63, titan:293.66, olympian:329.63, hero:349.23,
+  nature:392.00, zodiac:440.00, troy:493.88, mythconcepts:523.25,
+  philosophy:587.33, modernphil:659.25, psychology:698.46, arts:783.99, crosscultural:880.00
 };
 
 function playSelectSound(gen){
@@ -1053,6 +1054,8 @@ function setupDustWipe(card, i){
   let accumulated = 0;
 
   function onPointerDown(ev){
+    ev.preventDefault();
+    card.focus();
     wiping = true;
     lastX = ev.clientX; lastY = ev.clientY;
     if(card.setPointerCapture){ try{ card.setPointerCapture(ev.pointerId); }catch(e){} }

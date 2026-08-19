@@ -293,6 +293,9 @@ header p{
   border:1.5px solid var(--gold);
   overflow:hidden;
   touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
 }
 .egg-content{
   position:absolute;
