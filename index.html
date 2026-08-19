@@ -4,19 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>眾神之外</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div class="meander-strip"></div>
 <header>
-  <h1>眾神之外</h1>
-  <p>從混沌到當代 — 一部仍在生長的神話、思想與創作圖譜</p>
+  <div class="title-oracle-wrap">
+    <svg class="oracle-arc" viewBox="0 0 340 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <path id="arcTop" d="M 20 75 Q 170 0 320 75" fill="none"/>
+        <path id="arcBottom" d="M 20 25 Q 170 100 320 25" fill="none"/>
+      </defs>
+      <text font-size="9" fill="#9a93b8" font-family="Cinzel, serif" letter-spacing="3">
+        <textPath href="#arcTop" startOffset="50%" text-anchor="middle">WHERE THE GODS END</textPath>
+      </text>
+      <text font-size="9" fill="#9a93b8" font-family="Cinzel, serif" letter-spacing="3">
+        <textPath href="#arcBottom" startOffset="50%" text-anchor="middle">— BEYOND THE DIVINE —</textPath>
+      </text>
+    </svg>
+    <h1>眾神之外</h1>
+  </div>
+  <p class="oracle-sub">From chaos, the gods awaken... From myth, the world breathes...</p>
   <div class="header-controls">
-    <span class="progress-counter" id="progressCounter"><span class="dot"></span>已探索 0 / 0</span>
     <button class="egg-toggle" id="eggToggle" onclick="openEggWall()">🥚 彩蛋牆</button>
     <button class="egg-toggle" id="searchToggle" onclick="openSearch()">🔍 搜尋</button>
-    <button class="egg-toggle" id="pathToggle" onclick="openPathfinder()">🧭 關係尋路</button>
     <button class="egg-toggle" id="timelineToggle" onclick="openTimeline()">📅 時間軸</button>
     <button class="egg-toggle" id="mindMapToggle" onclick="openMindMap()">🌌 意識地圖</button>
   </div>
@@ -35,32 +50,33 @@
 </div>
 
 <div class="util-overlay" id="searchOverlay" onclick="if(event.target===this) closeSearch()">
-  <div class="util-panel">
-    <button class="util-close" onclick="closeSearch()">✕</button>
-    <h3 class="util-title">🔍 搜尋角色</h3>
-    <input type="text" class="util-input" id="searchInput" placeholder="輸入中文或英文名字…" oninput="renderSearchResults()" autocomplete="off">
-    <div class="util-results" id="searchResults"></div>
-  </div>
-</div>
-
-<div class="util-overlay" id="pathOverlay" onclick="if(event.target===this) closePathfinder()">
   <div class="util-panel util-panel-wide">
-    <button class="util-close" onclick="closePathfinder()">✕</button>
-    <h3 class="util-title">🧭 關係尋路</h3>
-    <p class="util-sub">輸入兩個角色，看看他們之間隔著幾步關係</p>
-    <div class="path-inputs">
-      <div class="path-field">
-        <input type="text" class="util-input" id="pathFromInput" placeholder="起點角色…" oninput="renderPathSuggestions('from')" autocomplete="off">
-        <div class="util-results" id="pathFromResults"></div>
-      </div>
-      <div class="path-arrow">→</div>
-      <div class="path-field">
-        <input type="text" class="util-input" id="pathToInput" placeholder="終點角色…" oninput="renderPathSuggestions('to')" autocomplete="off">
-        <div class="util-results" id="pathToResults"></div>
-      </div>
+    <button class="util-close" onclick="closeSearch()">✕</button>
+    <h3 class="util-title">🔍 搜尋</h3>
+    <div class="search-tabs">
+      <button class="search-tab active" onclick="switchSearchTab('search')">搜尋角色</button>
+      <button class="search-tab" onclick="switchSearchTab('path')">關係尋路</button>
     </div>
-    <button class="path-find-btn" onclick="runPathfinder()">尋找路徑</button>
-    <div class="path-result" id="pathResult"></div>
+    <div id="searchTabContent">
+      <input type="text" class="util-input" id="searchInput" placeholder="輸入中文或英文名字…" oninput="renderSearchResults()" autocomplete="off">
+      <div class="util-results" id="searchResults"></div>
+    </div>
+    <div id="pathTabContent" style="display:none">
+      <p class="util-sub">輸入兩個角色，看看他們之間隔著幾步關係</p>
+      <div class="path-inputs">
+        <div class="path-field">
+          <input type="text" class="util-input" id="pathFromInput" placeholder="起點角色…" oninput="renderPathSuggestions('from')" autocomplete="off">
+          <div class="util-results" id="pathFromResults"></div>
+        </div>
+        <div class="path-arrow">→</div>
+        <div class="path-field">
+          <input type="text" class="util-input" id="pathToInput" placeholder="終點角色…" oninput="renderPathSuggestions('to')" autocomplete="off">
+          <div class="util-results" id="pathToResults"></div>
+        </div>
+      </div>
+      <button class="path-find-btn" onclick="runPathfinder()">尋找路徑</button>
+      <div class="path-result" id="pathResult"></div>
+    </div>
   </div>
 </div>
 

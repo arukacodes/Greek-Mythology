@@ -859,6 +859,7 @@ function genColor(gen){
 
 function openSearch(){
   document.getElementById('searchOverlay').classList.add('open');
+  switchSearchTab('search');
   const input = document.getElementById('searchInput');
   input.value = '';
   renderSearchResults();
@@ -867,6 +868,23 @@ function openSearch(){
 
 function closeSearch(){
   document.getElementById('searchOverlay').classList.remove('open');
+}
+
+function switchSearchTab(tab){
+  document.querySelectorAll('.search-tab').forEach(t=>t.classList.remove('active'));
+  event?.target?.classList?.add('active') || document.querySelector(`.search-tab[onclick*="${tab}"]`)?.classList.add('active');
+  document.getElementById('searchTabContent').style.display = tab === 'search' ? 'block' : 'none';
+  document.getElementById('pathTabContent').style.display = tab === 'path' ? 'block' : 'none';
+  if(tab === 'path'){
+    document.getElementById('pathFromInput').value = '';
+    document.getElementById('pathToInput').value = '';
+    document.getElementById('pathFromResults').innerHTML = '';
+    document.getElementById('pathToResults').innerHTML = '';
+    document.getElementById('pathResult').innerHTML = '';
+    pathFromId = null;
+    pathToId = null;
+    setTimeout(()=> document.getElementById('pathFromInput').focus(), 50);
+  }
 }
 
 function matchesQuery(d, q){
@@ -929,18 +947,12 @@ let pathFromId = null;
 let pathToId = null;
 
 function openPathfinder(){
-  document.getElementById('pathOverlay').classList.add('open');
-  document.getElementById('pathFromInput').value = '';
-  document.getElementById('pathToInput').value = '';
-  document.getElementById('pathFromResults').innerHTML = '';
-  document.getElementById('pathToResults').innerHTML = '';
-  document.getElementById('pathResult').innerHTML = '';
-  pathFromId = null;
-  pathToId = null;
+  document.getElementById('searchOverlay').classList.add('open');
+  setTimeout(()=> switchSearchTab('path'), 0);
 }
 
 function closePathfinder(){
-  document.getElementById('pathOverlay').classList.remove('open');
+  document.getElementById('searchOverlay').classList.remove('open');
 }
 
 function renderPathSuggestions(field){
@@ -1461,34 +1473,55 @@ function renderMindMap(){
     return { id, x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
   });
 
+  // Sort points by angle from center for spiral arm effect
+  const spiralPoints = [...points].sort((a, b)=>{
+    const angleA = Math.atan2(a.y - cy, a.x - cx);
+    const angleB = Math.atan2(b.y - cy, b.x - cx);
+    return angleA - angleB;
+  });
+
   let svg = `<svg class="mind-map-svg" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <radialGradient id="neb1" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#6B4A8A" stop-opacity="0.30"/>
+        <stop offset="0%" stop-color="#6B4A8A" stop-opacity="0.28"/>
+        <stop offset="35%" stop-color="#6B4A8A" stop-opacity="0.14"/>
+        <stop offset="65%" stop-color="#6B4A8A" stop-opacity="0.05"/>
         <stop offset="100%" stop-color="#6B4A8A" stop-opacity="0"/>
       </radialGradient>
       <radialGradient id="neb2" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#2E8A6B" stop-opacity="0.24"/>
+        <stop offset="0%" stop-color="#2E8A6B" stop-opacity="0.22"/>
+        <stop offset="35%" stop-color="#2E8A6B" stop-opacity="0.10"/>
+        <stop offset="65%" stop-color="#2E8A6B" stop-opacity="0.04"/>
         <stop offset="100%" stop-color="#2E8A6B" stop-opacity="0"/>
       </radialGradient>
       <radialGradient id="neb3" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#8A2E5C" stop-opacity="0.24"/>
+        <stop offset="0%" stop-color="#8A2E5C" stop-opacity="0.22"/>
+        <stop offset="35%" stop-color="#8A2E5C" stop-opacity="0.10"/>
+        <stop offset="65%" stop-color="#8A2E5C" stop-opacity="0.04"/>
         <stop offset="100%" stop-color="#8A2E5C" stop-opacity="0"/>
       </radialGradient>
       <radialGradient id="neb4" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#C9A75C" stop-opacity="0.22"/>
+        <stop offset="0%" stop-color="#C9A75C" stop-opacity="0.20"/>
+        <stop offset="35%" stop-color="#C9A75C" stop-opacity="0.09"/>
+        <stop offset="65%" stop-color="#C9A75C" stop-opacity="0.03"/>
         <stop offset="100%" stop-color="#C9A75C" stop-opacity="0"/>
       </radialGradient>
       <radialGradient id="neb5" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#3D5A8A" stop-opacity="0.24"/>
+        <stop offset="0%" stop-color="#3D5A8A" stop-opacity="0.22"/>
+        <stop offset="35%" stop-color="#3D5A8A" stop-opacity="0.10"/>
+        <stop offset="65%" stop-color="#3D5A8A" stop-opacity="0.04"/>
         <stop offset="100%" stop-color="#3D5A8A" stop-opacity="0"/>
       </radialGradient>
       <radialGradient id="neb6" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#8A5A2E" stop-opacity="0.22"/>
+        <stop offset="0%" stop-color="#8A5A2E" stop-opacity="0.20"/>
+        <stop offset="35%" stop-color="#8A5A2E" stop-opacity="0.09"/>
+        <stop offset="65%" stop-color="#8A5A2E" stop-opacity="0.03"/>
         <stop offset="100%" stop-color="#8A5A2E" stop-opacity="0"/>
       </radialGradient>
       <radialGradient id="nebCore" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#F3E9C9" stop-opacity="0.28"/>
+        <stop offset="0%" stop-color="#F3E9C9" stop-opacity="0.26"/>
+        <stop offset="40%" stop-color="#F3E9C9" stop-opacity="0.12"/>
+        <stop offset="70%" stop-color="#F3E9C9" stop-opacity="0.04"/>
         <stop offset="100%" stop-color="#F3E9C9" stop-opacity="0"/>
       </radialGradient>
       <radialGradient id="sg0" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/><stop offset="22%" stop-color="#FFFFFF" stop-opacity="0.45"/><stop offset="60%" stop-color="#FFFFFF" stop-opacity="0.12"/><stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
@@ -1525,9 +1558,52 @@ function renderMindMap(){
     svg += `<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="${br.toFixed(1)}" fill="#EFE6CE" opacity="${bo.toFixed(2)}" class="mm-bg-star" style="--twinkle-delay:${delay}ms"/>`;
   }
 
-  for(let i=0; i<points.length-1; i++){
-    const a = points[i], b = points[i+1];
-    svg += `<path class="mm-thread" d="M ${a.x} ${a.y} L ${b.x} ${b.y}"/>`;
+  for(let i=0; i<spiralPoints.length-1; i++){
+    const a = spiralPoints[i], b = spiralPoints[i+1];
+    const midX = (a.x + b.x) / 2;
+    const midY = (a.y + b.y) / 2;
+    const dx = cx - midX, dy = cy - midY;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    const perpX = dy / dist;
+    const perpY = -dx / dist;
+    const spiralFactor = 25 + dist * 0.2 + i * 5;
+    const cpX = midX + perpX * spiralFactor;
+    const cpY = midY + perpY * spiralFactor;
+    // Star trail: a row of tiny stars along the spiral curve
+    const starCount = 8;
+    for(let s=0; s<starCount; s++){
+      const t = s / starCount;
+      // Quadratic bezier interpolation
+      const bx = (1-t)*(1-t)*a.x + 2*(1-t)*t*cpX + t*t*b.x;
+      const by = (1-t)*(1-t)*a.y + 2*(1-t)*t*cpY + t*t*b.y;
+      const r = 0.6 + (1 - Math.abs(t - 0.5) * 2) * 0.4;  // slightly bigger in middle
+      const op = 0.4 + rand() * 0.4;
+      const delay = Math.floor(rand() * 3000);
+      svg += `<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="${r.toFixed(1)}" fill="#FFF4D0" opacity="${op.toFixed(2)}" class="mm-trail-star" style="--twinkle-delay:${delay}ms"/>`;
+    }
+  }
+  if(spiralPoints.length > 2){
+    const a = spiralPoints[spiralPoints.length - 1];
+    const b = spiralPoints[0];
+    const midX = (a.x + b.x) / 2;
+    const midY = (a.y + b.y) / 2;
+    const dx = cx - midX, dy = cy - midY;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    const perpX = dy / dist;
+    const perpY = -dx / dist;
+    const spiralFactor = 40;
+    const cpX = midX + perpX * spiralFactor;
+    const cpY = midY + perpY * spiralFactor;
+    const starCount = 6;
+    for(let s=0; s<starCount; s++){
+      const t = s / starCount;
+      const bx = (1-t)*(1-t)*a.x + 2*(1-t)*t*cpX + t*t*b.x;
+      const by = (1-t)*(1-t)*a.y + 2*(1-t)*t*cpY + t*t*b.y;
+      const r = 0.5 + rand() * 0.3;
+      const op = 0.3 + rand() * 0.35;
+      const delay = Math.floor(rand() * 3000);
+      svg += `<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="${r.toFixed(1)}" fill="#FFF4D0" opacity="${op.toFixed(2)}" class="mm-trail-star" style="--twinkle-delay:${delay}ms"/>`;
+    }
   }
 
   // Real star colors are near-white with subtle temperature variance (warm/cool), never category-coded
