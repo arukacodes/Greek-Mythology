@@ -526,7 +526,7 @@ function renderDetail(id){
       <span class="astro-icon">🔭</span>
       <div class="astro-text"><span class="astro-label">在夜空中</span>${d.astro || '目前尚無明確對應的天體命名。'}</div>
     </div>
-    ${NODE_EGG_LOOKUP[id] ? `<div class="egg-seal-wrap"><button class="egg-seal" onclick="jumpToEggFromNode('${id}')" title="這裡藏著 ${NODE_EGG_LOOKUP[id].length} 條關於${d.zh}的塵封軼聞" aria-label="查看關於${d.zh}的塵封軼聞">🏺</button></div>` : ''}
+    ${NODE_EGG_LOOKUP[id] ? `<div class="egg-seal-wrap"><button class="egg-seal" onclick="jumpToEggFromNode('${id}')" title="這裡藏著 ${NODE_EGG_LOOKUP[id].length} 條關於${d.zh}的塵封軼聞" aria-label="查看關於${d.zh}的塵封軼聞">🧩</button></div>` : ''}
     <div class="detail-section-title">父母</div>
     <div class="link-row">${parentsChips}</div>
     <div class="detail-section-title">子嗣 / 後代</div>
