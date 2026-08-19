@@ -90,6 +90,7 @@ header h1{
     0 0 60px rgba(255, 215, 100, 0.15);
   animation:titleBreathe 4s ease-in-out infinite;
 }
+header h1.anim-paused{ animation-play-state:paused; }
 @keyframes titleBreathe{
   0%, 100%{
     text-shadow:
@@ -341,6 +342,7 @@ header p{
 @media (prefers-reduced-motion: reduce){
   .egg-card-inner{ transition:none; }
   .sparkle{ display:none; }
+  header h1{ animation:none; }
 }
 
 .legend{

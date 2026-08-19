@@ -185,7 +185,7 @@ function renderNodes(){
       if(d.isRoman) el.setAttribute('data-roman', 'true');
       const typeMeta = d.crossType ? CROSS_TYPE_META[d.crossType] : null;
       el.innerHTML = `
-        <div class="medallion">${generateConstellationSVG(d.id, 64)}</div>
+        <div class="medallion" data-cid="${d.id}"></div>
         <div class="node-name">${d.zh}</div>
         <div class="node-sig">${getSignature(d)}</div>
         <div class="gr">${d.gr}</div>
@@ -264,10 +264,8 @@ function generateConstellationSVG(id, size){
   }
   let dots = '';
   points.forEach(p=>{
-    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*3.2).toFixed(1)}" fill="var(--ring, var(--gold))" opacity="0.10"/>`;
-    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*2.0).toFixed(1)}" fill="var(--ring, var(--gold))" opacity="0.22"/>`;
-    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*1.1).toFixed(1)}" fill="var(--ring, var(--gold))" opacity="0.55"/>`;
-    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*0.55).toFixed(1)}" fill="#FFFBEF"/>`;
+    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*2.2).toFixed(1)}" fill="var(--ring, var(--gold))" opacity="0.20"/>`;
+    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*0.65).toFixed(1)}" fill="#FFFBEF"/>`;
   });
 
   return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${lines}${dots}</svg>`;
@@ -594,19 +592,28 @@ function renderStoryBox(){
   `;
 }
 
+function fillMedallion(node){
+  const m = node.querySelector('.medallion[data-cid]');
+  if(!m) return;
+  const id = m.getAttribute('data-cid');
+  m.innerHTML = generateConstellationSVG(id, 64);
+  m.removeAttribute('data-cid');
+}
+
 function setupRevealObserver(){
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    document.querySelectorAll('.node').forEach(n=>n.classList.add('revealed'));
+    document.querySelectorAll('.node').forEach(n=>{ n.classList.add('revealed'); fillMedallion(n); });
     return;
   }
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{
       if(entry.isIntersecting){
         entry.target.classList.add('revealed');
+        fillMedallion(entry.target);
         io.unobserve(entry.target);
       }
     });
-  }, {threshold:0.15, rootMargin:'0px 0px -40px 0px'});
+  }, {threshold:0.15, rootMargin:'200px 0px 200px 0px'});
   document.querySelectorAll('.node').forEach(n=>io.observe(n));
 }
 
@@ -648,7 +655,19 @@ function setupProgressRail(){
 }
 
 renderNodes();
+function setupHeaderAnimPause(){
+  const h1 = document.querySelector('header h1');
+  if(!h1 || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      h1.classList.toggle('anim-paused', !entry.isIntersecting);
+    });
+  }, {threshold:0});
+  io.observe(h1);
+}
+
 setupRevealObserver();
+setupHeaderAnimPause();
 setupProgressRail();
 (function initSoundButton(){
   const btn = document.getElementById('soundToggle');
