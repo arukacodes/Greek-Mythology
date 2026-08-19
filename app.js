@@ -249,8 +249,10 @@ function generateConstellationSVG(id, size){
   }
   let dots = '';
   points.forEach(p=>{
-    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*2.4).toFixed(1)}" fill="var(--ring, var(--gold))" opacity="0.22"/>`;
-    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${p.r.toFixed(1)}" fill="var(--ring, var(--gold))"/>`;
+    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*3.2).toFixed(1)}" fill="var(--ring, var(--gold))" opacity="0.10"/>`;
+    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*2.0).toFixed(1)}" fill="var(--ring, var(--gold))" opacity="0.22"/>`;
+    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*1.1).toFixed(1)}" fill="var(--ring, var(--gold))" opacity="0.55"/>`;
+    dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r*0.55).toFixed(1)}" fill="#FFFBEF"/>`;
   });
 
   return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${lines}${dots}</svg>`;

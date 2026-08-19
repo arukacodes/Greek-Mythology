@@ -438,9 +438,7 @@ svg#connections{
   height:88px;
   margin:0 auto 8px;
   border-radius:50%;
-  background:
-    radial-gradient(circle at 35% 30%, #fffdf5, var(--card-bg) 65%);
-  border:3px solid var(--ring,var(--gold));
+  background:transparent;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -528,7 +526,6 @@ svg#connections{
 .node[data-gen="echoes"] .medallion{ --ring:var(--echoes); }
 .node[data-gen="modernphil"] .medallion{ --ring:var(--modernphil); }
 .node[data-gen="crosscultural"] .medallion{ --ring:var(--crosscultural); }
-.node[data-roman="true"] .medallion{ border-style:dashed; }
 .node .roman-badge{
   display:inline-block;
   font-size:9px;
