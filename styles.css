@@ -1304,7 +1304,7 @@ footer{
 }
 
 @media (max-width:600px){
-  .path-inputs{ flex-direction:column; }
+  .path-inputs{ grid-template-columns:1fr; }
   .path-arrow{ display:none; }
 }
 
