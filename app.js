@@ -890,6 +890,14 @@ if(document.fonts && document.fonts.ready){
   document.fonts.ready.then(drawConnections);
 }
 
+function scrollToTop(){
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+window.addEventListener('scroll', ()=>{
+  const fab = document.getElementById('backToTopFab');
+  if(fab) fab.classList.toggle('visible', window.scrollY > 400);
+}, {passive:true});
+
 /* ---------- Easter Egg Wall ---------- */
 const EASTER_EGGS = [
   {icon:'🪐', text:'土星真的有一顆衛星叫「潘」——就卡在土星環的一道縫隙裡。'},

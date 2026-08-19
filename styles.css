@@ -1068,8 +1068,35 @@ svg#connections{
 }
 .sound-fab:hover{ transform:scale(1.1); box-shadow:0 5px 14px rgba(0,0,0,0.2); }
 .sound-fab.muted{ opacity:0.55; }
+.back-to-top-fab{
+  position:fixed;
+  left:18px;
+  top:calc(50% - 130px + 44px);
+  z-index:41;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  border:1.5px solid rgba(166,129,46,0.4);
+  background:var(--card-bg);
+  box-shadow:0 3px 10px rgba(0,0,0,0.15);
+  font-size:16px;
+  font-weight:700;
+  color:var(--ink);
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(6px);
+  transition:transform .18s ease, box-shadow .18s ease, opacity .25s ease;
+}
+.back-to-top-fab.visible{ opacity:1; pointer-events:auto; transform:translateY(0); }
+.back-to-top-fab:hover{ transform:scale(1.1); box-shadow:0 5px 14px rgba(0,0,0,0.2); }
 @media (max-width:880px){
   .sound-fab{ left:12px; top:12px; }
+  .back-to-top-fab{ left:12px; top:56px; }
 }
 .rail-dot{
   width:11px;
