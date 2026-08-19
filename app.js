@@ -704,6 +704,29 @@ function jumpToNode(id){
   selectNode(id);
 }
 
+const LEGEND_COLLAPSE_KEY = 'greekMythTree_legendCollapsed_v1';
+function toggleLegend(){
+  const legend = document.getElementById('legend');
+  const arrow = document.getElementById('legendToggleArrow');
+  const label = document.getElementById('legendToggleLabel');
+  const isCollapsed = legend.classList.toggle('collapsed');
+  arrow.style.transform = isCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
+  label.textContent = isCollapsed ? '展開分支導覽' : '收起分支導覽';
+  try{ localStorage.setItem(LEGEND_COLLAPSE_KEY, isCollapsed ? '1' : '0'); }catch(e){}
+}
+(function initLegendState(){
+  let collapsed = false;
+  try{ collapsed = localStorage.getItem(LEGEND_COLLAPSE_KEY) === '1'; }catch(e){}
+  if(collapsed){
+    const legend = document.getElementById('legend');
+    const arrow = document.getElementById('legendToggleArrow');
+    const label = document.getElementById('legendToggleLabel');
+    if(legend) legend.classList.add('collapsed');
+    if(arrow) arrow.style.transform = 'rotate(-90deg)';
+    if(label) label.textContent = '展開分支導覽';
+  }
+})();
+
 function jumpTo(gen){
   document.getElementById('sec-'+gen).scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -953,6 +976,15 @@ const EASTER_EGGS = [
   {icon:'💍', text:'古代文獻記載，亞里斯多德說話帶點口齒不清，卻意外是個講究穿著的人，喜歡戴戒指、留意髮型，跟後世對「哲學家」不修邊幅的刻板印象完全相反。'},
   {icon:'📕', text:'榮格晚年私下記錄自己夢境與異象的手稿《紅書》，他生前始終不敢公開，甚至一度懷疑自己是不是要瘋了——這本書直到他過世近半世紀後的2009年才正式出版。'},
   {icon:'🏫', text:'維根斯坦放棄家族財產後，曾在奧地利偏遠鄉村當過好幾年小學老師，才又回到劍橋重拾哲學研究。'},
+  {icon:'🔥', text:'畫出《維納斯的誕生》的波提切利，晚年成為激進修士薩佛納羅拉的虔誠信徒，據信曾親手將自己早年一些異教神話題材的畫作，投入「虛榮之火」焚毀懺悔。'},
+  {icon:'🪞', text:'卡拉瓦喬畫的那幅《美杜莎》，據信用的正是他自己的臉——他把自己的容貌，畫成了那顆剛被斬下、驚駭萬分的蛇髮女妖頭顱。'},
+  {icon:'⏳', text:'羅丹耗費三十七年打造的《地獄之門》，終其一生都未曾正式完工，也從未在他生前被真正鑄成青銅——我們今天在博物館看到的所有銅像，全部都是他過世後才澆鑄出來的。'},
+  {icon:'⛓️', text:'伊本・西那有一段重要的醫學百科全書著作，是他因政治鬥爭身陷囹圄、被囚禁在法爾達詹城堡期間寫成的。'},
+  {icon:'🌳', text:'孔子的後代族譜，是全世界持續記錄時間最長、最完整的家族世系之一，至今仍能追溯超過兩千五百年、傳承超過八十代。'},
+  {icon:'🐴', text:'尼采精神徹底崩潰的那一刻，據傳是在都靈街頭，他衝上前抱住一匹正被車伕鞭打的馬，泣不成聲——此後他再也沒能真正恢復清醒，餘生都在母親與妹妹的照料下度過。'},
+  {icon:'🏆', text:'卡繆四十四歲便獲頒諾貝爾文學獎，是史上最年輕的得主之一，得獎後僅僅三年，就因車禍猝逝。'},
+  {icon:'📐', text:'維根斯坦曾親自為姐姐設計了一整棟極簡主義風格的住宅，據說他為了門把手的精確尺寸，反覆修改到近乎偏執的程度。'},
+  {icon:'⚔️', text:'寫下《沉思錄》、被後世譽為「哲學家皇帝」的馬可・奧理略，在位期間卻也曾下令鎮壓、迫害當時剛剛興起的基督教信徒。'},
 ];
 
 const EGG_KEY = 'greekMythTree_eggs_v1';
@@ -1499,6 +1531,9 @@ const QUOTE_POOL = [
   {text:'天地有大美而不言。', author:'莊子《知北遊》'},
   {text:'無善無惡心之體，有善有惡意之動。', author:'王陽明（四句教）'},
   {text:'不被慾望所奴役的人，才是真正自由的人。', author:'蘇格拉底（意譯）'},
+  {text:'天才不過就是不斷的努力。', author:'羅丹（傳為）'},
+  {text:'四十而不惑，五十而知天命。', author:'孔子《論語》'},
+  {text:'雕塑，不過是從一個姿態緩緩流向另一個姿態的過程。', author:'羅丹（意譯）'},
 ];
 
 const MILESTONE_COUNTS = [25, 50, 75, 100];

@@ -136,20 +136,26 @@
 <button class="sound-fab" id="soundToggle" onclick="toggleSound()" aria-label="切換音效">🔊</button>
 <nav class="progress-rail" id="progressRail"></nav>
 
-<div class="legend" id="legend">
-  <button data-gen="primordial" style="--dot:#3B2E42" onclick="jumpTo('primordial')"><span class="dot"></span>創世 · 原初神</button>
-  <button data-gen="titan" style="--dot:#6B4A2F" onclick="jumpTo('titan')"><span class="dot"></span>泰坦神族</button>
-  <button data-gen="olympian" style="--dot:#1F4959" onclick="jumpTo('olympian')"><span class="dot"></span>奧林帕斯神族</button>
-  <button data-gen="hero" style="--dot:#B5502E" onclick="jumpTo('hero')"><span class="dot"></span>凡人與命運</button>
-  <button data-gen="nature" style="--dot:#4B6B3A" onclick="jumpTo('nature')"><span class="dot"></span>自然精靈與山林諸神</button>
-  <button data-gen="zodiac" style="--dot:#3D3A6B" onclick="jumpTo('zodiac')"><span class="dot"></span>黃道十二宮</button>
-  <button data-gen="troy" style="--dot:#6B2E3A" onclick="jumpTo('troy')"><span class="dot"></span>特洛伊戰爭與奧德賽</button>
-  <button data-gen="mythconcepts" style="--dot:#8A6D1F" onclick="jumpTo('mythconcepts')"><span class="dot"></span>神話衍生的現代概念</button>
-  <button data-gen="philosophy" style="--dot:#5B5850" onclick="jumpTo('philosophy')"><span class="dot"></span>古典哲學</button>
-  <button data-gen="modernphil" style="--dot:#43575C" onclick="jumpTo('modernphil')"><span class="dot"></span>現代哲學</button>
-  <button data-gen="psychology" style="--dot:#6B3F6B" onclick="jumpTo('psychology')"><span class="dot"></span>現代心理學</button>
-  <button data-gen="arts" style="--dot:#8A4A5C" onclick="jumpTo('arts')"><span class="dot"></span>藝術與文學的回聲</button>
-  <button data-gen="crosscultural" style="--dot:#9C6B3E" onclick="jumpTo('crosscultural')"><span class="dot"></span>跨文化連結</button>
+<div class="legend-wrap">
+  <button class="legend-toggle" id="legendToggle" onclick="toggleLegend()">
+    <span id="legendToggleLabel">收起分支導覽</span>
+    <span class="legend-toggle-arrow" id="legendToggleArrow">▾</span>
+  </button>
+  <div class="legend" id="legend">
+    <button data-gen="primordial" style="--dot:#3B2E42" onclick="jumpTo('primordial')"><span class="dot"></span>創世 · 原初神</button>
+    <button data-gen="titan" style="--dot:#6B4A2F" onclick="jumpTo('titan')"><span class="dot"></span>泰坦神族</button>
+    <button data-gen="olympian" style="--dot:#1F4959" onclick="jumpTo('olympian')"><span class="dot"></span>奧林帕斯神族</button>
+    <button data-gen="hero" style="--dot:#B5502E" onclick="jumpTo('hero')"><span class="dot"></span>凡人與命運</button>
+    <button data-gen="nature" style="--dot:#4B6B3A" onclick="jumpTo('nature')"><span class="dot"></span>自然精靈與山林諸神</button>
+    <button data-gen="zodiac" style="--dot:#3D3A6B" onclick="jumpTo('zodiac')"><span class="dot"></span>黃道十二宮</button>
+    <button data-gen="troy" style="--dot:#6B2E3A" onclick="jumpTo('troy')"><span class="dot"></span>特洛伊戰爭與奧德賽</button>
+    <button data-gen="mythconcepts" style="--dot:#8A6D1F" onclick="jumpTo('mythconcepts')"><span class="dot"></span>神話衍生的現代概念</button>
+    <button data-gen="philosophy" style="--dot:#5B5850" onclick="jumpTo('philosophy')"><span class="dot"></span>古典哲學</button>
+    <button data-gen="modernphil" style="--dot:#43575C" onclick="jumpTo('modernphil')"><span class="dot"></span>現代哲學</button>
+    <button data-gen="psychology" style="--dot:#6B3F6B" onclick="jumpTo('psychology')"><span class="dot"></span>現代心理學</button>
+    <button data-gen="arts" style="--dot:#8A4A5C" onclick="jumpTo('arts')"><span class="dot"></span>藝術與文學的回聲</button>
+    <button data-gen="crosscultural" style="--dot:#9C6B3E" onclick="jumpTo('crosscultural')"><span class="dot"></span>跨文化連結</button>
+  </div>
 </div>
 
 <div class="layout">
