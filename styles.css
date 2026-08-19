@@ -688,6 +688,15 @@ svg#connections{
   text-align:center;
 }
 .detail-empty .icon{ font-size:34px; display:block; margin-bottom:14px; }
+.detail-empty-en{
+  font-family:'Cinzel', serif;
+  font-size:10px;
+  font-weight:400;
+  letter-spacing:0.1em;
+  color:#9a93b8;
+  margin-top:14px;
+  line-height:1.8;
+}
 
 .detail-header{ display:flex; align-items:center; gap:14px; margin-bottom:6px; }
 .detail-medallion{

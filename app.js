@@ -711,7 +711,7 @@ function toggleLegend(){
   const label = document.getElementById('legendToggleLabel');
   const isCollapsed = legend.classList.toggle('collapsed');
   arrow.style.transform = isCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
-  label.textContent = isCollapsed ? '展開分支導覽' : '收起分支導覽';
+  label.textContent = isCollapsed ? '展開分支導覽 Expand' : '收起分支導覽 Collapse';
   try{ localStorage.setItem(LEGEND_COLLAPSE_KEY, isCollapsed ? '1' : '0'); }catch(e){}
 }
 (function initLegendState(){
@@ -723,7 +723,7 @@ function toggleLegend(){
     const label = document.getElementById('legendToggleLabel');
     if(legend) legend.classList.add('collapsed');
     if(arrow) arrow.style.transform = 'rotate(-90deg)';
-    if(label) label.textContent = '展開分支導覽';
+    if(label) label.textContent = '展開分支導覽 Expand';
   }
 })();
 
@@ -1851,7 +1851,7 @@ function renderMindMap(){
 
 /* ---------- Reset exploration progress ---------- */
 function resetExploration(){
-  const confirmed = confirm('確定要重置探索軌跡嗎？這會清空「已探索」進度與意識地圖上的星星，且無法復原。（彩蛋牆的翻牌記錄不受影響）');
+  const confirmed = confirm('確定要重置探索軌跡嗎？這會清空「已探索」進度與意識地圖上的星星，且無法復原。（塵封軼聞的翻牌記錄不受影響）');
   if(!confirmed) return;
 
   visited.clear();

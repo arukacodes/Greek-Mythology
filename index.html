@@ -30,11 +30,11 @@
   </div>
   <p class="oracle-sub">From chaos, the gods awaken... From myth, the world breathes...</p>
   <div class="header-controls">
-    <button class="egg-toggle" id="eggToggle" onclick="openEggWall()">🥚 彩蛋牆 <span class="btn-en">Easter Eggs</span></button>
+    <button class="egg-toggle" id="eggToggle" onclick="openEggWall()">🥚 塵封軼聞 <span class="btn-en">Forgotten Tales</span></button>
     <button class="egg-toggle" id="searchToggle" onclick="openSearch()">🔍 搜尋 <span class="btn-en">Search</span></button>
     <button class="egg-toggle" id="timelineToggle" onclick="openTimeline()">📅 時間軸 <span class="btn-en">Timeline</span></button>
     <button class="egg-toggle" id="mindMapToggle" onclick="openMindMap()">🌌 意識地圖 <span class="btn-en">Consciousness Map</span></button>
-    <button class="egg-toggle" id="philoToggle" onclick="openPhilo()">🎭 哲學抉擇 <span class="btn-en">Choices</span></button>
+    <button class="egg-toggle" id="philoToggle" onclick="openPhilo()">🎭 你的抉擇 <span class="btn-en">Your Choice</span></button>
   </div>
 </header>
 
@@ -42,7 +42,7 @@
   <div class="egg-panel">
     <button class="egg-close" onclick="closeEggWall()">✕</button>
     <div class="egg-header">
-      <h2>🥚 神話 × 現實 彩蛋牆</h2>
+      <h2>🥚 神話 × 現實 塵封軼聞</h2>
       <p class="egg-sub">翻開卡片，看看哪些神話悄悄藏在我們的日常之中</p>
       <span class="egg-progress" id="eggProgress"><span class="dot"></span>已發現 0 / 0</span>
     </div>
@@ -97,7 +97,7 @@
 <div class="util-overlay" id="philoOverlay" onclick="if(event.target===this) closePhilo()">
   <div class="util-panel util-panel-wide">
     <button class="util-close" onclick="closePhilo()">✕</button>
-    <h3 class="util-title">🎭 哲學抉擇</h3>
+    <h3 class="util-title">🎭 你的抉擇</h3>
     <p class="util-sub">沒有標準答案——選完之後，看看你的選擇呼應了樹上哪位思想家</p>
     <div id="philoContent"></div>
   </div>
@@ -138,7 +138,7 @@
 
 <div class="legend-wrap">
   <button class="legend-toggle" id="legendToggle" onclick="toggleLegend()">
-    <span id="legendToggleLabel">收起分支導覽</span>
+    <span id="legendToggleLabel">收起分支導覽 Collapse</span>
     <span class="legend-toggle-arrow" id="legendToggleArrow">▾</span>
   </button>
   <div class="legend" id="legend">
@@ -233,6 +233,7 @@
     <div class="detail-empty" id="detailEmpty">
       <span class="icon">⚱</span>
       點選任一圖章<br>查看該神祇的身世與故事
+      <p class="detail-empty-en">Select any medallion<br>to reveal its story</p>
     </div>
     <div id="detailContent" style="display:none;"></div>
   </aside>
