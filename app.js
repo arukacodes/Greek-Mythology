@@ -1133,6 +1133,7 @@ function renderEggGrid(){
         <span class="egg-emoji">${egg.icon}</span>
         <span class="egg-text">${egg.text}</span>
       </div>
+      <span class="egg-num">${String(i + 1).padStart(3, '0')}</span>
       <div class="egg-dust"></div>
       <div class="egg-shimmer"></div>
     `;
