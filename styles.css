@@ -1618,10 +1618,10 @@ footer{
 }
 
 .comp-core ellipse{
-  fill:rgba(230, 225, 255, 0.4);
+  fill:rgba(200, 195, 220, 0.25);
 }
 .comp-halo ellipse{
-  fill:rgba(230, 225, 255, 0.18);
+  fill:rgba(200, 195, 220, 0.12);
 }
 
 @keyframes companionDrift{
