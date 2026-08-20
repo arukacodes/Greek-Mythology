@@ -111,6 +111,8 @@ function playEggChime(){
   playTone(659.25, 0.3, 'sine', 0.1, 0);
   playTone(830.61, 0.3, 'sine', 0.09, 0.09);
   playTone(1046.5, 0.45, 'triangle', 0.1, 0.18);
+  playTone(1568.0, 0.35, 'sine', 0.06, 0.22);
+  playTone(2093.0, 0.3, 'sine', 0.045, 0.27);
 }
 
 function playPageSound(direction){
@@ -1034,7 +1036,7 @@ function renderEggGrid(){
   if(!grid || grid.childElementCount) { updateEggProgress(); return; }
   EASTER_EGGS.forEach((egg, i)=>{
     const card = document.createElement('div');
-    card.className = 'egg-card' + (discoveredEggs.has(i) ? ' revealed' : '');
+    card.className = 'egg-card shard-' + (i % 4) + (discoveredEggs.has(i) ? ' revealed' : '');
     card.dataset.index = i;
     card.tabIndex = 0;
     card.setAttribute('role', 'button');
@@ -1045,6 +1047,7 @@ function renderEggGrid(){
         <span class="egg-text">${egg.text}</span>
       </div>
       <div class="egg-dust"></div>
+      <div class="egg-shimmer"></div>
     `;
     setupDustWipe(card, i);
     grid.appendChild(card);

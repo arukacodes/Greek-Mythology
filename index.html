@@ -6,7 +6,7 @@
 <title>眾神之外</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@400;600&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -46,7 +46,7 @@
       <p class="egg-sub">翻開卡片，看看哪些神話悄悄藏在我們的日常之中</p>
       <span class="egg-progress" id="eggProgress"><span class="dot"></span>已發現 0 / 0</span>
     </div>
-    <div class="egg-grid" id="eggGrid"></div>
+    <div class="egg-grid" id="eggGrid" onclick="if(event.target===this) closeEggWall()"></div>
   </div>
 </div>
 

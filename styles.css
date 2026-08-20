@@ -119,6 +119,14 @@ header p{
   font-weight:400;
   text-transform:uppercase;
 }
+.oracle-sub{
+  max-width:280px;
+  margin:0 auto;
+  font-size:10px !important;
+  letter-spacing:0.06em !important;
+  line-height:1.7;
+  text-align:center;
+}
 .title-oracle-wrap{
   position:relative;
   display:inline-block;
@@ -287,7 +295,6 @@ header p{
 .egg-card{
   aspect-ratio:1 / 1;
   position:relative;
-  border-radius:12px;
   cursor:pointer;
   background:linear-gradient(160deg, #F3E9C9, #E8D9A8);
   border:1.5px solid var(--gold);
@@ -296,7 +303,16 @@ header p{
   user-select:none;
   -webkit-user-select:none;
   -webkit-touch-callout:none;
+  box-shadow:0 3px 8px rgba(0,0,0,0.18);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
 }
+/* Fragment/shard silhouettes — 4 variants cycled per card for visual variety, instead of a uniform rounded square */
+.egg-card.shard-0{ clip-path:polygon(8% 0%, 100% 0%, 100% 85%, 92% 100%, 0% 100%, 0% 15%); }
+.egg-card.shard-1{ clip-path:polygon(0% 10%, 15% 0%, 100% 0%, 100% 90%, 85% 100%, 0% 100%); }
+.egg-card.shard-2{ clip-path:polygon(5% 0%, 95% 3%, 100% 90%, 88% 100%, 10% 100%, 0% 92%); }
+.egg-card.shard-3{ clip-path:polygon(0% 0%, 95% 0%, 100% 12%, 100% 100%, 8% 100%, 0% 88%); }
+.egg-card.revealed{ transform:scale(1.04) rotate(-1deg); }
+.egg-card.revealed:hover{ transform:scale(1.06) rotate(-1deg); }
 .egg-content{
   position:absolute;
   inset:0;
@@ -305,19 +321,20 @@ header p{
   align-items:center;
   justify-content:flex-start;
   gap:5px;
-  padding:12px 9px 10px;
+  padding:14px 11px 12px;
   overflow-y:auto;
   scrollbar-width:thin;
   scrollbar-color:rgba(166,129,46,0.5) transparent;
 }
 .egg-content::-webkit-scrollbar{ width:4px; }
 .egg-content::-webkit-scrollbar-thumb{ background:rgba(166,129,46,0.5); border-radius:4px; }
-.egg-content .egg-emoji{ font-size:20px; flex-shrink:0; }
+.egg-content .egg-emoji{ font-size:21px; flex-shrink:0; }
 .egg-content .egg-text{
-  font-size:10.5px;
-  line-height:1.45;
+  font-family:'Ma Shan Zheng', 'Noto Serif TC', cursive;
+  font-size:13px;
+  line-height:1.55;
   color:#2A2118;
-  font-family:'Noto Sans TC',sans-serif;
+  letter-spacing:0.02em;
 }
 .egg-dust{
   position:absolute;
@@ -332,10 +349,31 @@ header p{
   transition:opacity .12s linear;
 }
 .egg-card.revealed .egg-dust{ opacity:0 !important; pointer-events:none; transition:opacity .4s ease; }
+/* Shimmer sweep — a bright diagonal streak that plays once across the card the instant it's revealed */
+.egg-shimmer{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  pointer-events:none;
+  background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.85) 48%, rgba(255,250,220,0.95) 52%, transparent 70%);
+  background-size:250% 250%;
+  background-position:-100% -100%;
+  opacity:0;
+}
+.egg-card.revealed .egg-shimmer{
+  animation:egg-shimmer-sweep .9s ease-out forwards;
+}
+@keyframes egg-shimmer-sweep{
+  0%{ opacity:1; background-position:-100% -100%; }
+  60%{ opacity:1; }
+  100%{ opacity:0; background-position:100% 100%; }
+}
 .egg-card:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
 @media (prefers-reduced-motion: reduce){
-  .egg-dust{ transition:none; }
+  .egg-dust, .egg-card{ transition:none; }
   .egg-card.revealed .egg-dust{ transition:none; }
+  .egg-card.revealed .egg-shimmer{ animation:none; display:none; }
+  .egg-card.revealed{ transform:none; }
 }
 
 .sparkle{
@@ -1517,6 +1555,19 @@ footer{
 @media (max-width:600px){
   .path-inputs{ grid-template-columns:1fr; }
   .path-arrow{ display:none; }
+  .header-controls{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:8px;
+    margin-top:16px;
+    padding:0 18px;
+  }
+  .header-controls .egg-toggle{
+    justify-content:center;
+    text-align:center;
+    padding:8px 6px;
+  }
+  .btn-en{ display:none; }
 }
 
 /* ---------- Consciousness Map ---------- */
