@@ -154,6 +154,89 @@ try{
   if(raw) visited = new Set(JSON.parse(raw));
 }catch(e){ /* localStorage unavailable — progress just won't persist */ }
 
+/* ---------- Companion Shadow: the quiet witness ---------- */
+const COMPANION_KEY = 'greekMythTree_companion_v1';
+let companionData = {
+  visited: new Set(),
+  genDistribution: {}
+};
+
+try{
+  const raw = localStorage.getItem(COMPANION_KEY);
+  if(raw){
+    const parsed = JSON.parse(raw);
+    companionData.visited = new Set(parsed.visited || []);
+    companionData.genDistribution = parsed.genDistribution || {};
+  }
+}catch(e){}
+
+function getCompanionPhase(){
+  const count = companionData.visited.size;
+  if(count >= 40) return 5;
+  if(count >= 25) return 4;
+  if(count >= 12) return 3;
+  if(count >= 5) return 2;
+  if(count >= 3) return 1;
+  return 0;
+}
+
+function updateCompanion(id){
+  const d = byId[id];
+  if(!companionData.visited.has(id)){
+    companionData.visited.add(id);
+    companionData.genDistribution[d.gen] = (companionData.genDistribution[d.gen] || 0) + 1;
+  }
+
+  try{
+    localStorage.setItem(COMPANION_KEY, JSON.stringify({
+      visited: [...companionData.visited],
+      genDistribution: companionData.genDistribution
+    }));
+  }catch(e){}
+
+  renderCompanionShadow();
+}
+
+function renderCompanionShadow(){
+  const shadow = document.getElementById('companionShadow');
+  if(!shadow) return;
+
+  const phase = getCompanionPhase();
+
+  if(phase === 0){
+    shadow.classList.remove('present', 'phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5');
+    return;
+  }
+
+  shadow.classList.add('present', 'phase-' + phase);
+
+  // 根据探索倾向微微调整姿势
+  const dominant = getDominantGen();
+  const poses = {
+    olympian: 'translateY(-2px)',
+    philosophy: 'translateX(-1px) translateY(-3px)',
+    hero: 'translateX(1px)',
+    primordial: 'translateY(2px)',
+    nature: 'translateY(-1px)',
+    titan: 'translateX(-2px)',
+    default: ''
+  };
+
+  const form = shadow.querySelector('.companion-form');
+  if(form){
+    form.style.transform = poses[dominant] || poses.default;
+  }
+}
+
+function getDominantGen(){
+  const dist = companionData.genDistribution;
+  let max = 0, dominant = 'olympian';
+  for(const [gen, count] of Object.entries(dist)){
+    if(count > max){ max = count; dominant = gen; }
+  }
+  return dominant;
+}
+
 function markVisited(id){
   const isNew = !visited.has(id);
   visited.add(id);
@@ -413,6 +496,7 @@ function selectNode(id){
 
   storyOpenId = null;
   markVisited(id);
+  updateCompanion(id);
   if(isFirstVisit){ playUnlockChime(); } else { playSelectSound(byId[id].gen); }
   checkScaleEasterEgg(byId[id].gen);
   renderDetail(id);
@@ -848,6 +932,19 @@ function setupProgressRail(){
 }
 
 renderNodes();
+renderCompanionShadow(); // Initialize companion shadow on load
+
+// If user has existing exploration history, load it into companion
+if(visited.size >= 3){
+  visited.forEach(id => {
+    if(!companionData.visited.has(id)){
+      companionData.visited.add(id);
+      const d = byId[id];
+      if(d) companionData.genDistribution[d.gen] = (companionData.genDistribution[d.gen] || 0) + 1;
+    }
+  });
+  renderCompanionShadow();
+}
 function setupHeaderAnimPause(){
   const h1 = document.querySelector('header h1');
   if(!h1 || !('IntersectionObserver' in window)) return;

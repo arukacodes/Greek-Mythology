@@ -136,6 +136,29 @@
 
 <div class="meander-strip"></div>
 
+<div class="companion-shadow" id="companionShadow">
+  <svg viewBox="0 0 70 160" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <filter id="shadowBlur" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
+      </filter>
+      <filter id="shadowGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <g class="companion-form" filter="url(#shadowBlur)">
+      <!-- 人形轮廓 - 默认模糊状态 -->
+      <ellipse class="companion-head" cx="35" cy="22" rx="12" ry="14" fill="rgba(201,168,76,0.6)"/>
+      <path class="companion-body" d="M35,36 Q22,50 20,80 Q18,100 22,130 Q26,145 35,155 Q44,145 48,130 Q52,100 50,80 Q48,50 35,36" fill="rgba(201,168,76,0.5)"/>
+      <path class="companion-arm companion-arm-left" d="M25,55 Q10,65 8,85" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="3" stroke-linecap="round"/>
+      <path class="companion-arm companion-arm-right" d="M45,55 Q60,65 62,85" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="3" stroke-linecap="round"/>
+    </g>
+  </svg>
+</div>
 <button class="sound-fab" id="soundToggle" onclick="toggleSound()" aria-label="切換音效">🔊</button>
 <button class="back-to-top-fab" id="backToTopFab" onclick="scrollToTop()" aria-label="回到頂部">↑</button>
 <nav class="progress-rail" id="progressRail"></nav>

@@ -1585,6 +1585,42 @@ footer{
   .btn-en{ display:none; }
 }
 
+/* ---------- Companion Shadow: the quiet witness ---------- */
+.companion-shadow{
+  position:fixed;
+  left:-30px;
+  top:20vh;
+  width:70px;
+  height:160px;
+  pointer-events:none;
+  z-index:25;
+  opacity:0;
+  transition:opacity 2.5s ease;
+}
+.companion-shadow.present{
+  opacity:0.12;
+  animation:companionBreath 6s ease-in-out infinite;
+}
+.companion-shadow.phase-1{ opacity:0.15; }
+.companion-shadow.phase-2{ opacity:0.18; }
+.companion-shadow.phase-3{ opacity:0.22; }
+.companion-shadow.phase-4{ opacity:0.25; }
+.companion-shadow.phase-5{ opacity:0.28; }
+
+@keyframes companionBreath{
+  0%, 100%{ transform:translateX(0); }
+  50%{ transform:translateX(3px); }
+}
+
+.companion-form{
+  opacity:var(--companion-opacity, 0.5);
+  transition:opacity 1.5s ease, transform 2s ease;
+}
+
+.companion-shadow:hover{
+  opacity:0.08 !important;
+}
+
 /* ---------- Consciousness Map ---------- */
 .mind-map-panel{ width:min(720px, 100%); }
 .mind-map-svg{ display:block; width:100%; height:auto; }
