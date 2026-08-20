@@ -1031,12 +1031,99 @@ try{
   if(raw) discoveredEggs = new Set(JSON.parse(raw));
 }catch(e){ /* ignore */ }
 
+/* ---------- Puzzle-piece geometry for the egg grid ---------- */
+// Deterministic per-edge "who owns the bite" decision — order matters, always called with the
+// canonical (earlier) cell first, so both neighboring cells derive the same answer independently.
+function eggEdgeBiteOwner(r1, c1, r2, c2){
+  const key = r1+'_'+c1+'_'+r2+'_'+c2;
+  let seed = 7;
+  for(let i=0;i<key.length;i++){ seed = (seed * 31 + key.charCodeAt(i)) % 999983; }
+  seed = (seed * 9301 + 49297) % 233280;
+  return (seed / 233280) > 0.5;
+}
+
+function eggGridCols(){
+  return (window.matchMedia && window.matchMedia('(min-width:700px)').matches) ? 4 : 3;
+}
+
+function layoutPuzzlePieces(cols, count){
+  const rows = Math.ceil(count / cols);
+  const pieces = [];
+  for(let i=0;i<count;i++){
+    const r = Math.floor(i / cols), c = i % cols;
+    const top    = (r === 0) ? false : !eggEdgeBiteOwner(r-1, c, r, c);
+    const left   = (c === 0) ? false : !eggEdgeBiteOwner(r, c-1, r, c);
+    const right  = (c === cols-1) ? false : eggEdgeBiteOwner(r, c, r, c+1);
+    const bottom = (r === rows-1) ? false : eggEdgeBiteOwner(r, c, r+1, c);
+    pieces.push({top, right, bottom, left});
+  }
+  return pieces;
+}
+
+// Builds an SVG path for a square with optional concave semicircular "bites" on each edge —
+// entirely inward-cutting, so it never needs the element to overflow its own box.
+function makePuzzlePiecePath(top, right, bottom, left, size){
+  size = size || 100;
+  const bumpR = size * 0.12;
+  const depth = size * 0.15;
+  const mid = size / 2;
+  let d = 'M 0 0 ';
+
+  if(!top){ d += 'L '+size+' 0 '; }
+  else{
+    d += 'L '+(mid-bumpR*1.4)+' 0 ';
+    d += 'C '+(mid-bumpR*1.4)+' '+(depth*0.7)+' '+(mid-bumpR)+' '+depth+' '+mid+' '+depth+' ';
+    d += 'C '+(mid+bumpR)+' '+depth+' '+(mid+bumpR*1.4)+' '+(depth*0.7)+' '+(mid+bumpR*1.4)+' 0 ';
+    d += 'L '+size+' 0 ';
+  }
+  if(!right){ d += 'L '+size+' '+size+' '; }
+  else{
+    d += 'L '+size+' '+(mid-bumpR*1.4)+' ';
+    d += 'C '+(size-depth*0.7)+' '+(mid-bumpR*1.4)+' '+(size-depth)+' '+(mid-bumpR)+' '+(size-depth)+' '+mid+' ';
+    d += 'C '+(size-depth)+' '+(mid+bumpR)+' '+(size-depth*0.7)+' '+(mid+bumpR*1.4)+' '+size+' '+(mid+bumpR*1.4)+' ';
+    d += 'L '+size+' '+size+' ';
+  }
+  if(!bottom){ d += 'L 0 '+size+' '; }
+  else{
+    d += 'L '+(mid+bumpR*1.4)+' '+size+' ';
+    d += 'C '+(mid+bumpR*1.4)+' '+(size-depth*0.7)+' '+(mid+bumpR)+' '+(size-depth)+' '+mid+' '+(size-depth)+' ';
+    d += 'C '+(mid-bumpR)+' '+(size-depth)+' '+(mid-bumpR*1.4)+' '+(size-depth*0.7)+' '+(mid-bumpR*1.4)+' '+size+' ';
+    d += 'L 0 '+size+' ';
+  }
+  if(!left){ d += 'L 0 0 '; }
+  else{
+    d += 'L 0 '+(mid+bumpR*1.4)+' ';
+    d += 'C '+(depth*0.7)+' '+(mid+bumpR*1.4)+' '+depth+' '+(mid+bumpR)+' '+depth+' '+mid+' ';
+    d += 'C '+depth+' '+(mid-bumpR)+' '+(depth*0.7)+' '+(mid-bumpR*1.4)+' 0 '+(mid-bumpR*1.4)+' ';
+    d += 'L 0 0 ';
+  }
+  d += 'Z';
+  return d;
+}
+
+function applyPuzzleClipPaths(){
+  const defs = document.getElementById('eggPuzzleDefs');
+  const grid = document.getElementById('eggGrid');
+  if(!defs || !grid) return;
+  const cols = eggGridCols();
+  const pieces = layoutPuzzlePieces(cols, EASTER_EGGS.length);
+  defs.innerHTML = pieces.map((p,i)=>
+    '<clipPath id="eggPieceClip'+i+'" clipPathUnits="objectBoundingBox">'+
+      '<path d="'+makePuzzlePiecePath(p.top,p.right,p.bottom,p.left,1)+'"/>'+
+    '</clipPath>'
+  ).join('');
+  grid.querySelectorAll('.egg-card').forEach(card=>{
+    const i = card.dataset.index;
+    card.style.clipPath = 'url(#eggPieceClip'+i+')';
+  });
+}
+
 function renderEggGrid(){
   const grid = document.getElementById('eggGrid');
   if(!grid || grid.childElementCount) { updateEggProgress(); return; }
   EASTER_EGGS.forEach((egg, i)=>{
     const card = document.createElement('div');
-    card.className = 'egg-card shard-' + (i % 4) + (discoveredEggs.has(i) ? ' revealed' : '');
+    card.className = 'egg-card' + (discoveredEggs.has(i) ? ' revealed' : '');
     card.dataset.index = i;
     card.tabIndex = 0;
     card.setAttribute('role', 'button');
@@ -1052,6 +1139,14 @@ function renderEggGrid(){
     setupDustWipe(card, i);
     grid.appendChild(card);
   });
+  applyPuzzleClipPaths();
+  let lastCols = eggGridCols();
+  if(window.matchMedia){
+    window.matchMedia('(min-width:700px)').addEventListener('change', ()=>{
+      const nowCols = eggGridCols();
+      if(nowCols !== lastCols){ lastCols = nowCols; applyPuzzleClipPaths(); }
+    });
+  }
   updateEggProgress();
 }
 

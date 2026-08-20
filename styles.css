@@ -288,8 +288,11 @@ header p{
 
 .egg-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
-  gap:14px;
+  grid-template-columns:repeat(3, 1fr);
+  gap:10px;
+}
+@media (min-width:700px){
+  .egg-grid{ grid-template-columns:repeat(4, 1fr); }
 }
 
 .egg-card{
@@ -307,10 +310,6 @@ header p{
   transition:transform .3s cubic-bezier(.34,1.56,.64,1);
 }
 /* Fragment/shard silhouettes — 4 variants cycled per card for visual variety, instead of a uniform rounded square */
-.egg-card.shard-0{ clip-path:polygon(8% 0%, 100% 0%, 100% 85%, 92% 100%, 0% 100%, 0% 15%); }
-.egg-card.shard-1{ clip-path:polygon(0% 10%, 15% 0%, 100% 0%, 100% 90%, 85% 100%, 0% 100%); }
-.egg-card.shard-2{ clip-path:polygon(5% 0%, 95% 3%, 100% 90%, 88% 100%, 10% 100%, 0% 92%); }
-.egg-card.shard-3{ clip-path:polygon(0% 0%, 95% 0%, 100% 12%, 100% 100%, 8% 100%, 0% 88%); }
 .egg-card.revealed{ transform:scale(1.04) rotate(-1deg); }
 .egg-card.revealed:hover{ transform:scale(1.06) rotate(-1deg); }
 .egg-content{
@@ -330,11 +329,13 @@ header p{
 .egg-content::-webkit-scrollbar-thumb{ background:rgba(166,129,46,0.5); border-radius:4px; }
 .egg-content .egg-emoji{ font-size:21px; flex-shrink:0; }
 .egg-content .egg-text{
-  font-family:'Ma Shan Zheng', 'Noto Serif TC', cursive;
-  font-size:13px;
-  line-height:1.55;
+  font-family:'Noto Serif TC', serif;
+  font-weight:600;
+  font-size:11.5px;
+  line-height:1.6;
+  letter-spacing:0.03em;
   color:#2A2118;
-  letter-spacing:0.02em;
+  text-shadow:0 1px 0 rgba(255,255,255,0.4), 0 -1px 0 rgba(0,0,0,0.08);
 }
 .egg-dust{
   position:absolute;
