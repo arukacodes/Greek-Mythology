@@ -1308,61 +1308,20 @@ function layoutPuzzlePieces(cols, count){
   return pieces;
 }
 
-// Builds an SVG path for a square with optional concave semicircular "bites" on each edge —
-// entirely inward-cutting, so it never needs the element to overflow its own box.
+// Diamond glass panels with beveled edges
 function makePuzzlePiecePath(top, right, bottom, left, size){
-  size = size || 100;
-  const bumpR = size * 0.12;
-  const depth = size * 0.15;
-  const mid = size / 2;
-  let d = 'M 0 0 ';
-
-  if(!top){ d += 'L '+size+' 0 '; }
-  else{
-    d += 'L '+(mid-bumpR*1.4)+' 0 ';
-    d += 'C '+(mid-bumpR*1.4)+' '+(depth*0.7)+' '+(mid-bumpR)+' '+depth+' '+mid+' '+depth+' ';
-    d += 'C '+(mid+bumpR)+' '+depth+' '+(mid+bumpR*1.4)+' '+(depth*0.7)+' '+(mid+bumpR*1.4)+' 0 ';
-    d += 'L '+size+' 0 ';
-  }
-  if(!right){ d += 'L '+size+' '+size+' '; }
-  else{
-    d += 'L '+size+' '+(mid-bumpR*1.4)+' ';
-    d += 'C '+(size-depth*0.7)+' '+(mid-bumpR*1.4)+' '+(size-depth)+' '+(mid-bumpR)+' '+(size-depth)+' '+mid+' ';
-    d += 'C '+(size-depth)+' '+(mid+bumpR)+' '+(size-depth*0.7)+' '+(mid+bumpR*1.4)+' '+size+' '+(mid+bumpR*1.4)+' ';
-    d += 'L '+size+' '+size+' ';
-  }
-  if(!bottom){ d += 'L 0 '+size+' '; }
-  else{
-    d += 'L '+(mid+bumpR*1.4)+' '+size+' ';
-    d += 'C '+(mid+bumpR*1.4)+' '+(size-depth*0.7)+' '+(mid+bumpR)+' '+(size-depth)+' '+mid+' '+(size-depth)+' ';
-    d += 'C '+(mid-bumpR)+' '+(size-depth)+' '+(mid-bumpR*1.4)+' '+(size-depth*0.7)+' '+(mid-bumpR*1.4)+' '+size+' ';
-    d += 'L 0 '+size+' ';
-  }
-  if(!left){ d += 'L 0 0 '; }
-  else{
-    d += 'L 0 '+(mid+bumpR*1.4)+' ';
-    d += 'C '+(depth*0.7)+' '+(mid+bumpR*1.4)+' '+depth+' '+(mid+bumpR)+' '+depth+' '+mid+' ';
-    d += 'C '+depth+' '+(mid-bumpR)+' '+(depth*0.7)+' '+(mid-bumpR*1.4)+' 0 '+(mid-bumpR*1.4)+' ';
-    d += 'L 0 0 ';
-  }
-  d += 'Z';
-  return d;
+  const bevel = size * 0.08;
+  // 使用圆角矩形，不再使用菱形
+  const r = bevel;
+  return 'M '+r+' 0 H '+(size-r)+' Q '+size+' 0 '+size+' '+r+' V '+(size-r)+' Q '+size+' '+size+' '+(size-r)+' '+size+' H '+r+' Q 0 '+size+' 0 '+(size-r)+' V '+r+' Q 0 0 '+r+' 0 Z';
 }
 
 function applyPuzzleClipPaths(){
-  const defs = document.getElementById('eggPuzzleDefs');
+  // 不再使用clipPath，让CSS的border-radius处理圆角
   const grid = document.getElementById('eggGrid');
-  if(!defs || !grid) return;
-  const cols = eggGridCols();
-  const pieces = layoutPuzzlePieces(cols, EASTER_EGGS.length);
-  defs.innerHTML = pieces.map((p,i)=>
-    '<clipPath id="eggPieceClip'+i+'" clipPathUnits="objectBoundingBox">'+
-      '<path d="'+makePuzzlePiecePath(p.top,p.right,p.bottom,p.left,1)+'"/>'+
-    '</clipPath>'
-  ).join('');
+  if(!grid) return;
   grid.querySelectorAll('.egg-card').forEach(card=>{
-    const i = card.dataset.index;
-    card.style.clipPath = 'url(#eggPieceClip'+i+')';
+    card.style.clipPath = 'none';
   });
 }
 
@@ -1507,6 +1466,40 @@ function openEggWall(){
 
 function closeEggWall(){
   document.getElementById('eggOverlay').classList.remove('open');
+}
+
+// 重置尘封轶闻进度（调试用）
+function resetEggs(){
+  localStorage.removeItem('easterEggs');
+  location.reload();
+}
+
+// 强制显示未翻开状态（同时清空localStorage）
+function forceUnrevealed(){
+  localStorage.removeItem('easterEggs');
+  discoveredEggs = new Set();
+  const cards = document.querySelectorAll('.egg-card');
+  cards.forEach(card => {
+    card.classList.remove('revealed');
+    card.dataset.index && setupDustWipe(card, parseInt(card.dataset.index));
+  });
+  updateEggProgress();
+}
+
+// 测试：显示未翻开的卡片
+function showUnrevealed(){
+  const cards = document.querySelectorAll('.egg-card');
+  cards.forEach(card => {
+    card.classList.remove('revealed');
+    const dust = card.querySelector('.egg-dust');
+    if(dust) dust.style.opacity = '1';
+  });
+}
+
+// 恢复翻开状态
+function restoreRevealed(){
+  const cards = document.querySelectorAll('.egg-card');
+  cards.forEach(card => card.classList.add('revealed'));
 }
 
 /* ---------- Search ---------- */
