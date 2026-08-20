@@ -1599,7 +1599,7 @@ footer{
 }
 .companion-shadow.present{
   opacity:0.12;
-  animation:companionBreath 6s ease-in-out infinite;
+  animation:companionBreathe 5s ease-in-out infinite, companionDrift 7s ease-in-out infinite;
 }
 .companion-shadow.phase-1{ opacity:0.15; }
 .companion-shadow.phase-2{ opacity:0.18; }
@@ -1607,9 +1607,22 @@ footer{
 .companion-shadow.phase-4{ opacity:0.25; }
 .companion-shadow.phase-5{ opacity:0.28; }
 
-@keyframes companionBreath{
-  0%, 100%{ transform:translateX(0); }
-  50%{ transform:translateX(3px); }
+@keyframes companionBreathe{
+  0%, 100%{
+    transform:scaleY(1) scaleX(1);
+    filter:blur(0px);
+  }
+  50%{
+    transform:scaleY(1.03) scaleX(0.98);
+    filter:blur(0.5px);
+  }
+}
+
+@keyframes companionDrift{
+  0%, 100%{ transform:translateX(0) translateY(0) scaleY(1) scaleX(1); }
+  25%{ transform:translateX(2px) translateY(-1px) scaleY(1.02) scaleX(0.99); }
+  50%{ transform:translateX(4px) translateY(0) scaleY(1) scaleX(1); }
+  75%{ transform:translateX(2px) translateY(1px) scaleY(0.98) scaleX(1.01); }
 }
 
 @keyframes companionFloat{

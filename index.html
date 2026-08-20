@@ -151,27 +151,29 @@
       </filter>
     </defs>
     <g class="companion-form" filter="url(#shadowBlur)">
-      <!-- 头部 - 柔和的椭圆 -->
-      <ellipse class="companion-head" cx="35" cy="22" rx="11" ry="13" fill="rgba(201,168,76,0.55)"/>
-      <!-- 身体 - 流动的轮廓，向下渐渐消散 -->
-      <path class="companion-body" d="
-        M35,35
-        C22,40 14,60 12,85
-        C10,100 8,110 6,122
-        C4,128 3,132 4,136
-        M35,35
-        C48,40 56,60 58,85
-        C60,100 62,110 64,122
-        C66,128 67,132 66,136
-      " fill="none" stroke="rgba(201,168,76,0.45)" stroke-width="2" stroke-linecap="round"/>
+      <!-- 整体身形：一条连续流动的线，从头顶蜿蜒向下消散 -->
+      <path class="companion-form-main" d="
+        M35,5
+        C28,8 24,14 24,22
+        C24,30 28,36 35,36
+        C22,42 14,62 12,85
+        C10,102 8,115 6,126
+        C4,132 5,138 8,142
+        M35,36
+        C48,42 56,62 58,85
+        C60,102 62,115 64,126
+        C66,132 65,138 62,142
+      " fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- 内层光晕，填补头部和身体的连接 -->
+      <ellipse class="companion-head-glow" cx="35" cy="22" rx="8" ry="10" fill="rgba(201,168,76,0.15)"/>
       <!-- 向下的散逸线条 -->
-      <path class="companion-disperse" d="M35,48 C35,70 32,90 28,115" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="1.5" stroke-linecap="round"/>
-      <path class="companion-disperse" d="M35,48 C35,75 38,95 42,118" fill="none" stroke="rgba(201,168,76,0.25)" stroke-width="1.2" stroke-linecap="round"/>
-      <path class="companion-disperse" d="M35,55 C34,80 30,100 22,125" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="1" stroke-linecap="round"/>
-      <path class="companion-disperse" d="M35,55 C36,80 40,100 48,128" fill="none" stroke="rgba(201,168,76,0.18)" stroke-width="1" stroke-linecap="round"/>
-      <!-- 微弱的双臂 -->
-      <path class="companion-arm companion-arm-left" d="M22,52 Q14,62 10,78" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="2" stroke-linecap="round"/>
-      <path class="companion-arm companion-arm-right" d="M48,52 Q56,62 60,78" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="2" stroke-linecap="round"/>
+      <path class="companion-disperse" d="M35,48 C35,72 31,95 26,120" fill="none" stroke="rgba(201,168,76,0.28)" stroke-width="1.5" stroke-linecap="round"/>
+      <path class="companion-disperse" d="M35,48 C35,78 40,100 45,122" fill="none" stroke="rgba(201,168,76,0.22)" stroke-width="1.2" stroke-linecap="round"/>
+      <path class="companion-disperse" d="M33,55 C30,82 24,105 16,130" fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="1" stroke-linecap="round"/>
+      <path class="companion-disperse" d="M37,55 C40,82 46,105 54,132" fill="none" stroke="rgba(201,168,76,0.12)" stroke-width="1" stroke-linecap="round"/>
+      <!-- 微微下垂的双臂 -->
+      <path class="companion-arm companion-arm-left" d="M24,50 Q16,58 12,72" fill="none" stroke="rgba(201,168,76,0.25)" stroke-width="1.8" stroke-linecap="round"/>
+      <path class="companion-arm companion-arm-right" d="M46,50 Q54,58 58,72" fill="none" stroke="rgba(201,168,76,0.25)" stroke-width="1.8" stroke-linecap="round"/>
     </g>
   </svg>
 </div>
