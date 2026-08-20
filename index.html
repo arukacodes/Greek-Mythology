@@ -150,30 +150,22 @@
         </feMerge>
       </filter>
     </defs>
-    <g class="companion-form" filter="url(#shadowBlur)">
-      <!-- 整体身形：一条连续流动的线，从头顶蜿蜒向下消散 -->
-      <path class="companion-form-main" d="
-        M35,5
-        C28,8 24,14 24,22
-        C24,30 28,36 35,36
-        C22,42 14,62 12,85
-        C10,102 8,115 6,126
-        C4,132 5,138 8,142
-        M35,36
-        C48,42 56,62 58,85
-        C60,102 62,115 64,126
-        C66,132 65,138 62,142
-      " fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <!-- 内层光晕，填补头部和身体的连接 -->
-      <ellipse class="companion-head-glow" cx="35" cy="22" rx="8" ry="10" fill="rgba(201,168,76,0.15)"/>
-      <!-- 向下的散逸线条 -->
-      <path class="companion-disperse" d="M35,48 C35,72 31,95 26,120" fill="none" stroke="rgba(201,168,76,0.28)" stroke-width="1.5" stroke-linecap="round"/>
-      <path class="companion-disperse" d="M35,48 C35,78 40,100 45,122" fill="none" stroke="rgba(201,168,76,0.22)" stroke-width="1.2" stroke-linecap="round"/>
-      <path class="companion-disperse" d="M33,55 C30,82 24,105 16,130" fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="1" stroke-linecap="round"/>
-      <path class="companion-disperse" d="M37,55 C40,82 46,105 54,132" fill="none" stroke="rgba(201,168,76,0.12)" stroke-width="1" stroke-linecap="round"/>
-      <!-- 微微下垂的双臂 -->
-      <path class="companion-arm companion-arm-left" d="M24,50 Q16,58 12,72" fill="none" stroke="rgba(201,168,76,0.25)" stroke-width="1.8" stroke-linecap="round"/>
-      <path class="companion-arm companion-arm-right" d="M46,50 Q54,58 58,72" fill="none" stroke="rgba(201,168,76,0.25)" stroke-width="1.8" stroke-linecap="round"/>
+    <g class="companion-form">
+      <!-- 核心光团 - 头部 -->
+      <ellipse class="comp-mist comp-mist-1" cx="35" cy="28" rx="14" ry="16"/>
+      <ellipse class="comp-mist comp-mist-2" cx="33" cy="26" rx="10" ry="12"/>
+      <ellipse class="comp-mist comp-mist-3" cx="37" cy="30" rx="8" ry="10"/>
+      <!-- 身体 - 向下的雾气 -->
+      <ellipse class="comp-mist comp-mist-4" cx="35" cy="58" rx="12" ry="18"/>
+      <ellipse class="comp-mist comp-mist-5" cx="33" cy="78" rx="10" ry="16"/>
+      <ellipse class="comp-mist comp-mist-6" cx="36" cy="98" rx="9" ry="14"/>
+      <ellipse class="comp-mist comp-mist-7" cx="35" cy="118" rx="7" ry="12"/>
+      <ellipse class="comp-mist comp-mist-8" cx="34" cy="138" rx="5" ry="10"/>
+      <!-- 飘散的边缘雾气 -->
+      <ellipse class="comp-mist comp-mist-edge" cx="26" cy="65" rx="6" ry="14"/>
+      <ellipse class="comp-mist comp-mist-edge" cx="44" cy="72" rx="5" ry="12"/>
+      <ellipse class="comp-mist comp-mist-edge" cx="28" cy="105" rx="4" ry="10"/>
+      <ellipse class="comp-mist comp-mist-edge" cx="42" cy="115" rx="4" ry="8"/>
     </g>
   </svg>
 </div>

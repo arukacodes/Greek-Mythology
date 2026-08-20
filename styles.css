@@ -1598,14 +1598,36 @@ footer{
   transition:opacity 2.5s ease;
 }
 .companion-shadow.present{
-  opacity:0.12;
-  animation:companionBreathe 5s ease-in-out infinite, companionDrift 7s ease-in-out infinite;
+  opacity:1;
+  animation:companionDrift 8s ease-in-out infinite;
 }
-.companion-shadow.phase-1{ opacity:0.15; }
-.companion-shadow.phase-2{ opacity:0.18; }
-.companion-shadow.phase-3{ opacity:0.22; }
-.companion-shadow.phase-4{ opacity:0.25; }
-.companion-shadow.phase-5{ opacity:0.28; }
+.companion-shadow.phase-1,
+.companion-shadow.phase-2,
+.companion-shadow.phase-3,
+.companion-shadow.phase-4,
+.companion-shadow.phase-5{ opacity:1; }
+
+.comp-mist{
+  fill:rgba(230, 225, 255, 0.25);
+  filter:blur(4px);
+  animation:compMistFloat 6s ease-in-out infinite;
+}
+.comp-mist-1{ animation-delay:0s; }
+.comp-mist-2{ fill:rgba(235, 230, 255, 0.3); filter:blur(3px); animation-delay:-1.5s; }
+.comp-mist-3{ fill:rgba(225, 220, 255, 0.2); filter:blur(5px); animation-delay:-3s; }
+.comp-mist-4{ animation-delay:-2s; }
+.comp-mist-5{ fill:rgba(230, 225, 255, 0.18); filter:blur(5px); animation-delay:-4s; }
+.comp-mist-6{ fill:rgba(230, 225, 255, 0.14); filter:blur(6px); animation-delay:-1s; }
+.comp-mist-7{ fill:rgba(230, 225, 255, 0.1); filter:blur(7px); animation-delay:-3s; }
+.comp-mist-8{ fill:rgba(230, 225, 255, 0.08); filter:blur(8px); animation-delay:-5s; }
+.comp-mist-edge{ fill:rgba(230, 225, 255, 0.12); filter:blur(6px); animation-delay:-2.5s; }
+
+@keyframes compMistFloat{
+  0%, 100%{ transform:translate(0, 0); }
+  25%{ transform:translate(2px, -2px); }
+  50%{ transform:translate(4px, 0); }
+  75%{ transform:translate(2px, 2px); }
+}
 
 @keyframes companionBreathe{
   0%, 100%{
@@ -1623,11 +1645,6 @@ footer{
   25%{ transform:translateX(2px) translateY(-1px) scaleY(1.02) scaleX(0.99); }
   50%{ transform:translateX(4px) translateY(0) scaleY(1) scaleX(1); }
   75%{ transform:translateX(2px) translateY(1px) scaleY(0.98) scaleX(1.01); }
-}
-
-@keyframes companionFloat{
-  0%, 100%{ transform:translateY(0); }
-  50%{ transform:translateY(-4px); }
 }
 
 .companion-disperse{
