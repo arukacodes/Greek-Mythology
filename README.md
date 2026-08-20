@@ -1,16 +1,57 @@
-# 希臘神系圖譜 Greek Mythology Family Tree
+# 眾神之外 · Beyond the Divine
 
-一個互動式希臘神話族譜，繁體中文。從創世混沌到英雄，另外收錄自然精靈（潘、薩堤爾、半人馬…）與黃道十二宮，共 46 個節點，每個都有完整神話故事、天文對應知識，並以可點擊的家族樹／關聯線串連。
+一個關於希臘神話與人類思想的互動地圖。
+An interactive map of Greek mythology and human thought.
 
-## 功能
-- 五個世代分類：原初神 → 泰坦神族 → 奧林帕斯十二主神 → 凡間英雄，外加自然精靈與黃道十二宮兩條支線
-- 點擊圖章查看角色詳情：稱號、象徵、父母／子嗣連結、跨文化對應（如潘與法翁努斯）
-- 📜 完整神話故事（捲軸式閱讀彈窗）
-- 🔭 每個角色對應的真實天文知識（行星、衛星、星座、太空任務）
-- 純 HTML/CSS/JS 單檔案，無需建置流程，本機開啟即可使用
+深淵無名，唯觀者賦予意義。
+The abyss has no name — only the observer gives it meaning.
+
+## 頁面結構
+
+- **首頁 (index.html)** - 踏入命運的黑洞入口
+- **神話世界 (family.html)** - 完整的神話族譜與功能
+
+## 功能特色
+
+- 🌀 黑洞入口動畫
+- ⏳ 載入過渡動畫（隨機神秘訊息）
+- 👁 意識地圖 - 記錄你的探索足跡
+- 🥚 塵封軼聞 Easter Eggs
+- 🔍 搜尋與關係尋路
+- 🎭 思想家抉擇測驗
+- 🌟 時間軸 - 真實歷史人物
+- 🔊 音效系統
+
+## 節點分類
+
+- 原初神 Primordial
+- 泰坦神族 Titans
+- 奧林帕斯神族 Olympians
+- 凡間英雄 Heroes
+- 自然精靈 Nature Spirits
+- 黃道十二宮 Zodiac
+- 特洛伊戰爭 Trojan War
+- 古典哲學 Classical Philosophy
+- 現代哲學 Modern Philosophy
+- 現代心理學 Psychology
+- 藝術與文學 Art & Literature
+- 跨文化連結 Cross-Cultural
+
+## 技術棧
+
+- 原生 HTML/CSS/JavaScript
+- 無需建構工具，直接運行
+- Web Audio API（無外部音頻文件）
 
 ## 使用方式
-直接用瀏覽器開啟 `index.html`，或啟用 GitHub Pages 後透過網址存取。
 
-## 技術
-單一 HTML 檔案，內含所有 CSS 與 JavaScript，資料以 `DATA` 陣列儲存於 `<script>` 區塊中，方便擴充新角色。
+```bash
+# 克隆後直接用瀏覽器打開
+open index.html
+
+# 或啟用 GitHub Pages 線上訪問
+```
+
+## License
+
+MIT
