@@ -137,35 +137,36 @@
 <div class="meander-strip"></div>
 
 <div class="companion-shadow" id="companionShadow">
-  <svg viewBox="0 0 70 160" preserveAspectRatio="xMidYMid meet">
+  <svg viewBox="0 0 90 180" preserveAspectRatio="xMidYMid meet">
     <defs>
-      <filter id="shadowBlur" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
-      </filter>
-      <filter id="shadowGlow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
-        <feMerge>
-          <feMergeNode in="blur"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
+      <filter id="shadowBlur" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
       </filter>
     </defs>
     <g class="companion-form">
-      <!-- 核心光团 - 头部 -->
-      <ellipse class="comp-mist comp-mist-1" cx="35" cy="28" rx="14" ry="16"/>
-      <ellipse class="comp-mist comp-mist-2" cx="33" cy="26" rx="10" ry="12"/>
-      <ellipse class="comp-mist comp-mist-3" cx="37" cy="30" rx="8" ry="10"/>
-      <!-- 身体 - 向下的雾气 -->
-      <ellipse class="comp-mist comp-mist-4" cx="35" cy="58" rx="12" ry="18"/>
-      <ellipse class="comp-mist comp-mist-5" cx="33" cy="78" rx="10" ry="16"/>
-      <ellipse class="comp-mist comp-mist-6" cx="36" cy="98" rx="9" ry="14"/>
-      <ellipse class="comp-mist comp-mist-7" cx="35" cy="118" rx="7" ry="12"/>
-      <ellipse class="comp-mist comp-mist-8" cx="34" cy="138" rx="5" ry="10"/>
+      <!-- 头部 - 较大较圆的 -->
+      <ellipse class="comp-mist comp-mist-head" cx="35" cy="22" rx="16" ry="18"/>
+      <ellipse class="comp-mist comp-mist-head" cx="33" cy="20" rx="12" ry="14"/>
+      <ellipse class="comp-mist comp-mist-head" cx="38" cy="24" rx="10" ry="12"/>
+      <ellipse class="comp-mist comp-mist-head" cx="35" cy="18" rx="8" ry="9"/>
+      <!-- 肩颈连接 - 过渡区域 -->
+      <ellipse class="comp-mist comp-mist-neck" cx="35" cy="42" rx="14" ry="12"/>
+      <ellipse class="comp-mist comp-mist-neck" cx="35" cy="50" rx="16" ry="12"/>
+      <!-- 肩部 - 展开的雾气 -->
+      <ellipse class="comp-mist comp-mist-shoulder" cx="35" cy="58" rx="18" ry="12"/>
+      <ellipse class="comp-mist comp-mist-shoulder" cx="24" cy="60" rx="10" ry="12"/>
+      <ellipse class="comp-mist comp-mist-shoulder" cx="46" cy="60" rx="10" ry="12"/>
+      <!-- 身体 - 向下均匀分布，逐渐消散 -->
+      <ellipse class="comp-mist comp-mist-body" cx="35" cy="76" rx="16" ry="14"/>
+      <ellipse class="comp-mist comp-mist-body" cx="35" cy="94" rx="14" ry="12"/>
+      <ellipse class="comp-mist comp-mist-body" cx="35" cy="112" rx="12" ry="10"/>
+      <ellipse class="comp-mist comp-mist-body" cx="35" cy="128" rx="10" ry="8"/>
       <!-- 飘散的边缘雾气 -->
-      <ellipse class="comp-mist comp-mist-edge" cx="26" cy="65" rx="6" ry="14"/>
-      <ellipse class="comp-mist comp-mist-edge" cx="44" cy="72" rx="5" ry="12"/>
-      <ellipse class="comp-mist comp-mist-edge" cx="28" cy="105" rx="4" ry="10"/>
-      <ellipse class="comp-mist comp-mist-edge" cx="42" cy="115" rx="4" ry="8"/>
+      <ellipse class="comp-mist comp-mist-edge" cx="22" cy="68" rx="8" ry="14"/>
+      <ellipse class="comp-mist comp-mist-edge" cx="48" cy="72" rx="7" ry="12"/>
+      <ellipse class="comp-mist comp-mist-edge" cx="24" cy="98" rx="6" ry="12"/>
+      <ellipse class="comp-mist comp-mist-edge" cx="46" cy="102" rx="5" ry="10"/>
+      <ellipse class="comp-mist comp-mist-edge" cx="26" cy="122" rx="5" ry="8"/>
     </g>
   </svg>
 </div>

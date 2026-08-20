@@ -1588,14 +1588,20 @@ footer{
 /* ---------- Companion Shadow: the quiet witness ---------- */
 .companion-shadow{
   position:fixed;
-  left:-30px;
-  top:20vh;
-  width:70px;
-  height:160px;
+  left:-10px;
+  top:15vh;
+  width:90px;
+  height:180px;
   pointer-events:none;
   z-index:25;
   opacity:0;
   transition:opacity 2.5s ease;
+  overflow:visible;
+}
+.companion-shadow svg{
+  overflow:visible;
+  width:100%;
+  height:100%;
 }
 .companion-shadow.present{
   opacity:1;
@@ -1612,15 +1618,35 @@ footer{
   filter:blur(4px);
   animation:compMistFloat 6s ease-in-out infinite;
 }
-.comp-mist-1{ animation-delay:0s; }
-.comp-mist-2{ fill:rgba(235, 230, 255, 0.3); filter:blur(3px); animation-delay:-1.5s; }
-.comp-mist-3{ fill:rgba(225, 220, 255, 0.2); filter:blur(5px); animation-delay:-3s; }
-.comp-mist-4{ animation-delay:-2s; }
-.comp-mist-5{ fill:rgba(230, 225, 255, 0.18); filter:blur(5px); animation-delay:-4s; }
-.comp-mist-6{ fill:rgba(230, 225, 255, 0.14); filter:blur(6px); animation-delay:-1s; }
-.comp-mist-7{ fill:rgba(230, 225, 255, 0.1); filter:blur(7px); animation-delay:-3s; }
-.comp-mist-8{ fill:rgba(230, 225, 255, 0.08); filter:blur(8px); animation-delay:-5s; }
-.comp-mist-edge{ fill:rgba(230, 225, 255, 0.12); filter:blur(6px); animation-delay:-2.5s; }
+.comp-mist-head{
+  fill:rgba(230, 225, 255, 0.35);
+  filter:blur(5px);
+  animation-delay:0s;
+}
+.comp-mist-neck{
+  fill:rgba(230, 225, 255, 0.35);
+  filter:blur(3px);
+  animation-delay:-1s;
+}
+.comp-mist-shoulder{
+  fill:rgba(230, 225, 255, 0.38);
+  filter:blur(4px);
+  animation-delay:-2s;
+}
+.comp-mist-body{
+  fill:rgba(230, 225, 255, 0.4);
+  filter:blur(4px);
+  animation-delay:-3s;
+}
+.comp-mist-body:nth-child(6){ fill:rgba(230, 225, 255, 0.35); filter:blur(4px); animation-delay:-4s; }
+.comp-mist-body:nth-child(7){ fill:rgba(230, 225, 255, 0.28); filter:blur(5px); animation-delay:-1s; }
+.comp-mist-body:nth-child(8){ fill:rgba(230, 225, 255, 0.22); filter:blur(5px); animation-delay:-2s; }
+.comp-mist-body:nth-child(9){ fill:rgba(230, 225, 255, 0.15); filter:blur(6px); animation-delay:-3.5s; }
+.comp-mist-edge{
+  fill:rgba(230, 225, 255, 0.25);
+  filter:blur(5px);
+  animation-delay:-2.5s;
+}
 
 @keyframes compMistFloat{
   0%, 100%{ transform:translate(0, 0); }
