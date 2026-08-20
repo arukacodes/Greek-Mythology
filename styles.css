@@ -1589,7 +1589,7 @@ footer{
 .companion-shadow{
   position:fixed;
   left:-10px;
-  top:12vh;
+  top:50vh;
   width:100px;
   height:200px;
   pointer-events:none;
@@ -1622,6 +1622,91 @@ footer{
 }
 .comp-halo ellipse{
   fill:rgba(200, 195, 220, 0.12);
+}
+
+/* ---------- Companion Tuner (Dev Only) ---------- */
+.comp-tuner{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -50%);
+  width:280px;
+  max-height:80vh;
+  overflow-y:auto;
+  background:rgba(10, 12, 28, 0.98);
+  border:1px solid rgba(201, 168, 76, 0.5);
+  border-radius:12px;
+  padding:16px;
+  z-index:500;
+  display:none;
+  box-shadow:0 12px 48px rgba(0,0,0,0.6);
+}
+.comp-tuner.open{ display:block; }
+
+.comp-tuner-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(201, 168, 76, 0.2);
+  font-family:'Cinzel', serif;
+  font-size:12px;
+  color:#c9c5d6;
+  letter-spacing:0.08em;
+}
+.comp-tuner-close{
+  background:none;
+  border:none;
+  color:#9a93b8;
+  cursor:pointer;
+  font-size:14px;
+  padding:2px 6px;
+}
+.comp-tuner-close:hover{ color:#c9c5d6; }
+
+.comp-tuner-row{
+  display:grid;
+  grid-template-columns:75px 1fr 35px;
+  align-items:center;
+  gap:8px;
+  margin-bottom:8px;
+}
+.comp-tuner-row label{
+  font-size:11px;
+  color:#9a93b8;
+  font-family:'Noto Sans TC', sans-serif;
+}
+.comp-tuner-row input[type="range"]{
+  width:100%;
+  accent-color:#C9A84C;
+  height:4px;
+}
+.comp-tuner-row span{
+  font-size:11px;
+  color:#c9c5d6;
+  text-align:right;
+  font-family:'Cinzel', serif;
+}
+
+.comp-tuner-reset,
+.comp-tuner-copy{
+  width:48%;
+  padding:8px 4px;
+  margin-top:10px;
+  background:transparent;
+  border:1px solid rgba(201, 168, 76, 0.3);
+  border-radius:6px;
+  color:#9a93b8;
+  font-size:11px;
+  cursor:pointer;
+  font-family:'Noto Sans TC', sans-serif;
+}
+.comp-tuner-copy{ float:right; }
+.comp-tuner-reset:hover,
+.comp-tuner-copy:hover{
+  background:rgba(201, 168, 76, 0.1);
+  color:#c9c5d6;
 }
 
 @keyframes companionDrift{

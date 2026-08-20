@@ -146,47 +146,94 @@
         <feGaussianBlur in="SourceGraphic" stdDeviation="8"/>
       </filter>
     </defs>
-    <g class="companion-form">
+    <g class="companion-form" id="companionForm">
       <!-- 核心雾气层 -->
       <g class="comp-core" filter="url(#mistBlur)">
         <!-- 头部 -->
-        <ellipse cx="50" cy="35" rx="14" ry="16"/>
-        <ellipse cx="48" cy="33" rx="10" ry="12"/>
-        <ellipse cx="52" cy="37" rx="8" ry="10"/>
+        <ellipse class="comp-head" cx="50" cy="35" rx="8" ry="9"/>
+        <ellipse class="comp-head" cx="48" cy="33" rx="6" ry="7"/>
+        <ellipse class="comp-head" cx="52" cy="37" rx="5" ry="6"/>
         <!-- 颈部 -->
-        <ellipse cx="50" cy="48" rx="12" ry="10"/>
+        <ellipse class="comp-neck" cx="50" cy="48" rx="12" ry="10"/>
         <!-- 肩部 -->
-        <ellipse cx="50" cy="58" rx="14" ry="10"/>
-        <ellipse cx="40" cy="60" rx="8" ry="10"/>
-        <ellipse cx="60" cy="60" rx="8" ry="10"/>
+        <ellipse class="comp-shoulder" cx="50" cy="58" rx="14" ry="10"/>
+        <ellipse class="comp-shoulder" cx="40" cy="60" rx="8" ry="10"/>
+        <ellipse class="comp-shoulder" cx="60" cy="60" rx="8" ry="10"/>
         <!-- 躯干主体 -->
-        <ellipse cx="50" cy="75" rx="14" ry="12"/>
-        <ellipse cx="50" cy="92" rx="12" ry="10"/>
-        <ellipse cx="50" cy="108" rx="10" ry="8"/>
-        <ellipse cx="50" cy="124" rx="8" ry="7"/>
-        <ellipse cx="50" cy="138" rx="6" ry="6"/>
-        <!-- 边缘连接雾气 -->
-        <ellipse cx="40" cy="68" rx="8" ry="12"/>
-        <ellipse cx="60" cy="70" rx="7" ry="10"/>
-        <ellipse cx="42" cy="95" rx="6" ry="10"/>
-        <ellipse cx="58" cy="97" rx="6" ry="8"/>
-        <ellipse cx="44" cy="118" rx="5" ry="8"/>
-        <ellipse cx="56" cy="120" rx="5" ry="7"/>
+        <ellipse class="comp-body" cx="50" cy="75" rx="18" ry="12"/>
+        <ellipse class="comp-body" cx="50" cy="90" rx="17" ry="11"/>
+        <ellipse class="comp-body" cx="50" cy="105" rx="16" ry="10"/>
+        <ellipse class="comp-body" cx="50" cy="118" rx="14" ry="9"/>
+        <ellipse class="comp-body" cx="50" cy="130" rx="12" ry="8"/>
+        <ellipse class="comp-body" cx="50" cy="140" rx="10" ry="7"/>
+        <!-- 边缘雾气 -->
+        <ellipse class="comp-edge" cx="40" cy="68" rx="8" ry="12"/>
+        <ellipse class="comp-edge" cx="60" cy="70" rx="7" ry="10"/>
+        <ellipse class="comp-edge" cx="42" cy="95" rx="7" ry="10"/>
+        <ellipse class="comp-edge" cx="58" cy="97" rx="6" ry="9"/>
+        <ellipse class="comp-edge" cx="44" cy="118" rx="6" ry="9"/>
+        <ellipse class="comp-edge" cx="56" cy="120" rx="5" ry="8"/>
+        <ellipse class="comp-edge" cx="46" cy="140" rx="5" ry="7"/>
+        <ellipse class="comp-edge" cx="54" cy="142" rx="5" ry="7"/>
       </g>
       <!-- 外层光晕 -->
+
       <g class="comp-halo" filter="url(#mistBlurLight)">
         <ellipse cx="50" cy="42" rx="18" ry="20"/>
-        <ellipse cx="50" cy="75" rx="18" ry="16"/>
-        <ellipse cx="50" cy="108" rx="14" ry="12"/>
-        <ellipse cx="50" cy="132" rx="10" ry="10"/>
+        <ellipse cx="50" cy="78" rx="18" ry="16"/>
+        <ellipse cx="50" cy="112" rx="16" ry="14"/>
+        <ellipse cx="50" cy="145" rx="14" ry="12"/>
         <ellipse cx="36" cy="64" rx="10" ry="14"/>
         <ellipse cx="64" cy="66" rx="9" ry="12"/>
-        <ellipse cx="40" cy="100" rx="8" ry="12"/>
-        <ellipse cx="60" cy="102" rx="8" ry="10"/>
+        <ellipse cx="40" cy="105" rx="9" ry="13"/>
+        <ellipse cx="60" cy="107" rx="8" ry="11"/>
+        <ellipse cx="42" cy="138" rx="7" ry="10"/>
+        <ellipse cx="58" cy="140" rx="7" ry="10"/>
       </g>
     </g>
   </svg>
 </div>
+
+<!-- 调节面板 -->
+<div class="comp-tuner" id="compTuner">
+  <div class="comp-tuner-header">
+    <span>影子调试</span>
+    <button class="comp-tuner-close" onclick="document.getElementById('compTuner').classList.remove('open')">✕</button>
+  </div>
+  <div class="comp-tuner-row">
+    <label>头部大小</label>
+    <input type="range" min="8" max="30" value="8" oninput="tuneCompanion('headRx', this.value)">
+    <span id="tuneHeadRx">8</span>
+  </div>
+  <div class="comp-tuner-row">
+    <label>身体宽度</label>
+    <input type="range" min="6" max="20" value="18" oninput="tuneCompanion('bodyRx', this.value)">
+    <span id="tuneBodyRx">18</span>
+  </div>
+  <div class="comp-tuner-row">
+    <label>整体亮度</label>
+    <input type="range" min="5" max="50" value="13" oninput="tuneCompanion('brightness', this.value)">
+    <span id="tuneBrightness">13</span>
+  </div>
+  <div class="comp-tuner-row">
+    <label>模糊程度</label>
+    <input type="range" min="2" max="15" value="11" oninput="tuneCompanion('blur', this.value)">
+    <span id="tuneBlur">11</span>
+  </div>
+  <div class="comp-tuner-row">
+    <label>垂直位置</label>
+    <input type="range" min="5" max="50" value="50" oninput="tuneCompanion('top', this.value)">
+    <span id="tuneTop">50</span>
+  </div>
+  <div class="comp-tuner-row">
+    <label>身体长度</label>
+    <input type="range" min="30" max="100" value="61" oninput="tuneCompanion('bodyLen', this.value)">
+    <span id="tuneBodyLen">61</span>
+  </div>
+  <button class="comp-tuner-reset" onclick="resetCompanionTuner()">重置</button>
+  <button class="comp-tuner-copy" onclick="copyCompanionValues()">复制数值</button>
+</div>
+
 <button class="sound-fab" id="soundToggle" onclick="toggleSound()" aria-label="切換音效">🔊</button>
 <button class="back-to-top-fab" id="backToTopFab" onclick="scrollToTop()" aria-label="回到頂部">↑</button>
 <nav class="progress-rail" id="progressRail"></nav>

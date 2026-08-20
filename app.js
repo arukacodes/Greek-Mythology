@@ -945,6 +945,157 @@ if(visited.size >= 3){
   });
   renderCompanionShadow();
 }
+
+/* ---------- Companion Tuner (Dev Only) ---------- */
+// 按 Ctrl+Shift+T 打开调试面板
+document.addEventListener('keydown', (e) => {
+  if(e.ctrlKey && e.shiftKey && e.key === 'T'){
+    e.preventDefault();
+    document.getElementById('compTuner').classList.toggle('open');
+  }
+  if(e.key === 'Escape'){
+    document.getElementById('compTuner').classList.remove('open');
+  }
+});
+
+const COMPANION_DEFAULTS = {
+  headRx: 8,
+  neckRx: 12,
+  shoulderRx: 14,
+  bodyRx: 18,
+  edgeRx: 8,
+  haloOpac: 12,
+  brightness: 13,
+  blur: 11,
+  top: 50,
+  bodyLen: 61,
+  width: 100
+};
+
+function tuneCompanion(prop, value){
+  const shadow = document.getElementById('companionShadow');
+  const form = document.getElementById('companionForm');
+  if(!shadow || !form) return;
+
+  const displayVal = document.getElementById('tune' + prop.charAt(0).toUpperCase() + prop.slice(1));
+  if(displayVal) displayVal.textContent = value;
+
+  switch(prop){
+    case 'headRx':
+      form.querySelectorAll('.comp-head').forEach(el => {
+        el.setAttribute('rx', value);
+        el.setAttribute('ry', Math.round(value * 1.15));
+      });
+      break;
+    case 'neckRx':
+      form.querySelectorAll('.comp-neck').forEach(el => {
+        el.setAttribute('rx', value);
+        el.setAttribute('ry', Math.round(value * 0.8));
+      });
+      break;
+    case 'shoulderRx':
+      form.querySelectorAll('.comp-shoulder').forEach(el => {
+        el.setAttribute('rx', value);
+        el.setAttribute('ry', Math.round(value * 0.75));
+      });
+      break;
+    case 'bodyRx':
+      form.querySelectorAll('.comp-body').forEach(el => {
+        el.setAttribute('rx', value);
+      });
+      break;
+    case 'edgeRx':
+      form.querySelectorAll('.comp-edge').forEach(el => {
+        el.setAttribute('rx', value * 0.6);
+        el.setAttribute('ry', value * 1.4);
+      });
+      break;
+    case 'haloOpac':
+      const haloOpac = (value / 100).toFixed(2);
+      form.querySelectorAll('.comp-halo ellipse').forEach(el => {
+        el.style.fill = `rgba(200, 195, 220, ${haloOpac})`;
+      });
+      break;
+    case 'brightness':
+      const bright = Math.round(155 + value * 1.8);
+      const opac = (value / 100).toFixed(2);
+      form.querySelectorAll('.comp-core ellipse').forEach(el => {
+        el.style.fill = `rgba(${bright}, ${bright - 5}, ${bright + 20}, ${opac})`;
+      });
+      break;
+    case 'blur':
+      document.getElementById('mistBlur').setAttribute('stdDeviation', value);
+      document.getElementById('mistBlurLight').setAttribute('stdDeviation', value + 2);
+      break;
+    case 'top':
+      shadow.style.top = value + 'vh';
+      break;
+    case 'bodyLen':
+      const newLen = parseInt(value);
+      // 身体椭圆
+      form.querySelectorAll('.comp-body').forEach((el, i) => {
+        const ratio = i / 5;
+        const newCy = Math.round(75 + newLen * ratio);
+        el.setAttribute('cy', newCy);
+      });
+      // 边缘雾气跟着身体走
+      form.querySelectorAll('.comp-edge').forEach((el, i) => {
+        const baseCy = [68, 70, 95, 97, 118, 120, 140, 142];
+        const baseLen = 80; // 原来的基准长度
+        const ratio = (baseCy[i] - 68) / (142 - 68);
+        const newCy = Math.round(68 + newLen * ratio);
+        el.setAttribute('cy', newCy);
+      });
+      // 外层光晕跟着身体走
+      form.querySelectorAll('.comp-halo ellipse').forEach((el, i) => {
+        const baseCy = [42, 78, 112, 145, 64, 66, 105, 107, 138, 140];
+        const baseLen = 80;
+        const ratio = i < 4 ? i / 3 : i < 6 ? (i - 4) / 2 : 0.5 + (i - 6) / 8;
+        const newCy = Math.round(baseCy[i] * (newLen / baseLen));
+        el.setAttribute('cy', Math.round(newCy));
+      });
+      break;
+    case 'width':
+      shadow.style.width = value + 'px';
+      break;
+  }
+}
+
+function resetCompanionTuner(){
+  Object.entries(COMPANION_DEFAULTS).forEach(([key, val]) => {
+    tuneCompanion(key, val);
+  });
+  // Reset slider displays
+  Object.keys(COMPANION_DEFAULTS).forEach(key => {
+    const el = document.getElementById('tune' + key.charAt(0).toUpperCase() + key.slice(1));
+    if(el) el.textContent = COMPANION_DEFAULTS[key];
+  });
+  // Reset sliders
+  document.querySelectorAll('.comp-tuner-row input').forEach((input, i) => {
+    input.value = Object.values(COMPANION_DEFAULTS)[i];
+  });
+  // Reset width
+  document.getElementById('companionShadow').style.width = '100px';
+}
+
+function copyCompanionValues(){
+  const values = {};
+  document.querySelectorAll('.comp-tuner-row input').forEach((input, i) => {
+    const label = input.closest('.comp-tuner-row').querySelector('label').textContent;
+    values[label] = input.value;
+  });
+  const text = JSON.stringify(values, null, 2);
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.comp-tuner-copy');
+    btn.textContent = '已复制!';
+    setTimeout(() => btn.textContent = '复制数值', 1500);
+  });
+}
+
+// Dev helper: run in console to open tuner
+window.openCompanionTuner = () => {
+  document.getElementById('compTuner').classList.add('open');
+};
 function setupHeaderAnimPause(){
   const h1 = document.querySelector('header h1');
   if(!h1 || !('IntersectionObserver' in window)) return;
