@@ -166,15 +166,44 @@
         <ellipse class="comp-body" cx="50" cy="118" rx="14" ry="9"/>
         <ellipse class="comp-body" cx="50" cy="130" rx="12" ry="8"/>
         <ellipse class="comp-body" cx="50" cy="140" rx="10" ry="7"/>
-        <!-- 边缘雾气 -->
-        <ellipse class="comp-edge" cx="38" cy="68" rx="8" ry="12"/>
-        <ellipse class="comp-edge" cx="62" cy="70" rx="7" ry="10"/>
-        <ellipse class="comp-edge" cx="40" cy="88" rx="7" ry="10"/>
-        <ellipse class="comp-edge" cx="60" cy="90" rx="6" ry="9"/>
-        <ellipse class="comp-edge" cx="42" cy="108" rx="6" ry="9"/>
-        <ellipse class="comp-edge" cx="58" cy="110" rx="5" ry="8"/>
-        <ellipse class="comp-edge" cx="44" cy="125" rx="5" ry="7"/>
-        <ellipse class="comp-edge" cx="56" cy="127" rx="5" ry="7"/>
+      </g>
+      <!-- 脊椎和肋骨 -->
+      <g class="comp-ribs">
+        <!-- 脊椎主干 -->
+        <path d="M 50 48 L 50 75" fill="none" stroke="rgba(255,120,120,0.5)" stroke-width="1.5"/>
+        <!-- 肋骨 - 从脊椎出发，环绕胸腔，再回到同一个脊椎点 -->
+        <!-- 第1对 -->
+        <path d="M 50 50 Q 45 48 42 51 Q 40 55 42 58 Q 45 60 50 58" fill="none" stroke="rgba(255,120,120,0.55)" stroke-width="1"/>
+        <path d="M 50 50 Q 55 48 58 51 Q 60 55 58 58 Q 55 60 50 58" fill="none" stroke="rgba(255,120,120,0.55)" stroke-width="1"/>
+        <!-- 第2对 -->
+        <path d="M 50 53 Q 44 50 41 54 Q 38 59 41 62 Q 44 64 50 62" fill="none" stroke="rgba(255,120,120,0.5)" stroke-width="1"/>
+        <path d="M 50 53 Q 56 50 59 54 Q 62 59 59 62 Q 56 64 50 62" fill="none" stroke="rgba(255,120,120,0.5)" stroke-width="1"/>
+        <!-- 第3对 -->
+        <path d="M 50 56 Q 43 52 40 57 Q 37 63 40 66 Q 43 68 50 66" fill="none" stroke="rgba(255,120,120,0.45)" stroke-width="1"/>
+        <path d="M 50 56 Q 57 52 60 57 Q 63 63 60 66 Q 57 68 50 66" fill="none" stroke="rgba(255,120,120,0.45)" stroke-width="1"/>
+        <!-- 第4对 -->
+        <path d="M 50 59 Q 42 54 39 60 Q 35 67 39 70 Q 42 72 50 70" fill="none" stroke="rgba(255,120,120,0.4)" stroke-width="1"/>
+        <path d="M 50 59 Q 58 54 61 60 Q 65 67 61 70 Q 58 72 50 70" fill="none" stroke="rgba(255,120,120,0.4)" stroke-width="1"/>
+        <!-- 第5对 -->
+        <path d="M 50 62 Q 41 56 38 63 Q 34 71 38 74 Q 41 76 50 74" fill="none" stroke="rgba(255,120,120,0.35)" stroke-width="1"/>
+        <path d="M 50 62 Q 59 56 62 63 Q 66 71 62 74 Q 59 76 50 74" fill="none" stroke="rgba(255,120,120,0.35)" stroke-width="1"/>
+        <!-- 第6对 -->
+        <path d="M 50 65 Q 40 58 37 66 Q 32 75 37 78 Q 40 80 50 78" fill="none" stroke="rgba(255,120,120,0.3)" stroke-width="1"/>
+        <path d="M 50 65 Q 60 58 63 66 Q 68 75 63 78 Q 60 80 50 78" fill="none" stroke="rgba(255,120,120,0.3)" stroke-width="1"/>
+        <!-- 第7对 -->
+        <path d="M 50 68 Q 39 60 36 69 Q 31 79 36 82 Q 39 84 50 82" fill="none" stroke="rgba(255,120,120,0.25)" stroke-width="1"/>
+        <path d="M 50 68 Q 61 60 64 69 Q 69 79 64 82 Q 61 84 50 82" fill="none" stroke="rgba(255,120,120,0.25)" stroke-width="1"/>
+      </g>
+      <!-- 边缘雾气 -->
+      <g class="comp-edge" filter="url(#mistBlur)">
+        <ellipse cx="38" cy="68" rx="8" ry="12"/>
+        <ellipse cx="62" cy="70" rx="7" ry="10"/>
+        <ellipse cx="40" cy="88" rx="7" ry="10"/>
+        <ellipse cx="60" cy="90" rx="6" ry="9"/>
+        <ellipse cx="42" cy="108" rx="6" ry="9"/>
+        <ellipse cx="58" cy="110" rx="5" ry="8"/>
+        <ellipse cx="44" cy="125" rx="5" ry="7"/>
+        <ellipse cx="56" cy="127" rx="5" ry="7"/>
       </g>
       <!-- 外层光晕 -->
 
@@ -182,13 +211,13 @@
         <ellipse cx="50" cy="42" rx="18" ry="20"/>
         <ellipse cx="50" cy="76" rx="18" ry="16"/>
         <ellipse cx="50" cy="108" rx="16" ry="14"/>
-        <ellipse cx="50" cy="135" rx="14" ry="12"/>
+        <ellipse cx="50" cy="135" rx="10" ry="8" fill="rgba(200, 195, 220, 0.04)"/>
         <ellipse cx="36" cy="64" rx="10" ry="14"/>
         <ellipse cx="64" cy="66" rx="9" ry="12"/>
         <ellipse cx="38" cy="98" rx="9" ry="13"/>
         <ellipse cx="62" cy="100" rx="8" ry="11"/>
-        <ellipse cx="40" cy="125" rx="7" ry="10"/>
-        <ellipse cx="60" cy="127" rx="7" ry="10"/>
+        <ellipse cx="40" cy="125" rx="5" ry="6" fill="rgba(200, 195, 220, 0.04)"/>
+        <ellipse cx="60" cy="127" rx="5" ry="6" fill="rgba(200, 195, 220, 0.04)"/>
       </g>
     </g>
   </svg>
