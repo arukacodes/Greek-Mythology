@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>眾神之外</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs id="eggPuzzleDefs"></defs>
+</svg>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-blackhole">
+    <div class="loading-ring loading-ring-1"></div>
+    <div class="loading-ring loading-ring-2"></div>
+    <div class="loading-ring loading-ring-3"></div>
+    <div class="loading-core"></div>
+  </div>
+  <p class="loading-text">
+    <span class="loading-zh"></span><br>
+    <span class="loading-en"></span>
+  </p>
+</div>
+
+<div class="meander-strip"></div>
+<header>
+  <div class="title-oracle-wrap">
+    <svg class="oracle-arc" viewBox="0 0 340 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <path id="arcTop" d="M 20 75 Q 170 0 320 75" fill="none"/>
+        <path id="arcBottom" d="M 20 25 Q 170 100 320 25" fill="none"/>
+      </defs>
+      <text font-size="9" fill="#9a93b8" font-family="Cinzel, serif" letter-spacing="3">
+        <textPath href="#arcTop" startOffset="50%" text-anchor="middle">WHERE THE GODS END</textPath>
+      </text>
+      <text font-size="9" fill="#9a93b8" font-family="Cinzel, serif" letter-spacing="3">
+        <textPath href="#arcBottom" startOffset="50%" text-anchor="middle">— BEYOND THE DIVINE —</textPath>
+      </text>
+    </svg>
+    <h1>眾神之<span class="gravity-char">外</span></h1>
+      <a href="index.html" class="home-btn"></a>
+  </div>
+  <p class="oracle-sub">From chaos, the gods awaken...<br>From myth, the world breathes...</p>
+  <div class="header-controls">
+    <button class="egg-toggle" id="eggToggle" onclick="openEggWall()">🥚 塵封軼聞 <span class="btn-en">Forgotten Tales</span></button>
+    <button class="egg-toggle" id="searchToggle" onclick="openSearch()">🔍 搜尋 <span class="btn-en">Search</span></button>
+    <button class="egg-toggle" id="timelineToggle" onclick="openTimeline()">📅 時間軸 <span class="btn-en">Timeline</span></button>
+    <button class="egg-toggle" id="mindMapToggle" onclick="openMindMap()">🌌 意識地圖 <span class="btn-en">Consciousness Map</span></button>
+    <button class="egg-toggle" id="philoToggle" onclick="openPhilo()">🎭 你的抉擇 <span class="btn-en">Your Choice</span></button>
+  </div>
+</header>
+
+<div class="egg-overlay" id="eggOverlay" onclick="if(event.target===this) closeEggWall()">
+  <div class="egg-panel">
+    <button class="egg-close" onclick="closeEggWall()">✕</button>
+    <div class="egg-header">
+      <h2>🥚 神話 × 現實 塵封軼聞</h2>
+      <p class="egg-sub">翻開卡片，看看哪些神話悄悄藏在我們的日常之中</p>
+      <span class="egg-progress" id="eggProgress"><span class="dot"></span>已發現 0 / 0</span>
+    </div>
+    <div class="egg-grid" id="eggGrid" onclick="if(event.target===this) closeEggWall()"></div>
+  </div>
+</div>
+
+<div class="util-overlay" id="searchOverlay" onclick="if(event.target===this) closeSearch()">
+  <div class="util-panel util-panel-wide">
+    <button class="util-close" onclick="closeSearch()">✕</button>
+    <h3 class="util-title">🔍 搜尋</h3>
+    <div class="search-tabs">
+      <button class="search-tab active" onclick="switchSearchTab('search')">搜尋角色</button>
+      <button class="search-tab" onclick="switchSearchTab('path')">關係尋路</button>
+    </div>
+    <div id="searchTabContent">
+      <input type="text" class="util-input" id="searchInput" placeholder="輸入中文或英文名字…" oninput="renderSearchResults()" autocomplete="off">
+      <div class="util-results" id="searchResults"></div>
+    </div>
+    <div id="pathTabContent" style="display:none">
+      <p class="util-sub">輸入兩個角色，看看他們之間隔著幾步關係</p>
+      <div class="path-inputs">
+        <div class="path-field">
+          <input type="text" class="util-input" id="pathFromInput" placeholder="起點角色…" oninput="renderPathSuggestions('from')" autocomplete="off">
+          <div class="util-results" id="pathFromResults"></div>
+        </div>
+        <div class="path-arrow">→</div>
+        <div class="path-field">
+          <input type="text" class="util-input" id="pathToInput" placeholder="終點角色…" oninput="renderPathSuggestions('to')" autocomplete="off">
+          <div class="util-results" id="pathToResults"></div>
+        </div>
+      </div>
+      <button class="path-find-btn" onclick="runPathfinder()">尋找路徑</button>
+      <div class="path-result" id="pathResult"></div>
+    </div>
+  </div>
+</div>
+
+<div class="path-banner" id="pathBanner">
+  <span id="pathBannerText"></span>
+</div>
+
+<div class="util-overlay" id="timelineOverlay" onclick="if(event.target===this) closeTimeline()">
+  <div class="util-panel util-panel-timeline">
+    <button class="util-close" onclick="closeTimeline()">✕</button>
+    <h3 class="util-title">📅 真實歷史時間軸</h3>
+    <p class="util-sub">只收錄有明確歷史年代的人物——神話角色沒有「出生年份」，不在此列</p>
+    <div id="timelineContent"></div>
+  </div>
+</div>
+
+<div class="util-overlay" id="philoOverlay" onclick="if(event.target===this) closePhilo()">
+  <div class="util-panel util-panel-wide">
+    <button class="util-close" onclick="closePhilo()">✕</button>
+    <h3 class="util-title">🎭 你的抉擇</h3>
+    <p class="util-sub">沒有標準答案——選完之後，看看你的選擇呼應了樹上哪位思想家</p>
+    <div id="philoContent"></div>
+  </div>
+</div>
+
+<div class="egg-overlay" id="mindMapOverlay" onclick="if(event.target===this) closeMindMap()">
+  <div class="egg-panel mind-map-panel">
+    <button class="egg-close" onclick="closeMindMap()">✕</button>
+    <div class="egg-header">
+      <h2>🌌 你的意識地圖</h2>
+      <p class="egg-sub">只有你親自點開過的角色，會在這裡留下一顆星</p>
+      <span class="egg-progress" id="mindMapProgress"><span class="dot"></span>已建構 0 / 0 個意識座標</span>
+      <button class="mm-reset-link" onclick="resetExploration()">🔄 重置探索軌跡</button>
+    </div>
+    <div id="mindMapContent"></div>
+  </div>
+</div>
+
+<div class="milestone-toast" id="milestoneToast">
+  <div class="milestone-text" id="milestoneText"></div>
+  <div class="milestone-author" id="milestoneAuthor"></div>
+</div>
+
+<div class="egg-overlay" id="completionOverlay" onclick="if(event.target===this) closeCompletion()">
+  <div class="egg-panel completion-panel">
+    <button class="egg-close" onclick="closeCompletion()">✕</button>
+    <div class="completion-icon">🌌</div>
+    <h2 class="completion-title">你已經點亮了整座意識地圖</h2>
+    <div class="completion-body" id="completionBody"></div>
+    <button class="completion-cta" onclick="closeCompletion(); openMindMap();">查看你的意識地圖 →</button>
+  </div>
+</div>
+
+<div class="meander-strip"></div>
+
+<div class="companion-shadow" id="companionShadow">
+  <svg viewBox="0 0 100 200" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <filter id="mistBlur" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="6"/>
+      </filter>
+      <filter id="mistBlurLight" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="8"/>
+      </filter>
+    </defs>
+    <g class="companion-form" id="companionForm">
+      <!-- 核心雾气层 -->
+      <g class="comp-core" filter="url(#mistBlur)">
+        <!-- 头部 -->
+        <ellipse class="comp-head" cx="50" cy="35" rx="8" ry="9"/>
+        <ellipse class="comp-head" cx="48" cy="33" rx="6" ry="7"/>
+        <ellipse class="comp-head" cx="52" cy="37" rx="5" ry="6"/>
+        <!-- 颈部 -->
+        <ellipse class="comp-neck" cx="50" cy="48" rx="12" ry="10"/>
+        <!-- 肩部 -->
+        <ellipse class="comp-shoulder" cx="50" cy="58" rx="14" ry="10"/>
+        <ellipse class="comp-shoulder" cx="40" cy="60" rx="8" ry="10"/>
+        <ellipse class="comp-shoulder" cx="60" cy="60" rx="8" ry="10"/>
+        <!-- 躯干主体 -->
+        <ellipse class="comp-body" cx="50" cy="75" rx="18" ry="12"/>
+        <ellipse class="comp-body" cx="50" cy="90" rx="17" ry="11"/>
+        <ellipse class="comp-body" cx="50" cy="105" rx="16" ry="10"/>
+        <ellipse class="comp-body" cx="50" cy="118" rx="14" ry="9"/>
+        <ellipse class="comp-body" cx="50" cy="130" rx="12" ry="8"/>
+        <ellipse class="comp-body" cx="50" cy="140" rx="10" ry="7"/>
+      </g>
+      <!-- 脊椎和肋骨 -->
+      <g class="comp-ribs">
+        <!-- 脊椎主干 -->
+        <path d="M 50 48 L 50 75" fill="none" stroke="rgba(255,120,120,0.5)" stroke-width="1.5"/>
+        <!-- 肋骨 - 苹果形状，更圆润饱满 -->
+        <!-- 第1对 -->
+        <path d="M 50 50 C 43 48, 38 53, 37 57 C 40 60, 45 59, 50 58" fill="none" stroke="rgba(255,120,120,0.55)" stroke-width="1"/>
+        <path d="M 50 50 C 57 48, 62 53, 63 57 C 60 60, 55 59, 50 58" fill="none" stroke="rgba(255,120,120,0.55)" stroke-width="1"/>
+        <!-- 第2对 -->
+        <path d="M 50 53 C 42 50, 37 56, 36 60 C 39 63, 44 62, 50 61" fill="none" stroke="rgba(255,120,120,0.5)" stroke-width="1"/>
+        <path d="M 50 53 C 58 50, 63 56, 64 60 C 61 63, 56 62, 50 61" fill="none" stroke="rgba(255,120,120,0.5)" stroke-width="1"/>
+        <!-- 第3对 -->
+        <path d="M 50 56 C 41 52, 36 59, 35 63 C 38 66, 44 65, 50 64" fill="none" stroke="rgba(255,120,120,0.45)" stroke-width="1"/>
+        <path d="M 50 56 C 59 52, 64 59, 65 63 C 62 66, 56 65, 50 64" fill="none" stroke="rgba(255,120,120,0.45)" stroke-width="1"/>
+        <!-- 第4对 -->
+        <path d="M 50 59 C 40 54, 35 62, 34 66 C 37 69, 43 68, 50 67" fill="none" stroke="rgba(255,120,120,0.4)" stroke-width="1"/>
+        <path d="M 50 59 C 60 54, 65 62, 66 66 C 63 69, 57 68, 50 67" fill="none" stroke="rgba(255,120,120,0.4)" stroke-width="1"/>
+        <!-- 第5对 -->
+        <path d="M 50 62 C 39 56, 34 65, 33 69 C 36 72, 43 71, 50 70" fill="none" stroke="rgba(255,120,120,0.35)" stroke-width="1"/>
+        <path d="M 50 62 C 61 56, 66 65, 67 69 C 64 72, 57 71, 50 70" fill="none" stroke="rgba(255,120,120,0.35)" stroke-width="1"/>
+        <!-- 第6对 -->
+        <path d="M 50 65 C 38 58, 33 68, 32 72 C 35 75, 42 74, 50 73" fill="none" stroke="rgba(255,120,120,0.3)" stroke-width="1"/>
+        <path d="M 50 65 C 62 58, 67 68, 68 72 C 65 75, 58 74, 50 73" fill="none" stroke="rgba(255,120,120,0.3)" stroke-width="1"/>
+        <!-- 第7对 -->
+        <path d="M 50 68 C 37 60, 32 71, 31 75 C 34 78, 42 77, 50 76" fill="none" stroke="rgba(255,120,120,0.25)" stroke-width="1"/>
+        <path d="M 50 68 C 63 60, 68 71, 69 75 C 66 78, 58 77, 50 76" fill="none" stroke="rgba(255,120,120,0.25)" stroke-width="1"/>
+      </g>
+      <!-- 边缘雾气 -->
+      <g class="comp-edge" filter="url(#mistBlur)">
+        <ellipse cx="38" cy="68" rx="8" ry="12"/>
+        <ellipse cx="62" cy="70" rx="7" ry="10"/>
+        <ellipse cx="40" cy="88" rx="7" ry="10"/>
+        <ellipse cx="60" cy="90" rx="6" ry="9"/>
+        <ellipse cx="42" cy="108" rx="6" ry="9"/>
+        <ellipse cx="58" cy="110" rx="5" ry="8"/>
+        <ellipse cx="44" cy="125" rx="5" ry="7"/>
+        <ellipse cx="56" cy="127" rx="5" ry="7"/>
+      </g>
+      <!-- 外层光晕 -->
+
+      <g class="comp-halo" filter="url(#mistBlurLight)">
+        <ellipse cx="50" cy="42" rx="18" ry="20"/>
+        <ellipse cx="50" cy="76" rx="18" ry="16"/>
+        <ellipse cx="50" cy="108" rx="16" ry="14"/>
+        <ellipse cx="50" cy="135" rx="10" ry="8" fill="rgba(200, 195, 220, 0.04)"/>
+        <ellipse cx="36" cy="64" rx="10" ry="14"/>
+        <ellipse cx="64" cy="66" rx="9" ry="12"/>
+        <ellipse cx="38" cy="98" rx="9" ry="13"/>
+        <ellipse cx="62" cy="100" rx="8" ry="11"/>
+        <ellipse cx="40" cy="125" rx="5" ry="6" fill="rgba(200, 195, 220, 0.04)"/>
+        <ellipse cx="60" cy="127" rx="5" ry="6" fill="rgba(200, 195, 220, 0.04)"/>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<!-- 调节面板 -->
+<div class="comp-tuner" id="compTuner">
+  <div class="comp-tuner-header">
+    <span>影子调试</span>
+    <button class="comp-tuner-close" onclick="document.getElementById('compTuner').classList.remove('open')">✕</button>
+  </div>
+  <div class="comp-tuner-row">
+    <label>头部大小</label>
+    <input type="range" min="8" max="30" value="8" oninput="tuneCompanion('headRx', this.value)">
+    <span id="tuneHeadRx">8</span>
+  </div>
+  <div class="comp-tuner-row">
+    <label>身体宽度</label>
+    <input type="range" min="6" max="20" value="18" oninput="tuneCompanion('bodyRx', this.value)">
+    <span id="tuneBodyRx">18</span>
+  </div>
+  <div class="comp-tuner-row">
+    <label>整体亮度</label>
+    <input type="range" min="5" max="50" value="13" oninput="tuneCompanion('brightness', this.value)">
+    <span id="tuneBrightness">13</span>
+  </div>
+  <div class="comp-tuner-row">
+    <label>模糊程度</label>
+    <input type="range" min="2" max="15" value="11" oninput="tuneCompanion('blur', this.value)">
+    <span id="tuneBlur">11</span>
+  </div>
+  <div class="comp-tuner-row">
+    <label>垂直位置</label>
+    <input type="range" min="5" max="50" value="50" oninput="tuneCompanion('top', this.value)">
+    <span id="tuneTop">50</span>
+  </div>
+  <div class="comp-tuner-row">
+    <label>身体长度</label>
+    <input type="range" min="30" max="100" value="61" oninput="tuneCompanion('bodyLen', this.value)">
+    <span id="tuneBodyLen">61</span>
+  </div>
+  <button class="comp-tuner-reset" onclick="resetCompanionTuner()">重置</button>
+  <button class="comp-tuner-copy" onclick="copyCompanionValues()">复制数值</button>
+</div>
+
+<button class="sound-fab" id="soundToggle" onclick="toggleSound()" aria-label="切換音效">🔊</button>
+<button class="back-to-top-fab" id="backToTopFab" onclick="scrollToTop()" aria-label="回到頂部">↑</button>
+<nav class="progress-rail" id="progressRail"></nav>
+
+<div class="legend-wrap">
+  <button class="legend-toggle" id="legendToggle" onclick="toggleLegend()">
+    <span id="legendToggleLabel">收起分支導覽 Collapse</span>
+    <span class="legend-toggle-arrow" id="legendToggleArrow">▾</span>
+  </button>
+  <div class="legend" id="legend">
+    <button data-gen="primordial" style="--dot:#3B2E42" onclick="jumpTo('primordial')"><span class="dot"></span>創世 · 原初神</button>
+    <button data-gen="titan" style="--dot:#6B4A2F" onclick="jumpTo('titan')"><span class="dot"></span>泰坦神族</button>
+    <button data-gen="olympian" style="--dot:#1F4959" onclick="jumpTo('olympian')"><span class="dot"></span>奧林帕斯神族</button>
+    <button data-gen="hero" style="--dot:#B5502E" onclick="jumpTo('hero')"><span class="dot"></span>凡人與命運</button>
+    <button data-gen="nature" style="--dot:#4B6B3A" onclick="jumpTo('nature')"><span class="dot"></span>自然精靈與山林諸神</button>
+    <button data-gen="zodiac" style="--dot:#3D3A6B" onclick="jumpTo('zodiac')"><span class="dot"></span>黃道十二宮</button>
+    <button data-gen="troy" style="--dot:#6B2E3A" onclick="jumpTo('troy')"><span class="dot"></span>特洛伊戰爭與奧德賽</button>
+    <button data-gen="mythconcepts" style="--dot:#8A6D1F" onclick="jumpTo('mythconcepts')"><span class="dot"></span>神話衍生的現代概念</button>
+    <button data-gen="philosophy" style="--dot:#5B5850" onclick="jumpTo('philosophy')"><span class="dot"></span>古典哲學</button>
+    <button data-gen="modernphil" style="--dot:#43575C" onclick="jumpTo('modernphil')"><span class="dot"></span>現代哲學</button>
+    <button data-gen="psychology" style="--dot:#6B3F6B" onclick="jumpTo('psychology')"><span class="dot"></span>現代心理學</button>
+    <button data-gen="arts" style="--dot:#8A4A5C" onclick="jumpTo('arts')"><span class="dot"></span>藝術與文學的回聲</button>
+    <button data-gen="crosscultural" style="--dot:#9C6B3E" onclick="jumpTo('crosscultural')"><span class="dot"></span>跨文化連結</button>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="tree-wrap" id="treeWrap">
+    <svg id="connections"></svg>
+
+    <div class="gen-section" id="sec-primordial">
+      <div class="gen-label"><span>創世 · 原初神 Primordial</span></div>
+      <div class="gen-row" data-row="primordial"></div>
+    </div>
+
+    <div class="gen-section" id="sec-titan">
+      <div class="gen-label"><span>泰坦神族 Titans</span></div>
+      <div class="gen-row" data-row="titan"></div>
+    </div>
+
+    <div class="gen-section" id="sec-olympian">
+      <div class="gen-label"><span>奧林帕斯神族 Olympians</span></div>
+      <div class="gen-row" data-row="olympian"></div>
+    </div>
+
+    <div class="gen-section" id="sec-hero">
+      <div class="gen-label"><span>凡人與命運 Mortals &amp; Fate</span></div>
+      <div class="gen-row" data-row="hero"></div>
+    </div>
+
+    <div class="gen-section" id="sec-nature">
+      <div class="gen-label"><span>自然精靈與山林諸神 Nature Spirits</span></div>
+      <div class="gen-row" data-row="nature"></div>
+    </div>
+
+    <div class="gen-section" id="sec-zodiac">
+      <div class="gen-label"><span>黃道十二宮 Zodiac</span></div>
+      <div class="gen-row" data-row="zodiac"></div>
+    </div>
+
+    <div class="gen-section" id="sec-troy">
+      <div class="gen-label"><span>特洛伊戰爭與奧德賽 Trojan War &amp; Odyssey</span></div>
+      <div class="gen-row" data-row="troy"></div>
+    </div>
+
+    <div class="gen-section" id="sec-mythconcepts">
+      <div class="gen-label"><span>神話衍生的現代概念 Myth-Derived Concepts</span></div>
+      <div class="gen-row" data-row="mythconcepts"></div>
+    </div>
+
+    <div class="gen-section" id="sec-philosophy">
+      <div class="gen-label"><span>古典哲學 Classical Philosophy</span></div>
+      <div class="gen-row" data-row="philosophy"></div>
+    </div>
+
+    <div class="gen-section" id="sec-modernphil">
+      <div class="gen-label"><span>現代哲學 Modern Philosophy</span></div>
+      <div class="gen-row" data-row="modernphil"></div>
+    </div>
+
+    <div class="gen-section" id="sec-psychology">
+      <div class="gen-label"><span>現代心理學 Modern Psychology</span></div>
+      <div class="gen-row" data-row="psychology"></div>
+    </div>
+
+    <div class="gen-section" id="sec-arts">
+      <div class="gen-label"><span>藝術與文學的回聲 Echoes in Art &amp; Literature</span></div>
+      <div class="gen-row" data-row="arts"></div>
+    </div>
+
+    <div class="gen-section" id="sec-crosscultural">
+      <div class="gen-label"><span>跨文化連結 Cross-Cultural Connections</span></div>
+      <div class="gen-row" data-row="crosscultural"></div>
+    </div>
+  </div>
+
+  <aside class="detail-panel" id="detailPanel">
+    <button class="close-btn" onclick="closePanel()">✕</button>
+    <div class="detail-empty" id="detailEmpty">
+      <span class="icon">⚱</span>
+      點選任一圖章<br>查看該神祇的身世與故事
+      <p class="detail-empty-en">Select any medallion<br>to reveal its story</p>
+    </div>
+    <div id="detailContent" style="display:none;"></div>
+  </aside>
+</div>
+
+<footer>原型 Prototype · 資料為簡化版本，供學習與探索使用</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -931,8 +931,35 @@ function setupProgressRail(){
   document.querySelectorAll('.gen-section').forEach(s=>io.observe(s));
 }
 
+// Random loading text
+const loadingMessages = [
+  { zh: '未能逃逸...', en: 'Failing to escape...' },
+  { zh: '事件視界之內...', en: 'Inside the event horizon...' },
+  { zh: '引力捕獲中...', en: 'Captured by gravity...' },
+  { zh: '它認識你...', en: 'It knows you...' },
+  { zh: '你不是一個人...', en: 'You are not alone...' },
+  { zh: '陰影從未離去...', en: 'The shadow never leaves...' },
+  { zh: '誰在跟隨你...', en: 'Who follows you...' },
+  { zh: '你的足跡，它都看見了...', en: 'It has seen all your footsteps...' },
+  { zh: '記錄正在建立...', en: 'Building a record...' }
+];
+const randomMsg = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+const loadingZh = document.querySelector('.loading-zh');
+const loadingEn = document.querySelector('.loading-en');
+if(loadingZh) loadingZh.textContent = randomMsg.zh;
+if(loadingEn) loadingEn.textContent = randomMsg.en;
+
 renderNodes();
 renderCompanionShadow(); // Initialize companion shadow on load
+
+// Hide loading overlay after content is rendered (minimum 1.2s display)
+const loadingOverlay = document.getElementById('loadingOverlay');
+if(loadingOverlay){
+  setTimeout(() => {
+    loadingOverlay.classList.add('hidden');
+    setTimeout(() => loadingOverlay.remove(), 800);
+  }, 1200);
+}
 
 // If user has existing exploration history, load it into companion
 if(visited.size >= 3){
