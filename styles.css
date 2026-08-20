@@ -1612,6 +1612,21 @@ footer{
   50%{ transform:translateX(3px); }
 }
 
+@keyframes companionFloat{
+  0%, 100%{ transform:translateY(0); }
+  50%{ transform:translateY(-4px); }
+}
+
+.companion-disperse{
+  animation:companionFloat 8s ease-in-out infinite;
+  opacity:0;
+  transition:opacity 2s ease;
+}
+.companion-shadow.present .companion-disperse{ opacity:1; }
+.companion-shadow.present .companion-disperse:nth-child(4){ animation-delay:-2s; }
+.companion-shadow.present .companion-disperse:nth-child(5){ animation-delay:-4s; }
+.companion-shadow.present .companion-disperse:nth-child(6){ animation-delay:-6s; }
+
 .companion-form{
   opacity:var(--companion-opacity, 0.5);
   transition:opacity 1.5s ease, transform 2s ease;

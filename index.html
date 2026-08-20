@@ -151,11 +151,27 @@
       </filter>
     </defs>
     <g class="companion-form" filter="url(#shadowBlur)">
-      <!-- 人形轮廓 - 默认模糊状态 -->
-      <ellipse class="companion-head" cx="35" cy="22" rx="12" ry="14" fill="rgba(201,168,76,0.6)"/>
-      <path class="companion-body" d="M35,36 Q22,50 20,80 Q18,100 22,130 Q26,145 35,155 Q44,145 48,130 Q52,100 50,80 Q48,50 35,36" fill="rgba(201,168,76,0.5)"/>
-      <path class="companion-arm companion-arm-left" d="M25,55 Q10,65 8,85" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="3" stroke-linecap="round"/>
-      <path class="companion-arm companion-arm-right" d="M45,55 Q60,65 62,85" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="3" stroke-linecap="round"/>
+      <!-- 头部 - 柔和的椭圆 -->
+      <ellipse class="companion-head" cx="35" cy="22" rx="11" ry="13" fill="rgba(201,168,76,0.55)"/>
+      <!-- 身体 - 流动的轮廓，向下渐渐消散 -->
+      <path class="companion-body" d="
+        M35,35
+        C22,40 14,60 12,85
+        C10,100 8,110 6,122
+        C4,128 3,132 4,136
+        M35,35
+        C48,40 56,60 58,85
+        C60,100 62,110 64,122
+        C66,128 67,132 66,136
+      " fill="none" stroke="rgba(201,168,76,0.45)" stroke-width="2" stroke-linecap="round"/>
+      <!-- 向下的散逸线条 -->
+      <path class="companion-disperse" d="M35,48 C35,70 32,90 28,115" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+      <path class="companion-disperse" d="M35,48 C35,75 38,95 42,118" fill="none" stroke="rgba(201,168,76,0.25)" stroke-width="1.2" stroke-linecap="round"/>
+      <path class="companion-disperse" d="M35,55 C34,80 30,100 22,125" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="1" stroke-linecap="round"/>
+      <path class="companion-disperse" d="M35,55 C36,80 40,100 48,128" fill="none" stroke="rgba(201,168,76,0.18)" stroke-width="1" stroke-linecap="round"/>
+      <!-- 微弱的双臂 -->
+      <path class="companion-arm companion-arm-left" d="M22,52 Q14,62 10,78" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="2" stroke-linecap="round"/>
+      <path class="companion-arm companion-arm-right" d="M48,52 Q56,62 60,78" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="2" stroke-linecap="round"/>
     </g>
   </svg>
 </div>
