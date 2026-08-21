@@ -154,6 +154,13 @@ header p{
   animation:gravitationalPull 5s ease-in-out infinite;
   will-change:transform;
 }
+/* "之"字的引力效果 - 以左边为支点，向黑洞倾斜 */
+.gravity-char-mid{
+  display:inline-block;
+  transform-origin:left center;
+  animation:gravitationalPullMid 5s ease-in-out infinite;
+  will-change:transform;
+}
 @keyframes gravitationalPull{
   0%, 85%, 100%{
     transform:scaleX(1) skewY(0deg) translateX(0) translateY(0);
@@ -162,6 +169,17 @@ header p{
   50%{
     transform:scaleX(1.08) skewY(-2deg) translateX(3px) translateY(-2px);
     text-shadow:0 0 12px rgba(255, 200, 100, 0.4);
+  }
+}
+/* "之"字引力动画 - 向右上角黑洞，以左边为支点 */
+@keyframes gravitationalPullMid{
+  0%, 85%, 100%{
+    transform:scaleX(1) skewY(0deg) translateX(0) translateY(0);
+    text-shadow:0 0 5px rgba(201, 168, 76, 0.1);
+  }
+  50%{
+    transform:scaleX(1.05) skewY(-1.5deg) translateX(2px) translateY(-1px);
+    text-shadow:0 0 10px rgba(255, 200, 100, 0.35);
   }
 }
 
@@ -246,7 +264,7 @@ header p{
 /* Home button styling - mini black hole, positioned at title */
 .home-btn{
   position:absolute;
-  top:35px;
+  top:18px;
   right:50px;
   display:flex;
   align-items:center;
@@ -294,7 +312,8 @@ header p{
   animation:escapeRotate 10s linear infinite;
   z-index:-1;
   filter:blur(2px);
-  opacity:0.6;
+  opacity:0.05;
+  transition:opacity 0.5s ease;
 }
 @keyframes escapeRotate{
   from{ transform:rotate(360deg); }
@@ -411,6 +430,8 @@ header p{
   animation:diskRotate 6s linear infinite;
   z-index:-1;
   filter:blur(4px);
+  opacity:0;
+  transition:opacity 0.5s ease;
 }
 @keyframes diskRotate{
   from{ transform:rotate(0deg); }
@@ -435,6 +456,8 @@ header p{
   animation:diskRotate 10s linear infinite reverse;
   z-index:-2;
   filter:blur(6px);
+  opacity:0;
+  transition:opacity 0.5s ease;
 }
 /* 被吸入的粒子 - 更亮更多 */
 .enter-btn-vortex{
@@ -473,6 +496,10 @@ header p{
 }
 .enter-btn:hover::before{
   animation-duration:3s;
+  opacity:1;
+}
+.enter-btn:hover::after{
+  opacity:1;
 }
 .enter-btn:active{
   transform:scale(0.95);
