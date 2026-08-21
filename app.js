@@ -3582,7 +3582,6 @@ function showShadowDialogue() {
   const shadow = document.getElementById('companionShadow');
   if (!shadow) return;
 
-  shadowClickCount++;
   const phase = getCompanionPhase();
   const philoScore = companionData.philoScore;
   const hasLetters = companionData.letters && companionData.letters.length > 0;
@@ -3759,10 +3758,148 @@ function setupConsciousnessMirror() {
   }
 }
 
+// 時空裂縫效果開關
+let mirrorEffectEnabled = false;
+
+function loadMirrorEffectSetting() {
+  try {
+    const saved = localStorage.getItem('greekMyth_mirrorEffect');
+    mirrorEffectEnabled = saved === 'true';
+    updateMirrorToggleUI();
+  } catch (e) {}
+}
+
+function saveMirrorEffectSetting() {
+  try {
+    localStorage.setItem('greekMyth_mirrorEffect', mirrorEffectEnabled ? 'true' : 'false');
+  } catch (e) {}
+}
+
+function toggleMirrorEffect() {
+  mirrorEffectEnabled = !mirrorEffectEnabled;
+  saveMirrorEffectSetting();
+  updateMirrorToggleUI();
+}
+
+function updateMirrorToggleUI() {
+  const btn = document.getElementById('mirrorToggle');
+  if (btn) {
+    btn.textContent = mirrorEffectEnabled ? '◉' : '◎';
+    btn.style.opacity = mirrorEffectEnabled ? '0.7' : '0.35';
+  }
+}
+
+// 意識之鏡轉場效果
+function triggerMirrorTransition() {
+  const overlay = document.getElementById('mirror-overlay');
+  if (!overlay) return;
+
+  // 克隆當前畫面到各層
+  const realities = overlay.querySelectorAll('.mirror-reality');
+  realities.forEach((layer, i) => {
+    layer.innerHTML = document.body.innerHTML;
+  });
+
+  // 收集文字碎片：信件 + 哲學選擇
+  const fragments = [];
+  const letters = companionData.letters || [];
+  const choices = companionData.philoChoices || {};
+
+  // 從信件中提取文字
+  letters.forEach(letter => {
+    if (letter.text && letter.text.trim()) {
+      const text = letter.text.trim();
+      // 按標點或長度分割
+      const sentences = text.split(/[。！？、]/).filter(s => s.trim());
+      sentences.forEach(s => {
+        const trimmed = s.trim();
+        if (trimmed.length > 2) {
+          if (trimmed.length > 15) {
+            for (let i = 0; i < trimmed.length; i += 12) {
+              const chunk = trimmed.substring(i, i + 12);
+              if (chunk.trim()) {
+                fragments.push({ type: 'letter', text: chunk.trim() });
+              }
+            }
+          } else {
+            fragments.push({ type: 'letter', text: trimmed });
+          }
+        }
+      });
+    }
+  });
+
+  // 加入哲學選擇
+  Object.keys(choices).forEach(id => {
+    const node = DATA.find(n => n.id === id);
+    if (node && node.zh) {
+      // 選擇的標題 + 故事片段
+      fragments.push({ type: 'choice', text: node.zh });
+      if (node.story) {
+        const shortStory = node.story.substring(0, 20);
+        fragments.push({ type: 'choice', text: shortStory });
+      }
+    }
+  });
+
+  // 如果沒有任何內容，顯示默認碎片
+  if (fragments.length === 0) {
+    fragments.push(
+      { type: 'default', text: '⋯⋯' },
+      { type: 'default', text: '是誰' },
+      { type: 'default', text: '在寫' }
+    );
+  }
+
+  // 在裂縫處顯示痕跡 - 只選直接子元素
+  const creavasses = overlay.querySelectorAll(':scope > .mirror-crevasse');
+
+  creavasses.forEach((crevasse, i) => {
+    // 清空並添加痕跡容器
+    crevasse.innerHTML = '<div class="crevasse-fragments"></div>';
+    const container = crevasse.querySelector('.crevasse-fragments');
+
+    // 選擇要顯示的碎片 - 平均分配到兩條裂縫
+    const midPoint = Math.ceil(fragments.length / 2);
+    const startIdx = i === 0 ? 0 : midPoint;
+    const endIdx = i === 0 ? midPoint : fragments.length;
+    const showFragments = fragments.slice(startIdx, endIdx);
+    const isBottom = i === 1;
+
+    showFragments.forEach((frag, j) => {
+      const span = document.createElement('span');
+      span.className = 'fragment';
+      span.textContent = frag.text;
+
+      // 延遲添加 visible 類，觸發動畫
+      const delay = 0.3 + j * 0.4;
+      setTimeout(() => {
+        span.classList.add('visible');
+      }, delay * 1000);
+
+      container.appendChild(span);
+    });
+  });
+
+  // 播放特殊音效
+  playEtherealShimmer();
+
+  // 激活轉場效果
+  overlay.classList.add('active');
+
+  // 3.5秒後跳轉並清理
+  setTimeout(() => {
+    overlay.classList.remove('active');
+    realities.forEach(layer => { layer.innerHTML = ''; });
+    jumpToNode('consciousness_mirror');
+  }, 3500);
+}
+
 // 初始化影子自我意識系統
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     setupPhilosophyToastOnClick();
+    loadMirrorEffectSetting();
 
     // 為影子添加點擊監聽
     const shadow = document.getElementById('companionShadow');
@@ -3771,14 +3908,15 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         e.stopPropagation();
 
-        // 當點擊次數足夠多且哲學分數足夠高時，有概率進入意識之鏡
-        if (shadowClickCount >= 3 && companionData.philoScore >= 6 && Math.random() < 0.3) {
-          // 播放特殊音效
-          playEtherealShimmer();
-          // 延遲進入，讓對話先消失
-          setTimeout(() => {
+        shadowClickCount++;
+
+        // 意識之鏡：點擊次數、哲學分數足夠時有概率觸發
+        if (shadowClickCount >= 8 && companionData.philoScore >= 6 && Math.random() < 0.25) {
+          if (mirrorEffectEnabled) {
+            triggerMirrorTransition();
+          } else {
             jumpToNode('consciousness_mirror');
-          }, 1500);
+          }
         } else {
           showShadowDialogue();
         }

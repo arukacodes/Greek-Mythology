@@ -2840,6 +2840,168 @@ footer{
 }
 .completion-cta:hover{ background:rgba(166,129,46,0.32); transform:translateY(-1px); }
 
+/* 意識之鏡轉場效果 */
+.mirror-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  background: rgba(10, 8, 15, 0.2);
+}
+
+.mirror-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* 多重現實疊加層 */
+.mirror-reality {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: screen;
+  z-index: 1;
+  opacity: 0;
+}
+
+.mirror-overlay.active .mirror-reality {
+  animation: realityFade 3s ease-in-out forwards;
+}
+
+.mirror-overlay.active .mirror-reality:nth-child(2) {
+  filter: hue-rotate(10deg);
+}
+
+@keyframes realityFade {
+  0% { opacity: 0; }
+  15% { opacity: 0.15; }
+  80% { opacity: 0.15; }
+  100% { opacity: 0; }
+}
+
+/* 時空裂縫 */
+.mirror-crevasse {
+  position: absolute;
+  left: 37.5%;
+  width: 25%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(220, 215, 240, 0.3) 10%,
+    rgba(220, 215, 240, 0.8) 25%,
+    rgba(220, 215, 240, 1) 50%,
+    rgba(220, 215, 240, 0.8) 75%,
+    rgba(220, 215, 240, 0.3) 90%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px 3px rgba(200, 195, 230, 0.25);
+  opacity: 0;
+  overflow: visible;
+  z-index: 100;
+}
+
+.mirror-overlay.active .mirror-crevasse {
+  animation: crevassePulse 3s ease-in-out forwards;
+}
+
+.mirror-overlay.active .mirror-crevasse:nth-child(4) {
+  top: 32%;
+}
+
+.mirror-overlay.active .mirror-crevasse:nth-child(5) {
+  top: 65%;
+}
+
+/* 裂縫脈動光暈 */
+@keyframes crevassePulse {
+  0% { opacity: 0; }
+  10% { opacity: 0.7; }
+  25% { opacity: 1; }
+  50% { opacity: 1; }
+  75% { opacity: 0.9; }
+  85% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 文字碎片 */
+.crevasse-fragments {
+  position: absolute;
+  top: -30px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.fragment {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: rgba(220, 215, 240, 1);
+  text-shadow:
+    0 0 15px rgba(200, 195, 230, 0.8),
+    0 0 30px rgba(200, 195, 230, 0.4);
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.fragment.visible {
+  animation: fragmentFloat 3s ease-out forwards;
+}
+
+/* 文字漂浮動畫：緩慢、靜謐 */
+@keyframes fragmentFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+    letter-spacing: 8px;
+  }
+  20% {
+    opacity: 0.9;
+    transform: translateY(0);
+    letter-spacing: 4px;
+  }
+  80% {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-5px);
+    letter-spacing: 6px;
+  }
+}
+
+/* 掃描線效果 */
+.mirror-scanline {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 4px,
+    rgba(200, 195, 220, 0.015) 4px,
+    rgba(200, 195, 220, 0.015) 5px
+  );
+  pointer-events: none;
+  opacity: 0;
+}
+
+.mirror-overlay.active .mirror-scanline {
+  animation: scanlineFade 3s ease-in-out forwards;
+}
+
+@keyframes scanlineFade {
+  0% { opacity: 0; }
+  20% { opacity: 0.5; }
+  80% { opacity: 0.5; }
+  100% { opacity: 0; }
+}
+
 @media (max-width:600px){
   .milestone-toast{ left:14px; right:14px; max-width:none; }
 }

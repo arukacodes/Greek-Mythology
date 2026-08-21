@@ -11,6 +11,15 @@
 </head>
 <body>
 
+<!-- 意識之鏡轉場效果 -->
+<div id="mirror-overlay" class="mirror-overlay">
+  <div class="mirror-reality"></div>
+  <div class="mirror-reality"></div>
+  <div class="mirror-crevasse"></div>
+  <div class="mirror-crevasse"></div>
+  <div class="mirror-scanline"></div>
+</div>
+
 <svg width="0" height="0" style="position:absolute;overflow:hidden">
   <defs id="eggPuzzleDefs"></defs>
 </svg>
@@ -55,6 +64,7 @@
     <button class="egg-toggle" id="mindMapToggle" onclick="openMindMap()">🌌 意識地圖 <span class="btn-en">Consciousness Map</span></button>
     <button class="egg-toggle" id="philoToggle" onclick="openPhilo()">🎭 你的抉擇 <span class="btn-en">Your Choice</span></button>
     <button class="egg-toggle" id="letterToggle" onclick="openLetter()">✉️ 書寫 <span class="btn-en">Write</span></button>
+    <button class="egg-toggle" id="mirrorToggle" onclick="toggleMirrorEffect()" title="時空效果" style="padding: 8px 10px; font-size: 11px; opacity: 0.35;">◎</button>
   </div>
 </header>
 
