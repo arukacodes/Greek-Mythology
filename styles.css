@@ -246,7 +246,7 @@ header p{
 /* Home button styling - mini black hole, positioned at title */
 .home-btn{
   position:absolute;
-  top:25px;
+  top:35px;
   right:50px;
   display:flex;
   align-items:center;
@@ -1536,7 +1536,7 @@ svg#connections{
 .sound-fab{
   position:fixed;
   left:18px;
-  top:calc(50% - 130px);
+  top:calc(50% - 160px);
   z-index:41;
   width:34px;
   height:34px;
@@ -1557,7 +1557,7 @@ svg#connections{
 .back-to-top-fab{
   position:fixed;
   left:18px;
-  top:calc(50% - 130px + 44px);
+  top:calc(50% - 160px + 44px);
   z-index:41;
   width:34px;
   height:34px;
@@ -1582,7 +1582,7 @@ svg#connections{
 .back-to-top-fab:hover{ transform:scale(1.1); box-shadow:0 5px 14px rgba(0,0,0,0.2); }
 @media (max-width:880px){
   .sound-fab{ left:12px; top:12px; }
-  .back-to-top-fab{ left:12px; top:56px; }
+  .back-to-top-fab{ left:12px; top:48px; }
 }
 .rail-dot{
   width:11px;

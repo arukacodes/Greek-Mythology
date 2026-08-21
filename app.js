@@ -363,8 +363,8 @@ function recordPhiloChoice(philosopherId) {
   // 保存
   saveCompanionData();
 
-  // 如果傾向發生變化，觸發特殊進化動畫
-  if (oldTendency !== newTendency && oldTendency !== 'unknown') {
+  // 如果傾向發生變化（或是首次檢測到傾向），觸發進化動畫
+  if (oldTendency !== newTendency) {
     triggerTendencyShiftAnimation(oldTendency, newTendency);
   }
 
