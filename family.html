@@ -239,7 +239,7 @@
   </svg>
 </div>
 
-<!-- 调节面板 -->
+<!-- 调节面板 - 开发完成后删除 -->
 <div class="comp-tuner" id="compTuner">
   <div class="comp-tuner-header">
     <span>影子调试</span>
@@ -277,6 +277,24 @@
   </div>
   <button class="comp-tuner-reset" onclick="resetCompanionTuner()">重置</button>
   <button class="comp-tuner-copy" onclick="copyCompanionValues()">复制数值</button>
+
+  <!-- 進化測試按鈕 -->
+  <div style="margin-top:16px; padding-top:12px; border-top:1px solid rgba(201,168,76,0.2);">
+    <span style="font-size:10px; color:#9a93b8; font-family:'Noto Sans TC',sans-serif;">測試進化效果</span>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-top:8px;">
+      <button class="tuner-test-btn" onclick="testShadowEvolution('stoicism')">斯多葛</button>
+      <button class="tuner-test-btn" onclick="testShadowEvolution('existentialism')">存在</button>
+      <button class="tuner-test-btn" onclick="testShadowEvolution('rationalism')">理性</button>
+      <button class="tuner-test-btn" onclick="testShadowEvolution('eastern')">東方</button>
+      <button class="tuner-test-btn" onclick="testShadowEvolution('buddhism')">佛教</button>
+      <button class="tuner-test-btn" onclick="testShadowEvolution('skepticism')">懷疑</button>
+      <button class="tuner-test-btn" onclick="testShadowEvolution('epicureanism')">伊壁</button>
+      <button class="tuner-test-btn" onclick="testShadowEvolution('pragmatism')">實用</button>
+    </div>
+    <div style="margin-top:8px;">
+      <button class="comp-tuner-reset" onclick="resetShadowEvolution()" style="width:100%;">重置進化</button>
+    </div>
+  </div>
 </div>
 
 <button class="sound-fab" id="soundToggle" onclick="toggleSound()" aria-label="切換音效">🔊</button>

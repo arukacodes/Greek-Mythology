@@ -2047,13 +2047,21 @@ footer{
   pointer-events:none;
   z-index:25;
   opacity:0;
-  transition:opacity 2.5s ease;
+  transition:
+    opacity 2.5s ease,
+    filter 1.5s ease,
+    transform 1.2s ease;
   overflow:visible;
+  user-select:none;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
 }
 .companion-shadow svg{
   overflow:visible;
   width:100%;
   height:100%;
+  transition:filter 1.5s ease;
 }
 .companion-shadow.present{
   opacity:1;
@@ -2067,13 +2075,16 @@ footer{
 
 .companion-form{
   animation:compMistFloat 8s ease-in-out infinite;
+  transition:transform 1.5s ease;
 }
 
 .comp-core ellipse{
   fill:rgba(200, 195, 220, 0.25);
+  transition:fill 1.5s ease;
 }
 .comp-halo ellipse{
   fill:rgba(200, 195, 220, 0.12);
+  transition:fill 1.5s ease, opacity 1.5s ease;
 }
 
 /* ---------- Companion Tuner (Dev Only) ---------- */
@@ -2161,6 +2172,25 @@ footer{
   color:#c9c5d6;
 }
 
+/* 進化測試按鈕 */
+.tuner-test-btn{
+  width:100%;
+  padding:6px 4px;
+  background:transparent;
+  border:1px solid rgba(201, 168, 76, 0.25);
+  border-radius:4px;
+  color:#9a93b8;
+  font-size:11px;
+  cursor:pointer;
+  font-family:'Noto Sans TC', sans-serif;
+  transition:all .2s ease;
+}
+.tuner-test-btn:hover{
+  background:rgba(201, 168, 76, 0.15);
+  color:#c9c5d6;
+  border-color:rgba(201, 168, 76, 0.5);
+}
+
 @keyframes companionDrift{
   0%, 100%{ transform:translate(0, 0); }
   25%{ transform:translate(3px, -2px); }
@@ -2172,6 +2202,266 @@ footer{
   0%, 100%{ transform:translate(0, 0) scale(1); }
   33%{ transform:translate(4px, -2px) scale(1.02); }
   66%{ transform:translate(2px, 2px) scale(0.98); }
+}
+
+/* ---------- Companion Shadow: Philosophical Evolution ---------- */
+/* 每個傾向都有獨特的視覺語言——深層哲學意義的視覺化 */
+
+/* 傾向轉變動畫 */
+.companion-shadow.tendency-shifting{
+  animation:tendencyPulse 2s ease-in-out;
+}
+
+@keyframes tendencyPulse{
+  0%, 100%{ filter:brightness(1); transform:scale(1); }
+  50%{ filter:brightness(1.5); transform:scale(1.05); }
+}
+
+/* ========== 存在主義：自由墜落 ========== */
+/* 尼采、沙特、卡繆——沒有預定本質，只有選擇與焦慮 */
+/* 戲劇化的不穩定，像是隨時會散去又聚攏的霧氣 */
+.companion-shadow.tendency-existentialism .companion-form{
+  animation:existentialFreefall 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes existentialFreefall{
+  0%{ transform:translateX(-8px) translateY(5px) rotate(-4deg) scaleY(0.95); filter:blur(5px); }
+  20%{ transform:translateX(6px) translateY(-8px) rotate(3deg) scaleY(1.05); filter:blur(4px); }
+  40%{ transform:translateX(-10px) translateY(10px) rotate(-5deg) scaleY(0.9); filter:blur(6px); }
+  60%{ transform:translateX(12px) translateY(-5px) rotate(4deg) scaleY(1.08); filter:blur(3px); }
+  80%{ transform:translateX(-5px) translateY(8px) rotate(-2deg) scaleY(0.92); filter:blur(5px); }
+  100%{ transform:translateX(-8px) translateY(5px) rotate(-4deg) scaleY(0.95); filter:blur(5px); }
+}
+/* 光暈：週期性崩解與重組 */
+.companion-shadow.tendency-existentialism .comp-halo ellipse{
+  animation:existentialDisintegrate 6s ease-in-out infinite;
+}
+@keyframes existentialDisintegrate{
+  0%, 100%{ opacity:0.15; transform:scale(1); filter:blur(3px); }
+  30%{ opacity:0.08; transform:scale(1.1) translateX(5px); filter:blur(8px); }
+  60%{ opacity:0.2; transform:scale(0.92) translateX(-3px); filter:blur(2px); }
+}
+
+/* ========== 斯多葛主義：石化永恆 ========== */
+/* 塞涅卡、愛比克泰德——控制能控制的，接受不能控制的 */
+/* 幾乎靜止，只有微不可察的呼吸 */
+.companion-shadow.tendency-stoicism .companion-form{
+  animation:stoicEternal 20s ease-in-out infinite;
+}
+@keyframes stoicEternal{
+  0%, 100%{ transform:translateX(0) translateY(0) rotate(0deg) scale(1); filter:blur(4px); }
+  50%{ transform:translateX(0) translateY(-1px) rotate(0.2deg) scale(1.005); filter:blur(4px); }
+}
+/* 光暈：微弱到幾乎看不見，像是被內化了 */
+.companion-shadow.tendency-stoicism .comp-halo ellipse{
+  animation:stoicInner 15s ease-in-out infinite;
+}
+@keyframes stoicInner{
+  0%, 100%{ opacity:0.04; transform:scale(0.98); }
+  50%{ opacity:0.06; transform:scale(1.02); }
+}
+
+/* ========== 效益主義：波紋擴散 ========== */
+/* 邊沁、辛格——最大幸福原則，向外擴展的影響力 */
+/* 從核心向外擴散的節奏，像是投入湖中的石子 */
+.companion-shadow.tendency-utilitarianism .companion-form{
+  animation:utilExpand 6s ease-out infinite;
+  transform-origin:bottom center;
+}
+@keyframes utilExpand{
+  0%{ transform:scale(1) translateY(0); filter:blur(4px); }
+  50%{ transform:scale(1.08) translateY(-3px); filter:blur(3px); }
+  100%{ transform:scale(1) translateY(0); filter:blur(4px); }
+}
+/* 光暈：金色波紋向外擴散 */
+.companion-shadow.tendency-utilitarianism .comp-halo ellipse{
+  animation:utilRipple 4s ease-out infinite;
+}
+@keyframes utilRipple{
+  0%{ opacity:0.2; transform:scale(1); filter:blur(2px) brightness(1); }
+  50%{ opacity:0.35; transform:scale(1.15) translateX(3px) translateY(2px); filter:blur(4px) brightness(1.3); }
+  100%{ opacity:0.2; transform:scale(1); filter:blur(2px) brightness(1); }
+}
+
+/* ========== 義務論：鐵律精準 ========== */
+/* 康德——絕對命令，必須如此行為 */
+/* 嚴謹、方正、不可動搖 */
+/* 冷藍色調：鐵律的莊嚴 */
+.companion-shadow.tendency-deontology .comp-core ellipse{
+  fill:rgba(140, 170, 210, 0.38);
+}
+.companion-shadow.tendency-deontology .comp-halo ellipse{
+  fill:rgba(140, 170, 210, 0.15);
+}
+.companion-shadow.tendency-deontology .companion-form{
+  animation:deonticRigid 10s ease-in-out infinite;
+}
+@keyframes deonticRigid{
+  0%, 100%{ transform:translateX(0) translateY(-3px) rotate(0deg) scale(1); }
+  25%{ transform:translateX(0) translateY(-3px) rotate(0.5deg) scale(1.005); }
+  50%{ transform:translateX(0) translateY(-4px) rotate(0deg) scale(1); }
+  75%{ transform:translateX(0) translateY(-3px) rotate(-0.5deg) scale(0.995); }
+}
+/* 光暈：收緊的紀律感 */
+.companion-shadow.tendency-deontology .comp-halo ellipse{
+  animation:deonticConstrict 8s ease-in-out infinite;
+}
+@keyframes deonticConstrict{
+  0%, 100%{ opacity:0.1; transform:scale(1); filter:blur(2px); }
+  50%{ opacity:0.06; transform:scale(0.95); filter:blur(1px); }
+}
+
+/* ========== 理性主義：沉思的重量 ========== */
+/* 柏拉圖、亞里斯多德——思想的重量，前傾的姿態 */
+/* 穩重、有深度，微微前傾像是陷入思考 */
+.companion-shadow.tendency-rationalism .companion-form{
+  animation:rationalContemplate 9s ease-in-out infinite;
+  transform-origin:top center;
+}
+@keyframes rationalContemplate{
+  0%, 100%{ transform:translateX(-3px) translateY(-5px) rotate(2deg) scale(1.02); filter:blur(4px); }
+  30%{ transform:translateX(-4px) translateY(-8px) rotate(3deg) scale(1.04); filter:blur(3px); }
+  60%{ transform:translateX(-3px) translateY(-6px) rotate(2.5deg) scale(1.03); filter:blur(3px); }
+}
+/* 光暈：清晰的光芒，像是理性之光 */
+.companion-shadow.tendency-rationalism .comp-halo ellipse{
+  animation:rationalClarity 7s ease-in-out infinite;
+}
+@keyframes rationalClarity{
+  0%, 100%{ opacity:0.12; transform:scale(1); filter:blur(2px) brightness(1); }
+  50%{ opacity:0.25; transform:scale(1.08); filter:blur(1px) brightness(1.4); }
+}
+
+/* ========== 懷疑論：若隱若現 ========== */
+/* 皮羅、蒙田——什麼都不知道，連懷疑本身也值得懷疑 */
+/* 不斷閃爍，像是隨時會消失 */
+.companion-shadow.tendency-skepticism .companion-form{
+  animation:skepticalVanish 5s ease-in-out infinite;
+}
+@keyframes skepticalVanish{
+  0%{ opacity:1; transform:translateX(0) translateY(0) rotate(0deg); filter:blur(4px); }
+  20%{ opacity:0.4; transform:translateX(2px) translateY(-1px) rotate(0.5deg); filter:blur(6px); }
+  40%{ opacity:0.9; transform:translateX(-1px) translateY(1px) rotate(-0.5deg); filter:blur(3px); }
+  60%{ opacity:0.3; transform:translateX(1px) translateY(0) rotate(0deg); filter:blur(8px); }
+  80%{ opacity:0.8; transform:translateX(-2px) translateY(-1px) rotate(-0.3deg); filter:blur(5px); }
+  100%{ opacity:1; transform:translateX(0) translateY(0) rotate(0deg); filter:blur(4px); }
+}
+/* 光暈：透明度劇烈波動 */
+.companion-shadow.tendency-skepticism .comp-halo ellipse{
+  animation:skepticalFlicker 3s ease-in-out infinite;
+}
+@keyframes skepticalFlicker{
+  0%, 100%{ opacity:0.15; filter:blur(3px); }
+  25%{ opacity:0.02; filter:blur(10px); }
+  50%{ opacity:0.2; filter:blur(2px); }
+  75%{ opacity:0.05; filter:blur(12px); }
+}
+
+/* ========== 東方哲學：道法自然 ========== */
+/* 老子、莊子——無為，與道合一 */
+/* 如水般流動，沒有強烈的意圖 */
+.companion-shadow.tendency-eastern .companion-form{
+  animation:easternFlow 12s ease-in-out infinite;
+  transform-origin:center;
+}
+@keyframes easternFlow{
+  0%, 100%{ transform:translateX(0) translateY(0) rotate(0deg) skewX(0deg); filter:blur(4px); }
+  25%{ transform:translateX(4px) translateY(-2px) rotate(1deg) skewX(0.5deg); filter:blur(5px); }
+  50%{ transform:translateX(0) translateY(2px) rotate(0deg) skewX(0deg); filter:blur(4px); }
+  75%{ transform:translateX(-4px) translateY(-2px) rotate(-1deg) skewX(-0.5deg); filter:blur(5px); }
+}
+/* 光暈：柔和的呼吸，像是與自然合一 */
+.companion-shadow.tendency-eastern .comp-halo ellipse{
+  animation:easternBreathe 10s ease-in-out infinite;
+}
+@keyframes easternBreathe{
+  0%, 100%{ opacity:0.08; transform:scale(1); filter:blur(4px); }
+  50%{ opacity:0.18; transform:scale(1.12) translateY(-2px); filter:blur(6px); }
+}
+
+/* ========== 佛教：空性的呼吸 ========== */
+/* 佛陀——一切有為法，如夢幻泡影 */
+/* 週期性的消散與重建，像是呼吸與輪迴 */
+.companion-shadow.tendency-buddhism .companion-form{
+  animation:buddhistImpermanence 10s ease-in-out infinite;
+}
+@keyframes buddhistImpermanence{
+  0%{ opacity:0.9; transform:translateX(0) translateY(0) scale(1); filter:blur(4px); }
+  40%{ opacity:0.3; transform:translateX(0) translateY(3px) scale(0.85); filter:blur(10px); }
+  60%{ opacity:0.2; transform:translateX(0) translateY(5px) scale(0.75); filter:blur(15px); }
+  80%{ opacity:0.5; transform:translateX(0) translateY(2px) scale(0.9); filter:blur(8px); }
+  100%{ opacity:0.9; transform:translateX(0) translateY(0) scale(1); filter:blur(4px); }
+}
+/* 光暈：蓮花綻放與凋零 */
+.companion-shadow.tendency-buddhism .comp-halo ellipse{
+  animation:buddhistLotus 8s ease-in-out infinite;
+}
+@keyframes buddhistLotus{
+  0%, 100%{ opacity:0.1; transform:scale(1) rotate(0deg); filter:blur(3px); }
+  50%{ opacity:0.25; transform:scale(1.2) rotate(10deg); filter:blur(5px); }
+}
+
+/* ========== 儒家：端正莊嚴 ========== */
+/* 孔子——君君臣臣，各安其位 */
+/* 穩重、端正、有秩序感 */
+.companion-shadow.tendency-confucianism .companion-form{
+  animation:confucianDignity 12s ease-in-out infinite;
+}
+@keyframes confucianDignity{
+  0%, 100%{ transform:translateX(0) translateY(-2px) rotate(0deg); filter:blur(4px); }
+  50%{ transform:translateX(0) translateY(-3px) rotate(0.3deg); filter:blur(4px); }
+}
+/* 光暈：穩定的責任感，像是鐘聲的餘韻 */
+.companion-shadow.tendency-confucianism .comp-halo ellipse{
+  animation:confucianResonance 9s ease-in-out infinite;
+}
+@keyframes confucianResonance{
+  0%, 40%, 100%{ opacity:0.12; transform:scale(1); filter:blur(3px); }
+  60%{ opacity:0.2; transform:scale(1.05); filter:blur(2px); }
+}
+
+/* ========== 伊比鳩魯主義：愉悅當下 ========== */
+/* 伊比鳩魯——快樂是最高的善，活在當下 */
+/* 輕盈、愉悅的搖擺，像是享受花園的陽光 */
+.companion-shadow.tendency-epicureanism .companion-form{
+  animation:epicureanJoy 7s ease-in-out infinite;
+  transform-origin:bottom center;
+}
+@keyframes epicureanJoy{
+  0%, 100%{ transform:translateX(2px) translateY(0) rotate(-1deg) scale(1); filter:blur(4px); }
+  25%{ transform:translateX(-2px) translateY(-4px) rotate(1.5deg) scale(1.03); filter:blur(3px); }
+  50%{ transform:translateX(3px) translateY(-2px) rotate(-0.5deg) scale(1); filter:blur(4px); }
+  75%{ transform:translateX(-1px) translateY(-5px) rotate(1deg) scale(1.02); filter:blur(3px); }
+}
+/* 光暈：溫暖的光 */
+.companion-shadow.tendency-epicureanism .comp-halo ellipse{
+  animation:epicureanWarm 6s ease-in-out infinite;
+}
+@keyframes epicureanWarm{
+  0%, 100%{ opacity:0.1; transform:scale(1); filter:blur(3px) brightness(1); }
+  50%{ opacity:0.22; transform:scale(1.1); filter:blur(5px) brightness(1.3); }
+}
+
+/* ========== 實用主義：務實調整 ========== */
+/* 詹姆斯、杜威——真理是有用的，時時刻刻調整 */
+/* 不斷微調，尋找最佳位置 */
+.companion-shadow.tendency-pragmatism .companion-form{
+  animation:pragmaticAdjust 6s ease-in-out infinite;
+}
+@keyframes pragmaticAdjust{
+  0%{ transform:translateX(0) translateY(-2px) rotate(0deg); filter:blur(4px); }
+  20%{ transform:translateX(4px) translateY(-1px) rotate(1.5deg); filter:blur(4px); }
+  40%{ transform:translateX(-3px) translateY(-3px) rotate(-1deg); filter:blur(4px); }
+  60%{ transform:translateX(2px) translateY(-4px) rotate(0.5deg); filter:blur(4px); }
+  80%{ transform:translateX(-1px) translateY(-2px) rotate(-0.5deg); filter:blur(4px); }
+  100%{ transform:translateX(0) translateY(-2px) rotate(0deg); filter:blur(4px); }
+}
+/* 光暈：有節奏的脈動，像是思考的節拍 */
+.companion-shadow.tendency-pragmatism .comp-halo ellipse{
+  animation:pragmaticPulse 5s ease-in-out infinite;
+}
+@keyframes pragmaticPulse{
+  0%, 100%{ opacity:0.1; transform:scale(1); }
+  50%{ opacity:0.18; transform:scale(1.06); }
 }
 
 /* ---------- Consciousness Map ---------- */

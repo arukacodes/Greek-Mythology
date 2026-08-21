@@ -156,9 +156,73 @@ try{
 
 /* ---------- Companion Shadow: the quiet witness ---------- */
 const COMPANION_KEY = 'greekMythTree_companion_v1';
+
+// 哲學家分類：用於 Companion Shadow 進化
+const PHILOSOPHER_TRAITS = {
+  // 理性主義
+  socrates: 'rationalism', plato: 'rationalism', aristotle: 'rationalism', wittgenstein: 'rationalism',
+  republic: 'rationalism', symposium: 'rationalism', themis: 'rationalism',
+  // 存在主義
+  nietzsche: 'existentialism', sartre: 'existentialism', camus: 'existentialism', schopenhauer: 'existentialism',
+  kierkegaard: 'existentialism', beauvoir: 'existentialism',
+  // 東方哲學
+  laozi: 'eastern', zhuangzi: 'eastern', confucius: 'eastern', buddha: 'eastern', wangyangming: 'eastern',
+  // 效益主義
+  singer: 'utilitarianism',
+  // 義務論
+  kant: 'deontology',
+  // 斯多葛主義
+  stoicism: 'stoicism', seneca: 'stoicism', marcusaurelius: 'stoicism',
+  // 懷疑論
+  skepticism: 'skepticism',
+  // 佛教
+  anscombe: 'buddhism',
+  // 儒家
+  nussbaum: 'confucianism',
+  // 伊比鳩魯
+  epicureanism: 'epicureanism',
+  // 其他
+  sophism: 'pragmatism', diogenes: 'pragmatism', arendt: 'pragmatism', rawls: 'utilitarianism'
+};
+
+// 傾向色彩
+const TENDENCY_COLORS = {
+  rationalism: 'rgba(180, 160, 220, 0.35)',
+  existentialism: 'rgba(220, 100, 100, 0.35)',
+  eastern: 'rgba(160, 200, 140, 0.30)',
+  utilitarianism: 'rgba(220, 190, 100, 0.35)',
+  deontology: 'rgba(140, 170, 210, 0.35)',
+  stoicism: 'rgba(190, 190, 190, 0.28)',
+  skepticism: 'rgba(170, 170, 195, 0.22)',
+  confucianism: 'rgba(200, 170, 130, 0.33)',
+  buddhism: 'rgba(210, 190, 150, 0.30)',
+  epicureanism: 'rgba(200, 180, 140, 0.32)',
+  pragmatism: 'rgba(180, 180, 200, 0.30)',
+  unknown: 'rgba(200, 195, 220, 0.25)'
+};
+
+// 傾向姿態
+const TENDENCY_POSES = {
+  rationalism: 'translateX(-2px) translateY(-3px) rotate(1deg)',
+  existentialism: 'translateX(3px) translateY(1px) rotate(-1.5deg)',
+  eastern: 'translateX(0) translateY(-1px) rotate(0deg)',
+  utilitarianism: 'translateX(-1px) translateY(-2px) rotate(0.5deg)',
+  deontology: 'translateX(0) translateY(-2px) rotate(0.5deg)',
+  stoicism: 'translateX(0) translateY(0) rotate(0deg)',
+  skepticism: 'translateX(-1px) translateY(-1px) rotate(-0.5deg)',
+  confucianism: 'translateX(0) translateY(-1px) rotate(0deg)',
+  buddhism: 'translateX(0) translateY(1px) rotate(0deg)',
+  epicureanism: 'translateX(1px) translateY(0) rotate(-0.5deg)',
+  pragmatism: 'translateX(0) translateY(-1px) rotate(0.5deg)',
+  unknown: ''
+};
+
 let companionData = {
   visited: new Set(),
-  genDistribution: {}
+  genDistribution: {},
+  philoChoices: {},      // 記錄每次選擇
+  philoTendency: 'unknown',
+  philoScore: 0
 };
 
 try{
@@ -167,6 +231,9 @@ try{
     const parsed = JSON.parse(raw);
     companionData.visited = new Set(parsed.visited || []);
     companionData.genDistribution = parsed.genDistribution || {};
+    companionData.philoChoices = parsed.philoChoices || {};
+    companionData.philoTendency = parsed.philoTendency || 'unknown';
+    companionData.philoScore = parsed.philoScore || 0;
   }
 }catch(e){}
 
@@ -187,12 +254,8 @@ function updateCompanion(id){
     companionData.genDistribution[d.gen] = (companionData.genDistribution[d.gen] || 0) + 1;
   }
 
-  try{
-    localStorage.setItem(COMPANION_KEY, JSON.stringify({
-      visited: [...companionData.visited],
-      genDistribution: companionData.genDistribution
-    }));
-  }catch(e){}
+  // 保存所有數據（包括哲學選擇）
+  saveCompanionData();
 
   renderCompanionShadow();
 }
@@ -203,16 +266,19 @@ function renderCompanionShadow(){
 
   const phase = getCompanionPhase();
 
-  if(phase === 0){
+  // 如果沒有探索記錄但有哲學進化數據，仍然顯示 shadow
+  if(phase === 0 && companionData.philoScore === 0){
     shadow.classList.remove('present', 'phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5');
     return;
   }
 
-  shadow.classList.add('present', 'phase-' + phase);
+  // 使用探索階段或默認階段
+  const displayPhase = phase > 0 ? phase : 1;
+  shadow.classList.add('present', 'phase-' + displayPhase);
 
-  // 根据探索倾向微微调整姿势
+  // 應用探索傾向姿勢
   const dominant = getDominantGen();
-  const poses = {
+  const genPoses = {
     olympian: 'translateY(-2px)',
     philosophy: 'translateX(-1px) translateY(-3px)',
     hero: 'translateX(1px)',
@@ -222,9 +288,51 @@ function renderCompanionShadow(){
     default: ''
   };
 
+  // 應用哲學傾向姿勢
+  const philoTendency = companionData.philoTendency;
+  const philoPose = TENDENCY_POSES[philoTendency] || TENDENCY_POSES.unknown;
+
   const form = shadow.querySelector('.companion-form');
   if(form){
-    form.style.transform = poses[dominant] || poses.default;
+    // 如果有哲學傾向，優先使用哲學姿勢
+    form.style.transform = philoTendency !== 'unknown' ? philoPose : (genPoses[dominant] || genPoses.default);
+  }
+
+  // 應用哲學傾向色彩到核心霧氣
+  const coreEllipses = shadow.querySelectorAll('.comp-core ellipse');
+  const haloEllipses = shadow.querySelectorAll('.comp-halo ellipse');
+  const tendencyColor = TENDENCY_COLORS[philoTendency] || TENDENCY_COLORS.unknown;
+
+  // 計算清晰度（基於哲學選擇次數，符合CLAUDE.md設計）
+  // Phase 0-2: blur 12→9, Phase 3-5: blur 8, Phase 6-10: blur 6, Phase 10+: blur 4-5
+  let blurAmount;
+  if (companionData.philoScore <= 2) {
+    blurAmount = 12 - (companionData.philoScore * 1.5); // 12, 10.5, 9
+  } else if (companionData.philoScore <= 5) {
+    blurAmount = 9 - ((companionData.philoScore - 2) * 0.33); // ~8
+  } else if (companionData.philoScore <= 10) {
+    blurAmount = 8 - ((companionData.philoScore - 5) * 0.4); // 6
+  } else {
+    blurAmount = Math.max(4, 6 - ((companionData.philoScore - 10) * 0.1)); // 4-5
+  }
+  const opacityAmount = Math.min(0.45, 0.20 + companionData.philoScore * 0.02);
+
+  // 應用模糊效果
+  if (companionData.philoScore > 0) {
+    const mistBlur = shadow.querySelector('#mistBlur');
+    const mistBlurLight = shadow.querySelector('#mistBlurLight');
+    if (mistBlur) {
+      mistBlur.querySelector('feGaussianBlur').setAttribute('stdDeviation', blurAmount);
+    }
+    if (mistBlurLight) {
+      mistBlurLight.querySelector('feGaussianBlur').setAttribute('stdDeviation', blurAmount + 2);
+    }
+  }
+
+  // 應用特殊效果類（移除所有傾向類，然後添加當前傾向）
+  shadow.className = shadow.className.replace(/tendency-\w+/g, '').trim();
+  if (philoTendency !== 'unknown') {
+    shadow.classList.add('tendency-' + philoTendency);
   }
 }
 
@@ -235,6 +343,200 @@ function getDominantGen(){
     if(count > max){ max = count; dominant = gen; }
   }
   return dominant;
+}
+
+// 記錄哲學選擇
+function recordPhiloChoice(philosopherId) {
+  const trait = PHILOSOPHER_TRAITS[philosopherId] || 'unknown';
+
+  if (!companionData.philoChoices[trait]) {
+    companionData.philoChoices[trait] = 0;
+  }
+  companionData.philoChoices[trait]++;
+  companionData.philoScore++;
+
+  // 計算新的主導傾向
+  const newTendency = calculatePhiloTendency();
+  const oldTendency = companionData.philoTendency;
+  companionData.philoTendency = newTendency;
+
+  // 保存
+  saveCompanionData();
+
+  // 如果傾向發生變化，觸發特殊進化動畫
+  if (oldTendency !== newTendency && oldTendency !== 'unknown') {
+    triggerTendencyShiftAnimation(oldTendency, newTendency);
+  }
+
+  renderCompanionShadow();
+}
+
+// 計算主導哲學傾向
+function calculatePhiloTendency() {
+  const choices = companionData.philoChoices;
+  const entries = Object.entries(choices);
+
+  if (entries.length === 0) return 'unknown';
+
+  // 找到次數最多的傾向
+  entries.sort((a, b) => b[1] - a[1]);
+  return entries[0][0];
+}
+
+// 保存伴隨數據
+function saveCompanionData() {
+  try {
+    localStorage.setItem(COMPANION_KEY, JSON.stringify({
+      visited: [...companionData.visited],
+      genDistribution: companionData.genDistribution,
+      philoChoices: companionData.philoChoices,
+      philoTendency: companionData.philoTendency,
+      philoScore: companionData.philoScore
+    }));
+  } catch(e) {}
+}
+
+// 傾向轉變時的神秘訊息（詩意版）
+const TENDENCY_REVELATIONS = {
+  rationalism: [
+    '輪廓，漸漸清晰。',
+    '某種重量，在沉澱。',
+    '更近了。'
+  ],
+  existentialism: [
+    '邊界在顫動。',
+    '不確定。',
+    '搖晃。'
+  ],
+  eastern: [
+    '如水。',
+    '慢下來了。',
+    '沒有方向的方向。'
+  ],
+  utilitarianism: [
+    '向外擴展。',
+    '觸手可及之處，在拓寬。',
+    '觸碰。'
+  ],
+  deontology: [
+    '邊界，收緊了。',
+    '更規整。',
+    '棱角。'
+  ],
+  stoicism: [
+    '靜止。',
+    '凝固。',
+    '永恆的一瞬。'
+  ],
+  skepticism: [
+    '閃爍。',
+    '存在，又不存在。',
+    '模糊。'
+  ],
+  buddhism: [
+    '散了。又聚。',
+    '淡去。',
+    '空。'
+  ],
+  confucianism: [
+    '端正。',
+    '禮。',
+    '位置。'
+  ],
+  epicureanism: [
+    '輕盈。',
+    '此刻。',
+    '愉悅。'
+  ],
+  pragmatism: [
+    '搖擺。',
+    '調整。',
+    '有用。'
+  ],
+  unknown: []
+};
+
+// 測試：手動觸發進化到指定傾向
+function testShadowEvolution(tendency) {
+  const oldTendency = companionData.philoTendency;
+
+  // 添加 3 次選擇，確保這個傾向成為主導
+  companionData.philoChoices[tendency] = (companionData.philoChoices[tendency] || 0) + 3;
+  companionData.philoScore += 3;
+  companionData.philoTendency = tendency;
+
+  saveCompanionData();
+  renderCompanionShadow();
+
+  // 觸發動畫和訊息
+  triggerTendencyShiftAnimation(oldTendency, tendency);
+
+  console.log(`Shadow 進化到: ${tendency}`);
+}
+
+// 重置進化數據
+function resetShadowEvolution() {
+  companionData.philoChoices = {};
+  companionData.philoTendency = 'unknown';
+  companionData.philoScore = 0;
+  saveCompanionData();
+  renderCompanionShadow();
+  console.log('Shadow 進化已重置');
+}
+
+// 讓影子雙擊可打開調試面板
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const shadow = document.getElementById('companionShadow');
+    if (shadow) {
+      // 阻止選中和複製
+      shadow.addEventListener('selectstart', (e) => e.preventDefault());
+      shadow.addEventListener('copy', (e) => e.preventDefault());
+      shadow.addEventListener('mousedown', (e) => e.preventDefault());
+    }
+  }, 500);
+});
+
+function triggerTendencyShiftAnimation(fromTendency, toTendency) {
+  const shadow = document.getElementById('companionShadow');
+  if (!shadow) return;
+
+  // 添加傾向轉變class，觸發CSS動畫
+  shadow.classList.add('tendency-shifting');
+
+  // 根據傾向給予額外的視覺反饋
+  const tendencyEffects = {
+    existentialism: '它劇烈地搖晃了一下...',
+    stoicism: '它凝固了，像石頭一樣。',
+    buddhism: '它開始消散...又凝聚...',
+    skepticism: '它忽明忽暗...',
+    rationalism: '它的輪廓清晰了。',
+    eastern: '它像水一樣流動...',
+    utilitarianism: '它在擴展，觸及更遠。',
+    deontology: '它的邊界收緊了。',
+    epicureanism: '它輕盈地跳動。',
+    confucianism: '它站得更端正了。',
+    pragmatism: '它在不斷調整自己。'
+  };
+
+  // 獲取該傾向的神秘訊息
+  const messages = TENDENCY_REVELATIONS[toTendency] || ['它在沉默中回應了你...'];
+  const message = messages[Math.floor(Math.random() * messages.length)];
+
+  // 階段性視覺效果：先脈動，再穩定
+  setTimeout(() => {
+    shadow.style.filter = 'brightness(1.8) contrast(1.2)';
+    shadow.style.transform = 'scale(1.1)';
+  }, 500);
+
+  setTimeout(() => {
+    shadow.classList.remove('tendency-shifting');
+    shadow.style.filter = '';
+    shadow.style.transform = '';
+    renderCompanionShadow(); // 重新渲染，應用新的傾向
+
+    showMilestoneToast({ text: message, author: '' });
+  }, 2000);
 }
 
 function markVisited(id){
@@ -831,6 +1133,12 @@ function choosePhilo(i){
   const d = PHILO_DILEMMAS[philoIndex];
   const o = d.options[i];
   const person = byId[o.reveal];
+
+  // 記錄哲學選擇到 Companion Shadow
+  if (o.reveal) {
+    recordPhiloChoice(o.reveal);
+  }
+
   document.getElementById('philoContent').innerHTML = `
     <p class="philo-question philo-question-dim">${d.q}</p>
     <div class="philo-reveal">
@@ -2118,13 +2426,17 @@ function showMilestoneToast(quote){
   if(!toast) return;
   const textEl = document.getElementById('milestoneText');
   const authorEl = document.getElementById('milestoneAuthor');
+  const text = typeof quote === 'string' ? quote : quote.text;
+  const author = typeof quote === 'string' ? '' : (quote.author || '');
   authorEl.style.opacity = '0';
   toast.classList.add('show');
   playEggChime();
-  scrambleReveal(textEl, `「${quote.text}」`, 750);
+  scrambleReveal(textEl, `「${text}」`, 750);
   setTimeout(()=>{
-    authorEl.textContent = `— ${quote.author}`;
-    authorEl.style.opacity = '1';
+    if(author){
+      authorEl.textContent = `— ${author}`;
+      authorEl.style.opacity = '1';
+    }
   }, 800);
   clearTimeout(milestoneTimer);
   milestoneTimer = setTimeout(()=> toast.classList.remove('show'), 6200);
