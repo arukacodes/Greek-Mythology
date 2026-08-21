@@ -54,6 +54,7 @@
     <button class="egg-toggle" id="timelineToggle" onclick="openTimeline()">📅 時間軸 <span class="btn-en">Timeline</span></button>
     <button class="egg-toggle" id="mindMapToggle" onclick="openMindMap()">🌌 意識地圖 <span class="btn-en">Consciousness Map</span></button>
     <button class="egg-toggle" id="philoToggle" onclick="openPhilo()">🎭 你的抉擇 <span class="btn-en">Your Choice</span></button>
+    <button class="egg-toggle" id="letterToggle" onclick="openLetter()">✉️ 書寫 <span class="btn-en">Write</span></button>
   </div>
 </header>
 
@@ -119,6 +120,24 @@
     <h3 class="util-title">🎭 你的抉擇</h3>
     <p class="util-sub">沒有標準答案——選完之後，看看你的選擇呼應了樹上哪位思想家</p>
     <div id="philoContent"></div>
+  </div>
+</div>
+
+<div class="egg-overlay" id="letterOverlay" onclick="if(event.target===this) closeLetter()">
+  <div class="egg-panel letter-panel">
+    <button class="egg-close" onclick="closeLetter()">✕</button>
+    <div class="egg-header">
+      <h2>✉️ 書寫</h2>
+      <p class="egg-sub">寫給誰呢。</p>
+    </div>
+    <div class="letter-content">
+      <textarea class="letter-input" id="letterInput" placeholder="或許是寫給自己的。" maxlength="200"></textarea>
+      <div class="letter-meta">
+        <span class="letter-count"><span id="letterCount">0</span> / 200</span>
+      </div>
+      <button class="letter-submit" onclick="submitLetter()">留下</button>
+    </div>
+    <div class="letter-history" id="letterHistory"></div>
   </div>
 </div>
 

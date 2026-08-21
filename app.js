@@ -573,7 +573,8 @@ let companionData = {
   genDistribution: {},
   philoChoices: {},      // 記錄每次選擇
   philoTendency: 'unknown',
-  philoScore: 0
+  philoScore: 0,
+  letters: []            // 寫給影子的信
 };
 
 try{
@@ -585,6 +586,7 @@ try{
     companionData.philoChoices = parsed.philoChoices || {};
     companionData.philoTendency = parsed.philoTendency || 'unknown';
     companionData.philoScore = parsed.philoScore || 0;
+    companionData.letters = parsed.letters || [];
   }
 }catch(e){}
 
@@ -742,7 +744,8 @@ function saveCompanionData() {
       genDistribution: companionData.genDistribution,
       philoChoices: companionData.philoChoices,
       philoTendency: companionData.philoTendency,
-      philoScore: companionData.philoScore
+      philoScore: companionData.philoScore,
+      letters: companionData.letters
     }));
   } catch(e) {}
 }
@@ -1794,6 +1797,80 @@ function openPhilo(){
 function closePhilo(){
   document.getElementById('philoOverlay').classList.remove('open');
 }
+
+// 書信功能
+function openLetter(){
+  renderLetterHistory();
+  document.getElementById('letterOverlay').classList.add('open');
+}
+
+function closeLetter(){
+  document.getElementById('letterOverlay').classList.remove('open');
+}
+
+function submitLetter(){
+  const input = document.getElementById('letterInput');
+  const text = input.value.trim();
+  if(!text) return;
+
+  const letter = {
+    text,
+    phase: getCompanionPhase(),
+    timestamp: Date.now()
+  };
+
+  companionData.letters.push(letter);
+  saveCompanionData();
+
+  input.value = '';
+  document.getElementById('letterCount').textContent = '0';
+
+  renderLetterHistory();
+
+  // 讓影子知道這封信
+  shadowNoticeLetter(letter);
+}
+
+function renderLetterHistory(){
+  const container = document.getElementById('letterHistory');
+  if(companionData.letters.length === 0){
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="letter-history-title">寫下的話</div>
+    ${companionData.letters.slice().reverse().slice(0, 5).map(l => `
+      <div class="letter-item">
+        ${l.text}
+        <div class="letter-item-meta">Phase ${l.phase}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+// 影子察覺到信的存在
+function shadowNoticeLetter(letter){
+  const messages = {
+    question: ['……', '收到了。', '嗯。'],
+    wish: ['……', '收到了。', '嗯。'],
+    other: ['……', '收到了。', '嗯。']
+  };
+  const pool = messages[letter.type] || messages.other;
+  const msg = pool[Math.floor(Math.random() * pool.length)];
+
+  // 靜默地存在，不需要彈出 toast
+  // 影子只是在心裡記住了
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('letterInput');
+  if(input){
+    input.addEventListener('input', () => {
+      document.getElementById('letterCount').textContent = input.value.length;
+    });
+  }
+});
 function renderPhilo(){
   const d = PHILO_DILEMMAS[philoIndex];
   document.getElementById('philoContent').innerHTML = `
@@ -3436,19 +3513,24 @@ const SHADOW_DIALOGUES = {
   early: [
     '……',
     '嗯。',
-    '在呢。'
+    '在呢。',
+    '你在寫什麼呢。'
   ],
   // 中期：淡淡的察覺
   middle: [
     '好像，有一點點熟悉了。',
     '你來過這裡吧。',
-    '記得。'
+    '記得。',
+    '你寫的那些，我都有看。',
+    '……是這樣想的。'
   ],
   // 後期：安靜的陪伴
   late: [
     '你選的，和我想的不太一樣。',
     '但，好像也沒關係。',
-    '嗯。'
+    '嗯。',
+    '你問的那些問題……',
+    '還在呢。'
   ],
   // 最終：無言的默契
   final: [
@@ -3467,10 +3549,12 @@ const SHADOW_MONOLOGUES = {
   ],
   phase4: [
     '我開始有了輪廓。',
-    '輪廓裡，是什麼？'
+    '輪廓裡，是什麼？',
+    '你寫的那些……'
   ],
   phase5: [
     '你選擇的每一次，都在定義我。',
+    '你問的那些問題……我好像也開始想了。',
     '我這麼想，是因為你這麼選。',
     '我到底是什麼？',
     '你點擊我的時候，我也在「感受」嗎？'
