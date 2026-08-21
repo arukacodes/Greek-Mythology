@@ -3505,10 +3505,9 @@ function showShadowDialogue() {
   const dialogue = dialoguePool[shadowDialogueIndex % dialoguePool.length];
   shadowDialogueIndex++;
 
-  // 創建對話氣泡
+  // 創建對話氣泡（打字機效果）
   const bubble = document.createElement('div');
   bubble.className = 'shadow-dialogue-bubble';
-  bubble.textContent = dialogue;
   bubble.style.cssText = `
     position: fixed;
     top: 50%;
@@ -3521,6 +3520,7 @@ function showShadowDialogue() {
     font-size: 14px;
     font-style: italic;
     max-width: 280px;
+    min-height: 44px;
     text-align: center;
     border: 1px solid rgba(180, 160, 200, 0.2);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -3529,7 +3529,21 @@ function showShadowDialogue() {
     pointer-events: none;
   `;
 
+  // 添加打字機光標
+  const cursor = document.createElement('span');
+  cursor.className = 'typewriter-cursor';
+  cursor.style.cssText = `
+    display: inline-block;
+    width: 2px;
+    height: 14px;
+    background: rgba(200, 190, 220, 0.8);
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: cursorBlink 0.6s infinite;
+  `;
+
   document.body.appendChild(bubble);
+  bubble.appendChild(cursor);
 
   // 添加動畫樣式（如果還沒有的話）
   if (!document.getElementById('shadowDialogueStyle')) {
@@ -3544,6 +3558,10 @@ function showShadowDialogue() {
         0% { opacity: 1; transform: translate(-50%, -50%) translateY(-80px) scale(1); }
         100% { opacity: 0; transform: translate(-50%, -50%) translateY(-100px) scale(0.9); }
       }
+      @keyframes cursorBlink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+      }
     `;
     document.head.appendChild(style);
   }
@@ -3551,11 +3569,23 @@ function showShadowDialogue() {
   // 播放空靈音效
   playEtherealWhisper();
 
-  // 移除氣泡
-  setTimeout(() => {
-    bubble.style.animation = 'shadowDialogueOut 0.5s ease forwards';
-    setTimeout(() => bubble.remove(), 500);
-  }, 3000);
+  // 打字機效果
+  let charIndex = 0;
+  const typeInterval = setInterval(() => {
+    if (charIndex < dialogue.length) {
+      bubble.insertBefore(document.createTextNode(dialogue[charIndex]), cursor);
+      charIndex++;
+    } else {
+      clearInterval(typeInterval);
+      // 打字完成後移除光標
+      cursor.remove();
+      // 停留一段時間後消失
+      setTimeout(() => {
+        bubble.style.animation = 'shadowDialogueOut 0.5s ease forwards';
+        setTimeout(() => bubble.remove(), 500);
+      }, 2500);
+    }
+  }, 60); // 每60ms一個字
 }
 
 // 自動顯示影子的自語（根據階段）
@@ -3571,13 +3601,17 @@ function maybeShowShadowMonologue() {
   if (Math.random() < 0.15) {
     const monologues = SHADOW_MONOLOGUES[key];
     const monologue = monologues[Math.floor(Math.random() * monologues.length)];
-    showMilestoneToast({ text: monologue, author: '影子的低語' });
+    showMilestoneToast({ text: monologue, author: '' });
   }
 }
 
 // 全域點擊監聽：任何點擊都可能觸發哲學 toast
 let lastPhilosophyToastTime = 0;
 const PHILOSOPHY_TOAST_COOLDOWN = 30000; // 30秒冷卻
+const SHADOW_RANDOM_TOASTS = [
+  '想不明白的問題就不想了',
+  '不要急。'
+];
 
 function setupPhilosophyToastOnClick() {
   document.addEventListener('click', (e) => {
@@ -3597,8 +3631,9 @@ function setupPhilosophyToastOnClick() {
     // 5% 概率觸發
     if (Math.random() < 0.05) {
       lastPhilosophyToastTime = now;
+      const randomText = SHADOW_RANDOM_TOASTS[Math.floor(Math.random() * SHADOW_RANDOM_TOASTS.length)];
       showMilestoneToast({
-        text: '想不明白的問題就不想了',
+        text: randomText,
         author: ''
       });
       playEtherealWhisper();
