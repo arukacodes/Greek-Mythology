@@ -2077,12 +2077,77 @@ footer{
   transition:
     opacity 2.5s ease,
     filter 1.5s ease,
-    transform 1.2s ease;
+    transform 1.2s ease,
+    left 0.8s ease,
+    top 0.8s ease;
   overflow:visible;
   user-select:none;
   -webkit-user-select:none;
   -moz-user-select:none;
   -ms-user-select:none;
+}
+/* Shy effect - shadow retreats when mouse approaches */
+.companion-shadow.shy{
+  opacity:0.4 !important;
+  filter: blur(8px) brightness(0.8);
+}
+/* Soul Departing effect - mist floats up while skeleton stays */
+.companion-shadow.confused .comp-core{
+  animation: soulFloatUp 2s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+.companion-shadow.confused .comp-halo{
+  animation: soulFloatUp 2s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+.companion-shadow.confused .comp-edge{
+  animation: soulFloatUp 2s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+/* Heart reveals and glows during soul departing */
+.companion-shadow.confused .comp-heart{
+  animation: heartReveal 2s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+.companion-shadow.confused .comp-heart-glow{
+  animation: heartGlow 2s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+/* Heart pulse animation */
+.companion-shadow .comp-heart path{
+  transform-origin: 50px 65px;
+}
+@keyframes heartGlow{
+  0%{ opacity: 0; transform: scale(1); }
+  15%{ opacity: 0.5; }
+  30%{ opacity: 0.8; }
+  45%{ opacity: 1; }
+  50%{ opacity: 1; }
+  75%{ opacity: 0.7; }
+  90%{ opacity: 0.3; }
+  100%{ opacity: 0; }
+}
+@keyframes heartReveal{
+  0%{ opacity: 0; transform: scale(1); }
+  10%{ opacity: 0.7; }
+  20%{ opacity: 1; transform: scale(1.03); }
+  25%{ transform: scale(1); }
+  /* 正常脉搏频率，约1秒一次 */
+  45%{ transform: scale(1.05); }
+  50%{ transform: scale(1); }
+  70%{ transform: scale(1.04); }
+  75%{ transform: scale(1); }
+  90%{ opacity: 0.5; transform: scale(0.98); }
+  100%{ opacity: 0; transform: scale(0.95); }
+}
+@keyframes soulFloatUp{
+  0%{ transform: translateY(0) scale(1); opacity: 1; filter: blur(0px); }
+  /* 緩緩上升，變得模糊 */
+  30%{ transform: translateY(-8px) scale(1.03); opacity: 0.75; filter: blur(6px); }
+  /* 停頓，靈魂懸浮，更模糊 */
+  50%{ transform: translateY(-6px) scale(1.02); opacity: 0.6; filter: blur(10px); }
+  /* 緩慢回歸 */
+  75%{ transform: translateY(-2px) scale(1); opacity: 0.8; filter: blur(5px); }
+  100%{ transform: translateY(0) scale(1); opacity: 1; filter: blur(0px); }
+}
+/* Glow resonance - shadow glows when user makes a choice */
+.companion-shadow.glow-resonance{
+  filter: brightness(1.6) drop-shadow(0 0 20px rgba(200, 180, 230, 0.6));
 }
 .companion-shadow svg{
   overflow:visible;

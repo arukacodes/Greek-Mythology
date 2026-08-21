@@ -484,7 +484,40 @@ function resetShadowEvolution() {
   console.log('Shadow 進化已重置');
 }
 
-// 讓影子雙擊可打開調試面板
+// 測試 Shadow 互動反應
+function testShadowReaction(type) {
+  const shadow = document.getElementById('companionShadow');
+  if (!shadow) return;
+
+  switch(type) {
+    case 'shy':
+      shadow.classList.add('shy');
+      shadow.style.left = '-30px';
+      shadow.style.top = `calc(50vh + ${Math.random() * 20 - 10}px)`;
+      setTimeout(() => {
+        shadow.classList.remove('shy');
+        shadow.style.left = '-10px';
+        shadow.style.top = '50vh';
+      }, 2000);
+      break;
+    case 'confused':
+      shadow.classList.add('confused');
+      setTimeout(() => shadow.classList.remove('confused'), 2000);
+      break;
+    case 'glow':
+      triggerShadowGlow();
+      break;
+    case 'all':
+      // 依次觸發所有效果
+      testShadowReaction('glow');
+      setTimeout(() => testShadowReaction('shy'), 500);
+      setTimeout(() => testShadowReaction('confused'), 2500);
+      break;
+  }
+  console.log(`測試互動反應: ${type}`);
+}
+
+// Shadow 互動效果：害羞 + 共鳴發光
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     const shadow = document.getElementById('companionShadow');
@@ -493,9 +526,89 @@ document.addEventListener('DOMContentLoaded', () => {
       shadow.addEventListener('selectstart', (e) => e.preventDefault());
       shadow.addEventListener('copy', (e) => e.preventDefault());
       shadow.addEventListener('mousedown', (e) => e.preventDefault());
+
+      // 開啟指針事件以偵測滑鼠
+      shadow.style.pointerEvents = 'auto';
+      shadow.style.cursor = 'default';
+
+      let shyTimeout = null;
+      let basePosition = { left: -10, top: 50 }; // vh
+
+      // 害羞效果：滑鼠靠近時退開（概率可調），否則疑惑
+      shadow.addEventListener('mouseenter', () => {
+        if (shyTimeout) clearTimeout(shyTimeout);
+        const shyProb = parseInt(document.getElementById('shyProbability')?.value || 70) / 100;
+        if (Math.random() < shyProb) {
+          shadow.classList.remove('confused');
+          shadow.classList.add('shy');
+          // 輕輕向左飄遠
+          shadow.style.left = '-30px';
+          shadow.style.top = `calc(50vh + ${Math.random() * 20 - 10}px)`;
+        } else {
+          // 不害羞時，表現疑惑
+          shadow.classList.remove('shy');
+          shadow.classList.add('confused');
+          setTimeout(() => shadow.classList.remove('confused'), 600);
+        }
+      });
+
+      shadow.addEventListener('mouseleave', () => {
+        shadow.classList.remove('shy');
+        // 慢慢回到原位
+        shyTimeout = setTimeout(() => {
+          shadow.style.left = '-10px';
+          shadow.style.top = '50vh';
+        }, 800);
+      });
+
+      // 儲存 base position 供外部呼叫
+      shadow._baseLeft = -10;
+      shadow._baseTop = 50;
     }
   }, 500);
+
+  // 監聽滑鼠移動，用於更靈敏的害羞偵測
+  document.addEventListener('mousemove', (e) => {
+    const shadow = document.getElementById('companionShadow');
+    if (!shadow || !shadow.classList.contains('present')) return;
+
+    const rect = shadow.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
+
+    // 滑鼠靠近 150px 範圍內（概率可調）
+    const shyChance = parseInt(document.getElementById('shyProbability')?.value || 70) / 100;
+    if (distance < 150 && !shadow.classList.contains('shy')) {
+      if (Math.random() < shyChance) {
+        shadow.classList.add('shy');
+        shadow.style.left = '-30px';
+        shadow.style.top = `calc(50vh + ${(Math.random() * 20 - 10)}px)`;
+      } else {
+        // 不害羞就疑惑
+        shadow.classList.add('confused');
+        setTimeout(() => shadow.classList.remove('confused'), 600);
+      }
+    } else if (distance >= 150 && shadow.classList.contains('shy')) {
+      shadow.classList.remove('shy');
+      setTimeout(() => {
+        shadow.style.left = '-10px';
+        shadow.style.top = '50vh';
+      }, 300);
+    }
+  });
 });
+
+// 觸發 Shadow 共鳴發光效果（用於哲學選擇時）
+function triggerShadowGlow() {
+  const shadow = document.getElementById('companionShadow');
+  if (!shadow) return;
+
+  shadow.classList.add('glow-resonance');
+  setTimeout(() => {
+    shadow.classList.remove('glow-resonance');
+  }, 1500);
+}
 
 function triggerTendencyShiftAnimation(fromTendency, toTendency) {
   const shadow = document.getElementById('companionShadow');
@@ -1297,6 +1410,8 @@ function choosePhilo(i){
   // 記錄哲學選擇到 Companion Shadow
   if (o.reveal) {
     recordPhiloChoice(o.reveal);
+    // 觸發 Shadow 共鳴發光效果
+    triggerShadowGlow();
   }
 
   document.getElementById('philoContent').innerHTML = `
