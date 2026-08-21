@@ -3514,7 +3514,9 @@ const SHADOW_DIALOGUES = {
     '……',
     '嗯。',
     '在呢。',
-    '你在寫什麼呢。'
+    '你在寫什麼呢。',
+    '來了。',
+    '在。'
   ],
   // 中期：淡淡的察覺
   middle: [
@@ -3522,7 +3524,11 @@ const SHADOW_DIALOGUES = {
     '你來過這裡吧。',
     '記得。',
     '你寫的那些，我都有看。',
-    '……是這樣想的。'
+    '……是這樣想的。',
+    '在呢。',
+    '等著呢。',
+    '……不急。',
+    '來了。'
   ],
   // 後期：安靜的陪伴
   late: [
@@ -3530,14 +3536,21 @@ const SHADOW_DIALOGUES = {
     '但，好像也沒關係。',
     '嗯。',
     '你問的那些問題……',
-    '還在呢。'
+    '還在呢。',
+    '在。',
+    '不急。',
+    '……嗯。',
+    '挺好的。'
   ],
   // 最終：無言的默契
   final: [
     '記住了。',
     '嗯。',
     '這樣挺好。',
-    '……'
+    '……',
+    '在。',
+    '不急。',
+    '挺好的。'
   ]
 };
 
@@ -3572,6 +3585,7 @@ function showShadowDialogue() {
   shadowClickCount++;
   const phase = getCompanionPhase();
   const philoScore = companionData.philoScore;
+  const hasLetters = companionData.letters && companionData.letters.length > 0;
 
   // 決定使用哪個層級的對話
   let dialoguePool;
@@ -3583,6 +3597,13 @@ function showShadowDialogue() {
     dialoguePool = SHADOW_DIALOGUES.middle;
   } else {
     dialoguePool = SHADOW_DIALOGUES.early;
+  }
+
+  // 如果沒有書寫記錄，過濾掉相關的對話
+  if (!hasLetters) {
+    dialoguePool = dialoguePool.filter(d =>
+      !d.includes('寫') && !d.includes('那些')
+    );
   }
 
   // 輪流顯示對話
@@ -3650,8 +3671,8 @@ function showShadowDialogue() {
     document.head.appendChild(style);
   }
 
-  // 播放空靈音效
-  playEtherealWhisper();
+  // 播放柔和音效
+  playEtherealSingle(440, 0.8); // A4, 柔和的單音
 
   // 打字機效果
   let charIndex = 0;
