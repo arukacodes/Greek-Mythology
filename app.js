@@ -3599,7 +3599,7 @@ function setupPhilosophyToastOnClick() {
       lastPhilosophyToastTime = now;
       showMilestoneToast({
         text: '想不明白的問題就不想了',
-        author: '影子的低語'
+        author: ''
       });
       playEtherealWhisper();
     }
