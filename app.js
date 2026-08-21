@@ -52,15 +52,53 @@ function playTone(freq, duration, type, peak, delay){
 }
 
 const GEN_NOTES = {
-  primordial:261.63, titan:293.66, olympian:329.63, hero:349.23,
-  nature:392.00, zodiac:440.00, troy:493.88, mythconcepts:523.25,
-  philosophy:587.33, modernphil:659.25, psychology:698.46, arts:783.99, crosscultural:880.00
+  // A小調 - 擴展音域避免半音撞音，確保12個分支各有獨特音高
+  primordial:220.00,   // A3
+  titan:261.63,        // C4 (跳過B，避免與C撞)
+  olympian:293.66,     // D4
+  hero:349.23,         // F4 (跳過E，避免與F撞)
+  nature:392.00,       // G4
+  zodiac:466.16,       // Bb4 (避開B4-C5撞音)
+  troy:523.25,         // C5
+  mythconcepts:587.33, // D5
+  philosophy:659.25,   // E5
+  modernphil:739.99,   // F#5 (避開F5-G5撞音)
+  psychology:880.00,   // A5
+  arts:987.77,         // B5
+  crosscultural:1174.66 // D6
 };
 
 function playSelectSound(gen){
+  // 空靈版本 - 正弦波 + 泛音 + 緩慢衰減
+  if(!soundOn) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
   const base = GEN_NOTES[gen] || 392;
-  playTone(base, 0.5, 'triangle', 0.11, 0);
-  playTone(base*1.5, 0.4, 'sine', 0.04, 0.03);
+  const t0 = ctx.currentTime;
+
+  // 主音
+  const main = ctx.createOscillator();
+  const mainGain = ctx.createGain();
+  main.type = 'sine';
+  main.frequency.value = base;
+  mainGain.gain.setValueAtTime(0, t0);
+  mainGain.gain.linearRampToValueAtTime(0.08, t0 + 0.12);
+  mainGain.gain.exponentialRampToValueAtTime(0.001, t0 + 1.8);
+  main.connect(mainGain).connect(ctx.destination);
+  main.start(t0);
+  main.stop(t0 + 1.8);
+
+  // 泛音
+  const harm = ctx.createOscillator();
+  const harmGain = ctx.createGain();
+  harm.type = 'sine';
+  harm.frequency.value = base * 2.5;
+  harmGain.gain.setValueAtTime(0, t0);
+  harmGain.gain.linearRampToValueAtTime(0.02, t0 + 0.15);
+  harmGain.gain.exponentialRampToValueAtTime(0.001, t0 + 1.0);
+  harm.connect(harmGain).connect(ctx.destination);
+  harm.start(t0);
+  harm.stop(t0 + 1.2);
 }
 
 /* ---------- Sound easter egg: click through every tier in ascending pitch order to play a hidden scale ---------- */
@@ -86,54 +124,367 @@ function checkScaleEasterEgg(gen){
 }
 
 function playScaleCompleteFanfare(){
-  if(!soundOn) return;
-  // A clean two-octave C-major-pentatonic run, purpose-built for pleasantness —
-  // the raw per-tier click pitches (GEN_NOTES) include an F and Ab that break the pentatonic feel and sound "off"
-  const fanfareNotes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
-  fanfareNotes.forEach((freq, i)=>{
-    playTone(freq, 0.22, 'triangle', 0.09, i * 0.075);
-  });
-  const chordDelay = fanfareNotes.length * 0.075 + 0.06;
-  setTimeout(()=>{
-    playTone(1046.50, 1.0, 'sine', 0.11, 0);   // C6
-    playTone(1318.51, 1.0, 'sine', 0.08, 0);   // E6
-    playTone(1568.00, 1.0, 'sine', 0.07, 0);   // G6
-    showMilestoneToast({text:'你彈奏了一段完整的音階——從創世的低音，到跨文化連結的最高音。', author:'🎵 音效彩蛋'});
-  }, chordDelay * 1000);
-}
-
-function playUnlockChime(){
-  playTone(523.25, 0.35, 'triangle', 0.12, 0);
-  playTone(659.25, 0.5, 'triangle', 0.12, 0.12);
-}
-
-function playEggChime(){
-  playTone(659.25, 0.3, 'sine', 0.1, 0);
-  playTone(830.61, 0.3, 'sine', 0.09, 0.09);
-  playTone(1046.5, 0.45, 'triangle', 0.1, 0.18);
-  playTone(1568.0, 0.35, 'sine', 0.06, 0.22);
-  playTone(2093.0, 0.3, 'sine', 0.045, 0.27);
-}
-
-function playPageSound(direction){
+  // 空靈版本 - 音階上行 + 和弦尾音
   if(!soundOn) return;
   const ctx = getAudioCtx();
   if(!ctx) return;
   const t0 = ctx.currentTime;
+  const scaleNotes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+
+  scaleNotes.forEach((freq, i) => {
+    // 主音
+    const main = ctx.createOscillator();
+    const mainGain = ctx.createGain();
+    main.type = 'sine';
+    main.frequency.value = freq;
+    mainGain.gain.setValueAtTime(0, t0 + i * 0.18);
+    mainGain.gain.linearRampToValueAtTime(0.06, t0 + i * 0.18 + 0.1);
+    mainGain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.18 + 2.0);
+    main.connect(mainGain).connect(ctx.destination);
+    main.start(t0 + i * 0.18);
+    main.stop(t0 + i * 0.18 + 2.2);
+
+    // 泛音
+    const harm = ctx.createOscillator();
+    const harmGain = ctx.createGain();
+    harm.type = 'sine';
+    harm.frequency.value = freq * 2.5;
+    harmGain.gain.setValueAtTime(0, t0 + i * 0.18);
+    harmGain.gain.linearRampToValueAtTime(0.015, t0 + i * 0.18 + 0.15);
+    harmGain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.18 + 1.2);
+    harm.connect(harmGain).connect(ctx.destination);
+    harm.start(t0 + i * 0.18);
+    harm.stop(t0 + i * 0.18 + 1.5);
+  });
+
+  // 和弦尾音
+  const chordDelay = scaleNotes.length * 0.18 + 0.2;
+  [1046.50, 1318.51, 1568.00].forEach(freq => {
+    const main = ctx.createOscillator();
+    const mainGain = ctx.createGain();
+    main.type = 'sine';
+    main.frequency.value = freq;
+    mainGain.gain.setValueAtTime(0, t0 + chordDelay);
+    mainGain.gain.linearRampToValueAtTime(0.05, t0 + chordDelay + 0.1);
+    mainGain.gain.exponentialRampToValueAtTime(0.001, t0 + chordDelay + 3.0);
+    main.connect(mainGain).connect(ctx.destination);
+    main.start(t0 + chordDelay);
+    main.stop(t0 + chordDelay + 3.2);
+
+    const harm = ctx.createOscillator();
+    const harmGain = ctx.createGain();
+    harm.type = 'sine';
+    harm.frequency.value = freq * 2;
+    harmGain.gain.setValueAtTime(0, t0 + chordDelay);
+    harmGain.gain.linearRampToValueAtTime(0.012, t0 + chordDelay + 0.2);
+    harmGain.gain.exponentialRampToValueAtTime(0.001, t0 + chordDelay + 1.8);
+    harm.connect(harmGain).connect(ctx.destination);
+    harm.start(t0 + chordDelay);
+    harm.stop(t0 + chordDelay + 2.0);
+  });
+
+  setTimeout(() => {
+    showMilestoneToast({text:'你彈奏了一段完整的音階——從創世的低音，到跨文化連結的最高音。', author:'🎵 音效彩蛋'});
+  }, chordDelay * 1000 + 500);
+}
+
+function playUnlockChime(){
+  // 空靈版本 - 頌钵風格三和絃
+  if(!soundOn) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  const t0 = ctx.currentTime;
+  const notes = [392, 523.25, 659.25]; // G4, C5, E5
+
+  notes.forEach((freq, i) => {
+    const main = ctx.createOscillator();
+    const mainGain = ctx.createGain();
+    main.type = 'sine';
+    main.frequency.value = freq;
+    mainGain.gain.setValueAtTime(0, t0 + i * 0.12);
+    mainGain.gain.linearRampToValueAtTime(0.07, t0 + i * 0.12 + 0.15);
+    mainGain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.12 + 2.5);
+    main.connect(mainGain).connect(ctx.destination);
+    main.start(t0 + i * 0.12);
+    main.stop(t0 + i * 0.12 + 2.8);
+
+    const harm = ctx.createOscillator();
+    const harmGain = ctx.createGain();
+    harm.type = 'sine';
+    harm.frequency.value = freq * 3;
+    harmGain.gain.setValueAtTime(0, t0 + i * 0.12);
+    harmGain.gain.linearRampToValueAtTime(0.018, t0 + i * 0.12 + 0.2);
+    harmGain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.12 + 1.5);
+    harm.connect(harmGain).connect(ctx.destination);
+    harm.start(t0 + i * 0.12);
+    harm.stop(t0 + i * 0.12 + 2.0);
+  });
+}
+
+function playEggChime(){
+  // 空靈版本 - 輕盈上行旋律（用於彩蛋發現）
+  if(!soundOn) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  const t0 = ctx.currentTime;
+  const notes = [523.25, 659.25, 783.99, 1046.5, 1318.51];
+
+  notes.forEach((freq, i) => {
+    const main = ctx.createOscillator();
+    const mainGain = ctx.createGain();
+    main.type = 'sine';
+    main.frequency.value = freq;
+    mainGain.gain.setValueAtTime(0, t0 + i * 0.15);
+    mainGain.gain.linearRampToValueAtTime(0.06, t0 + i * 0.15 + 0.1);
+    mainGain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.15 + 1.5);
+    main.connect(mainGain).connect(ctx.destination);
+    main.start(t0 + i * 0.15);
+    main.stop(t0 + i * 0.15 + 1.8);
+
+    const harm = ctx.createOscillator();
+    const harmGain = ctx.createGain();
+    harm.type = 'sine';
+    harm.frequency.value = freq * 2.5;
+    harmGain.gain.setValueAtTime(0, t0 + i * 0.15);
+    harmGain.gain.linearRampToValueAtTime(0.015, t0 + i * 0.15 + 0.15);
+    harmGain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.15 + 0.9);
+    harm.connect(harmGain).connect(ctx.destination);
+    harm.start(t0 + i * 0.15);
+    harm.stop(t0 + i * 0.15 + 1.2);
+  });
+}
+
+function playToastSound(){
+  // Toast 專用 - 低沉柔和的提示音（不搶戲）
+  if(!soundOn) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  const t0 = ctx.currentTime;
+  const notes = [392, 493.88, 587.33]; // G4, B4, D5 - 下行終止
+
+  notes.forEach((freq, i) => {
+    const main = ctx.createOscillator();
+    const mainGain = ctx.createGain();
+    main.type = 'sine';
+    main.frequency.value = freq;
+    mainGain.gain.setValueAtTime(0, t0 + i * 0.18);
+    mainGain.gain.linearRampToValueAtTime(0.04, t0 + i * 0.18 + 0.08);
+    mainGain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.18 + 1.8);
+    main.connect(mainGain).connect(ctx.destination);
+    main.start(t0 + i * 0.18);
+    main.stop(t0 + i * 0.18 + 2.0);
+
+    const harm = ctx.createOscillator();
+    const harmGain = ctx.createGain();
+    harm.type = 'sine';
+    harm.frequency.value = freq * 2;
+    harmGain.gain.setValueAtTime(0, t0 + i * 0.18);
+    harmGain.gain.linearRampToValueAtTime(0.008, t0 + i * 0.18 + 0.12);
+    harmGain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.18 + 1.0);
+    harm.connect(harmGain).connect(ctx.destination);
+    harm.start(t0 + i * 0.18);
+    harm.stop(t0 + i * 0.18 + 1.2);
+  });
+}
+
+/* ---------- Ethereal Sound Demo (空灵音效) ---------- */
+function playEtherealSingle(freq = 523.25, duration = 2.0) {
+  // 單一空靈音 - 正弦波 + 泛音 + 緩慢衰減
+  if(!soundOn) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+
+  const t0 = ctx.currentTime;
+
+  // 主音
+  const main = ctx.createOscillator();
+  const mainGain = ctx.createGain();
+  main.type = 'sine';
+  main.frequency.value = freq;
+  mainGain.gain.setValueAtTime(0, t0);
+  mainGain.gain.linearRampToValueAtTime(0.07, t0 + 0.15);
+  mainGain.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
+  main.connect(mainGain).connect(ctx.destination);
+  main.start(t0);
+  main.stop(t0 + duration);
+
+  // 泛音 (shimmer)
+  const harm = ctx.createOscillator();
+  const harmGain = ctx.createGain();
+  harm.type = 'sine';
+  harm.frequency.value = freq * 2.5;
+  harmGain.gain.setValueAtTime(0, t0);
+  harmGain.gain.linearRampToValueAtTime(0.025, t0 + 0.2);
+  harmGain.gain.exponentialRampToValueAtTime(0.001, t0 + duration * 0.6);
+  harm.connect(harmGain).connect(ctx.destination);
+  harm.start(t0);
+  harm.stop(t0 + duration);
+
+  // 高頻泛音 (air)
+  const air = ctx.createOscillator();
+  const airGain = ctx.createGain();
+  air.type = 'sine';
+  air.frequency.value = freq * 4;
+  airGain.gain.setValueAtTime(0, t0);
+  airGain.gain.linearRampToValueAtTime(0.008, t0 + 0.3);
+  airGain.gain.exponentialRampToValueAtTime(0.001, t0 + duration * 0.4);
+  air.connect(airGain).connect(ctx.destination);
+  air.start(t0);
+  air.stop(t0 + duration);
+}
+
+function playEtherealChime() {
+  // 空靈鐘聲 - 頌钵風格
+  if(!soundOn) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+
+  const t0 = ctx.currentTime;
+  const notes = [392, 523.25, 659.25]; // G4, C5, E5 - 和弦
+
+  notes.forEach((freq, i) => {
+    // 主音
+    const main = ctx.createOscillator();
+    const mainGain = ctx.createGain();
+    main.type = 'sine';
+    main.frequency.value = freq;
+    mainGain.gain.setValueAtTime(0, t0 + i * 0.08);
+    mainGain.gain.linearRampToValueAtTime(0.06, t0 + i * 0.08 + 0.1);
+    mainGain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.08 + 2.0);
+    main.connect(mainGain).connect(ctx.destination);
+    main.start(t0 + i * 0.08);
+    main.stop(t0 + i * 0.08 + 2.0);
+
+    // 泛音
+    const harm = ctx.createOscillator();
+    const harmGain = ctx.createGain();
+    harm.type = 'sine';
+    harm.frequency.value = freq * 3;
+    harmGain.gain.setValueAtTime(0, t0 + i * 0.08);
+    harmGain.gain.linearRampToValueAtTime(0.015, t0 + i * 0.08 + 0.15);
+    harmGain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.08 + 1.2);
+    harm.connect(harmGain).connect(ctx.destination);
+    harm.start(t0 + i * 0.08);
+    harm.stop(t0 + i * 0.08 + 1.5);
+  });
+}
+
+function playEtherealWhisper() {
+  // 空靈低語 - 記憶模糊觸發時
+  if(!soundOn) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+
+  const t0 = ctx.currentTime;
+  const freq = 261.63; // C4 低沉
+
+  // 低頻 drone
+  const drone = ctx.createOscillator();
+  const droneGain = ctx.createGain();
+  drone.type = 'sine';
+  drone.frequency.value = freq;
+  droneGain.gain.setValueAtTime(0, t0);
+  droneGain.gain.linearRampToValueAtTime(0.04, t0 + 0.5);
+  droneGain.gain.linearRampToValueAtTime(0.02, t0 + 1.5);
+  droneGain.gain.exponentialRampToValueAtTime(0.001, t0 + 2.5);
+  drone.connect(droneGain).connect(ctx.destination);
+  drone.start(t0);
+  drone.stop(t0 + 2.5);
+
+  // 上方泛音
+  const harm = ctx.createOscillator();
+  const harmGain = ctx.createGain();
+  harm.type = 'sine';
+  harm.frequency.value = freq * 2;
+  harmGain.gain.setValueAtTime(0, t0);
+  harmGain.gain.linearRampToValueAtTime(0.015, t0 + 0.8);
+  harmGain.gain.exponentialRampToValueAtTime(0.001, t0 + 2.0);
+  harm.connect(harmGain).connect(ctx.destination);
+  harm.start(t0);
+  harm.stop(t0 + 2.0);
+}
+
+function playEtherealShimmer() {
+  // 空靈閃爍 - 輕盈上行
+  if(!soundOn) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+
+  const t0 = ctx.currentTime;
+  const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+
+  notes.forEach((freq, i) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0, t0 + i * 0.15);
+    gain.gain.linearRampToValueAtTime(0.05, t0 + i * 0.15 + 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.15 + 1.8);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t0 + i * 0.15);
+    osc.stop(t0 + i * 0.15 + 2.0);
+
+    // Shimmer 泛音
+    const shimmer = ctx.createOscillator();
+    const shimmerGain = ctx.createGain();
+    shimmer.type = 'sine';
+    shimmer.frequency.value = freq * 3;
+    shimmerGain.gain.setValueAtTime(0, t0 + i * 0.15);
+    shimmerGain.gain.linearRampToValueAtTime(0.012, t0 + i * 0.15 + 0.2);
+    shimmerGain.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.15 + 1.2);
+    shimmer.connect(shimmerGain).connect(ctx.destination);
+    shimmer.start(t0 + i * 0.15);
+    shimmer.stop(t0 + i * 0.15 + 1.5);
+  });
+}
+
+// 調試面板測試空靈音效
+function testEtherealSound(type) {
+  switch(type) {
+    case 'single': playEtherealSingle(523.25, 2.0); break;
+    case 'chime': playEtherealChime(); break;
+    case 'whisper': playEtherealWhisper(); break;
+    case 'shimmer': playEtherealShimmer(); break;
+  }
+}
+
+function playPageSound(direction){
+  // 空靈版本 - 柔和滑音 + 泛音
+  if(!soundOn) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  const t0 = ctx.currentTime;
+  const startFreq = direction === 'next' ? 440 : 587.33;
+  const endFreq = direction === 'next' ? 587.33 : 440;
+
+  // 主音
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   osc.type = 'sine';
-  const startFreq = direction === 'next' ? 500 : 700;
-  const endFreq = direction === 'next' ? 700 : 500;
   osc.frequency.setValueAtTime(startFreq, t0);
-  osc.frequency.exponentialRampToValueAtTime(endFreq, t0 + 0.18);
+  osc.frequency.exponentialRampToValueAtTime(endFreq, t0 + 0.35);
   gain.gain.setValueAtTime(0, t0);
-  gain.gain.linearRampToValueAtTime(0.06, t0 + 0.02);
-  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.2);
+  gain.gain.linearRampToValueAtTime(0.04, t0 + 0.05);
+  gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.6);
   osc.connect(gain);
   gain.connect(ctx.destination);
   osc.start(t0);
-  osc.stop(t0 + 0.25);
+  osc.stop(t0 + 0.7);
+
+  // 泛音
+  const harm = ctx.createOscillator();
+  const harmGain = ctx.createGain();
+  harm.type = 'sine';
+  harm.frequency.setValueAtTime(startFreq * 2, t0);
+  harm.frequency.exponentialRampToValueAtTime(endFreq * 2, t0 + 0.35);
+  harmGain.gain.setValueAtTime(0, t0);
+  harmGain.gain.linearRampToValueAtTime(0.01, t0 + 0.08);
+  harmGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.4);
+  harm.connect(harmGain);
+  harmGain.connect(ctx.destination);
+  harm.start(t0);
+  harm.stop(t0 + 0.5);
 }
 
 function toggleSound(){
@@ -2138,7 +2489,7 @@ function revealEgg(i, card){
     try{ localStorage.setItem(EGG_KEY, JSON.stringify([...discoveredEggs])); }catch(e){}
     const rect = card.getBoundingClientRect();
     spawnSparkles(rect.left + rect.width/2, rect.top + rect.height/2);
-    playEggChime();
+    playToastSound();
     updateEggProgress();
     if(discoveredEggs.size === EASTER_EGGS.length){
       setTimeout(()=>{
@@ -2755,7 +3106,7 @@ function showMilestoneToast(quote){
   const author = typeof quote === 'string' ? '' : (quote.author || '');
   authorEl.style.opacity = '0';
   toast.classList.add('show');
-  playEggChime();
+  playToastSound();
   scrambleReveal(textEl, `「${text}」`, 750);
   setTimeout(()=>{
     if(author){
@@ -3072,7 +3423,7 @@ window.easterEgg = function(){
   const q = QUOTE_POOL[Math.floor(Math.random() * QUOTE_POOL.length)];
   console.log('%c'+q.text, 'font-size:14px; color:#A6812E; font-style:italic;');
   console.log('%c—— '+q.author, 'font-size:11px; color:#8a8578;');
-  try{ playEggChime(); }catch(e){}
+  try{ playToastSound(); }catch(e){}
   try{ spawnSparkles(window.innerWidth/2, window.innerHeight/2); }catch(e){}
   return '✦ 願你在探索裡，也找到自己的答案。';
 };
