@@ -532,70 +532,91 @@ document.addEventListener('DOMContentLoaded', () => {
       shadow.style.cursor = 'default';
 
       let shyTimeout = null;
-      let basePosition = { left: -10, top: 50 }; // vh
+      let confusedTimeout = null;
+      let isRecovering = false;
+      let lastDistance = 999; // 記住上次距離
 
       // 害羞效果：滑鼠靠近時退開（概率可調），否則疑惑
       shadow.addEventListener('mouseenter', () => {
         if (shyTimeout) clearTimeout(shyTimeout);
+        if (confusedTimeout) clearTimeout(confusedTimeout);
         const shyProb = parseInt(document.getElementById('shyProbability')?.value || 70) / 100;
         if (Math.random() < shyProb) {
           shadow.classList.remove('confused');
           shadow.classList.add('shy');
-          // 輕輕向左飄遠
           shadow.style.left = '-30px';
           shadow.style.top = `calc(50vh + ${Math.random() * 20 - 10}px)`;
         } else {
-          // 不害羞時，表現疑惑
           shadow.classList.remove('shy');
           shadow.classList.add('confused');
-          setTimeout(() => shadow.classList.remove('confused'), 600);
+          confusedTimeout = setTimeout(() => shadow.classList.remove('confused'), 2000);
         }
       });
 
       shadow.addEventListener('mouseleave', () => {
         shadow.classList.remove('shy');
-        // 慢慢回到原位
         shyTimeout = setTimeout(() => {
           shadow.style.left = '-10px';
           shadow.style.top = '50vh';
-        }, 800);
+        }, 1000);
       });
 
-      // 儲存 base position 供外部呼叫
       shadow._baseLeft = -10;
       shadow._baseTop = 50;
+
+      // 用 IntersectionObserver 代替 mousemove，只在 Shadow 可見時計算
+      // 但為了簡單，這裡還是保留 mousemove，只是加節流
     }
   }, 500);
 
-  // 監聽滑鼠移動，用於更靈敏的害羞偵測
+  // 監聽滑鼠移動，用於更靈敏的害羞偵測（節流版本）
+  let isRecovering = false;
+  let isProcessing = false;
+  let confusedTimeout = null;
+
   document.addEventListener('mousemove', (e) => {
-    const shadow = document.getElementById('companionShadow');
-    if (!shadow || !shadow.classList.contains('present')) return;
+    if (isProcessing) return;
+    isProcessing = true;
 
-    const rect = shadow.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
-
-    // 滑鼠靠近 150px 範圍內（概率可調）
-    const shyChance = parseInt(document.getElementById('shyProbability')?.value || 70) / 100;
-    if (distance < 150 && !shadow.classList.contains('shy')) {
-      if (Math.random() < shyChance) {
-        shadow.classList.add('shy');
-        shadow.style.left = '-30px';
-        shadow.style.top = `calc(50vh + ${(Math.random() * 20 - 10)}px)`;
-      } else {
-        // 不害羞就疑惑
-        shadow.classList.add('confused');
-        setTimeout(() => shadow.classList.remove('confused'), 600);
+    requestAnimationFrame(() => {
+      const shadow = document.getElementById('companionShadow');
+      if (!shadow || !shadow.classList.contains('present')) {
+        isProcessing = false;
+        return;
       }
-    } else if (distance >= 150 && shadow.classList.contains('shy')) {
-      shadow.classList.remove('shy');
-      setTimeout(() => {
+
+      const rect = shadow.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
+
+      const shyChance = parseInt(document.getElementById('shyProbability')?.value || 70) / 100;
+
+      // 用方向變化代替距離判斷，避免頻繁觸發
+      const wasNear = shadow._lastDistance < 150;
+      const isNear = distance < 150;
+
+      if (isNear && !wasNear && !shadow.classList.contains('shy') && !isRecovering) {
+        if (Math.random() < shyChance) {
+          shadow.classList.add('shy');
+          shadow.style.left = '-30px';
+          shadow.style.top = `calc(50vh + ${(Math.random() * 20 - 10)}px)`;
+        } else {
+          shadow.classList.add('confused');
+          if (confusedTimeout) clearTimeout(confusedTimeout);
+          confusedTimeout = setTimeout(() => shadow.classList.remove('confused'), 2000);
+        }
+      } else if (!isNear && wasNear && shadow.classList.contains('shy') && !isRecovering) {
+        isRecovering = true;
+        shadow.classList.remove('shy');
         shadow.style.left = '-10px';
         shadow.style.top = '50vh';
-      }, 300);
-    }
+        setTimeout(() => { isRecovering = false; }, 800);
+      }
+
+      shadow._lastDistance = distance;
+      isProcessing = false;
+    });
   });
 });
 
