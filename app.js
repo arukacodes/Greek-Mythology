@@ -587,9 +587,8 @@ function renderDetail(id){
     `;
   }).join('');
 
-  const storyParts = d.story.split('。');
-  const storyHook = storyParts[0] ? storyParts[0] + '。' : d.story;
-  const storyRest = storyParts.slice(1).join('。');
+  // 完整渲染 story
+  const storyText = d.story;
 
   content.innerHTML = `
     <div class="detail-header">
@@ -605,7 +604,7 @@ function renderDetail(id){
       <span class="tag">領域：${d.domain}</span>
       <span class="tag">象徵：${d.symbol}</span>
     </div>
-    <div class="detail-story"><span class="story-hook">${storyHook}</span>${storyRest}</div>
+    <div class="detail-story">${storyText}</div>
     ${d.diagram ? `<div class="concept-diagram">${d.diagram}<div class="diagram-caption">💡 概念圖解</div></div>` : ''}
     <button class="read-story-btn" id="storyToggleBtn" onclick="toggleStory('${d.id}')">📜 閱讀完整神話故事</button>
     <div class="full-story-box" id="fullStoryBox"></div>

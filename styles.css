@@ -1343,19 +1343,10 @@ svg#connections{
   color:var(--ink);
   margin-bottom:16px;
   font-family:'Noto Serif TC', serif;
-}
-.detail-story .story-hook{
-  display:block;
-  font-size:13px;
-  font-weight:600;
-  color:var(--gold);
-  line-height:1.7;
-  padding:12px 14px;
-  margin-bottom:14px;
-  background:linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+  padding:14px 16px;
+  background:linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.02));
   border-left:3px solid var(--gold);
   border-radius:0 8px 8px 0;
-  font-family:'Noto Serif TC', serif;
 }
 
 .concept-diagram{

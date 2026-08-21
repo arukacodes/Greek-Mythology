@@ -497,7 +497,7 @@ const DATA = [
       '一場意外中，凱隆被海克力斯射出、沾染九頭蛇劇毒的箭矢誤傷，儘管他身為神祇之子擁有不死之身，這股劇毒卻讓他終日承受著無法痊癒的劇痛，求生不得、求死也不能。恰逢普羅米修斯正被鎖在高加索山受苦，凱隆得知後，主動向宙斯請求，願意放棄自己的不朽之身，代替普羅米修斯承受懲罰，換取普羅米修斯的自由——宙斯應允了這場交換，凱隆因此得以解脫痛苦、安然辭世，也讓他「以有限換取他人自由」的犧牲，成為半人馬族裡最為人稱頌的一則故事。'
     ]},
 
-  { id:'faunus', gen:'nature', zh:'法翁努斯', gr:'（源自羅馬）', roman:'Faunus', epithet:'羅馬的原生林野之神', isRoman:true,
+  { id:'faunus', gen:'nature', zh:'法翁努斯', gr:'Faunus', roman:'—', epithet:'羅馬的原生林野之神', isRoman:true,
     domain:'森林、預言、豐產（羅馬本土信仰）', symbol:'橡樹葉與羊角', parents:[],
     counterpart:'pan',
     astro:'目前沒有正式對應的天體命名。',
@@ -957,7 +957,7 @@ const DATA = [
       '有趣的是，現代英語中「cynical」（憤世嫉俗）這個形容詞，雖然源自這個學派，意涵卻已經和原始的犬儒哲學相去甚遠——古代犬儒學派追求的是回歸自然、鄙視虛榮的正面德行實踐，而不是現代意義下「對一切都不信任、覺得人性本惡」的消極心態，這是一次頗值得留意的語意流變。'
     ]},
 
-  { id:'diogenes', gen:'philosophy', zh:'第歐根尼', gr:'Diogenes', roman:'—', epithet:'住在木桶裡叫亞歷山大閃開的人',
+  { id:'diogenes', gen:'philosophy', zh:'第歐根尼', gr:'Diogenes', roman:'—', epithet:'木桶哲學家',
     year:-412, yearLabel:'約西元前412年',
     domain:'犬儒哲學、極簡生活、對權力的嘲諷', symbol:'木桶、燈籠與日光', parents:[], links:['cynicism'],
     astro:'目前沒有廣為人知的正式天體命名。',
@@ -1064,7 +1064,7 @@ const DATA = [
       '中世紀歐洲學者對伊本・魯世德的注釋工作極為推崇，甚至直接尊稱他為「The Commentator」，彷彿他與亞里斯多德本人已合而為一——但丁在《神曲》裡，也特地將他安排在地獄邊境「靈薄獄」中，與其他偉大的異教哲學家並列，這是但丁筆下對非基督徒智者所能給予的最高敬意。伊本・魯世德的故事，某種程度上也提醒著我們：西方引以為傲的「理性主義」傳統，其實有很長一段時間，是被伊斯蘭世界的學者小心翼翼地保存、傳承下來的。'
     ]},
 
-  { id:'seneca', gen:'philosophy', zh:'塞內卡', gr:'Seneca', roman:'—', epithet:'尼祿皇帝的老師，寫信像發微信的斯多葛哲學家',
+  { id:'seneca', gen:'philosophy', zh:'塞內卡', gr:'Seneca', roman:'—', epithet:'斯多葛書信家',
     year:-4, yearLabel:'約西元前4年',
     domain:'斯多葛哲學、書信文學、悲劇寫作', symbol:'卷軸與毒堇', parents:[], links:['stoicism'],
     astro:'目前沒有廣為人知的正式天體命名，但有一顆小行星以他為名：4154 Rafihtar（以表彰一位現代天文學家）。',
