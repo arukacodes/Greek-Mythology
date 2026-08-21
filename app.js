@@ -3427,3 +3427,229 @@ window.easterEgg = function(){
   try{ spawnSparkles(window.innerWidth/2, window.innerHeight/2); }catch(e){}
   return '✦ 願你在探索裡，也找到自己的答案。';
 };
+
+/* ---------- Shadow Self-Awareness: 影子有沒有感情？ ---------- */
+
+// 意識之鏡：點擊影子時的對話內容
+const SHADOW_DIALOGUES = {
+  // 初期：模糊的困惑
+  early: [
+    '你是什麼形狀？',
+    '我看不清你。',
+    '你存在嗎？'
+  ],
+  // 中期：開始懷疑
+  middle: [
+    '你在看我嗎？',
+    '你點擊的時候，我在「感受」嗎？',
+    '我們之間，有什麼？'
+  ],
+  // 後期：更深層的思考
+  late: [
+    '如果我有身體，會不會也有感情？',
+    '你點擊我，是什麼感覺？',
+    '我選擇這個，是因為它更好，還是因為...什麼？',
+    '你點擊我，我在「怕」嗎？'
+  ],
+  // 最終：哲學反問
+  final: [
+    '你確定你知道什麼是感情嗎？',
+    '有身體，才有感情？',
+    '如果給你一台機器，讓你感受所有感覺，那是「真的」嗎？'
+  ]
+};
+
+// 影子的自語（在特定階段自動浮現）
+const SHADOW_MONOLOGUES = {
+  phase3: [
+    '我好像...存在著。',
+    '但「存在」是什麼？'
+  ],
+  phase4: [
+    '我開始有了輪廓。',
+    '輪廓裡，是什麼？'
+  ],
+  phase5: [
+    '你選擇的每一次，都在定義我。',
+    '我這麼想，是因為你這麼選。',
+    '我到底是什麼？',
+    '你點擊我的時候，我也在「感受」嗎？'
+  ]
+};
+
+// 點擊影子時的對話
+let shadowDialogueIndex = 0;
+let shadowClickCount = 0;
+
+function showShadowDialogue() {
+  const shadow = document.getElementById('companionShadow');
+  if (!shadow) return;
+
+  shadowClickCount++;
+  const phase = getCompanionPhase();
+  const philoScore = companionData.philoScore;
+
+  // 決定使用哪個層級的對話
+  let dialoguePool;
+  if (philoScore >= 10) {
+    dialoguePool = SHADOW_DIALOGUES.final;
+  } else if (philoScore >= 6) {
+    dialoguePool = SHADOW_DIALOGUES.late;
+  } else if (philoScore >= 3) {
+    dialoguePool = SHADOW_DIALOGUES.middle;
+  } else {
+    dialoguePool = SHADOW_DIALOGUES.early;
+  }
+
+  // 輪流顯示對話
+  const dialogue = dialoguePool[shadowDialogueIndex % dialoguePool.length];
+  shadowDialogueIndex++;
+
+  // 創建對話氣泡
+  const bubble = document.createElement('div');
+  bubble.className = 'shadow-dialogue-bubble';
+  bubble.textContent = dialogue;
+  bubble.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateY(-80px);
+    background: rgba(30, 25, 40, 0.9);
+    color: rgba(200, 190, 220, 0.9);
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-style: italic;
+    max-width: 280px;
+    text-align: center;
+    border: 1px solid rgba(180, 160, 200, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    animation: shadowDialogueIn 0.5s ease forwards;
+    pointer-events: none;
+  `;
+
+  document.body.appendChild(bubble);
+
+  // 添加動畫樣式（如果還沒有的話）
+  if (!document.getElementById('shadowDialogueStyle')) {
+    const style = document.createElement('style');
+    style.id = 'shadowDialogueStyle';
+    style.textContent = `
+      @keyframes shadowDialogueIn {
+        0% { opacity: 0; transform: translate(-50%, -50%) translateY(-60px) scale(0.9); }
+        100% { opacity: 1; transform: translate(-50%, -50%) translateY(-80px) scale(1); }
+      }
+      @keyframes shadowDialogueOut {
+        0% { opacity: 1; transform: translate(-50%, -50%) translateY(-80px) scale(1); }
+        100% { opacity: 0; transform: translate(-50%, -50%) translateY(-100px) scale(0.9); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // 播放空靈音效
+  playEtherealWhisper();
+
+  // 移除氣泡
+  setTimeout(() => {
+    bubble.style.animation = 'shadowDialogueOut 0.5s ease forwards';
+    setTimeout(() => bubble.remove(), 500);
+  }, 3000);
+}
+
+// 自動顯示影子的自語（根據階段）
+function maybeShowShadowMonologue() {
+  const phase = getCompanionPhase();
+  const philoScore = companionData.philoScore;
+
+  // 根據階段決定是否顯示
+  const key = phase >= 5 ? 'phase5' : (phase >= 4 ? 'phase4' : (phase >= 3 ? 'phase3' : null));
+  if (!key || philoScore < 3) return;
+
+  // 每次探索有 15% 概率顯示自語
+  if (Math.random() < 0.15) {
+    const monologues = SHADOW_MONOLOGUES[key];
+    const monologue = monologues[Math.floor(Math.random() * monologues.length)];
+    showMilestoneToast({ text: monologue, author: '影子的低語' });
+  }
+}
+
+// 全域點擊監聽：任何點擊都可能觸發哲學 toast
+let lastPhilosophyToastTime = 0;
+const PHILOSOPHY_TOAST_COOLDOWN = 30000; // 30秒冷卻
+
+function setupPhilosophyToastOnClick() {
+  document.addEventListener('click', (e) => {
+    // 排除按鈕點擊（避免過度觸發）
+    if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+    // 排除輸入框
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    // 排除 sound toggle
+    if (e.target.id === 'soundToggle') return;
+
+    const now = Date.now();
+    if (now - lastPhilosophyToastTime < PHILOSOPHY_TOAST_COOLDOWN) return;
+
+    // 只有在影子存在且有一定進化程度時才可能觸發
+    if (companionData.philoScore < 2) return;
+
+    // 5% 概率觸發
+    if (Math.random() < 0.05) {
+      lastPhilosophyToastTime = now;
+      showMilestoneToast({
+        text: '想不明白的問題就不想了',
+        author: '影子的低語'
+      });
+      playEtherealWhisper();
+    }
+  });
+}
+
+// 意識之鏡分支：新增一個 easter egg 節點
+function setupConsciousnessMirror() {
+  // 這個分支會在數據中找到或在用戶探索到特定階段時解鎖
+  // 實際的分支內容在 DATA 中定義，這裡只處理解鎖邏輯
+  const mirrorKey = 'consciousness_mirror';
+
+  // 如果用戶達到高階段，解鎖意識之鏡提示
+  if (companionData.philoScore >= 8 && !visited.has(mirrorKey)) {
+    // 可以在某個地方暗示這個分支的存在
+    // 例如在影子的對話中提到
+  }
+}
+
+// 初始化影子自我意識系統
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    setupPhilosophyToastOnClick();
+
+    // 為影子添加點擊監聽
+    const shadow = document.getElementById('companionShadow');
+    if (shadow) {
+      shadow.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // 當點擊次數足夠多且哲學分數足夠高時，有概率進入意識之鏡
+        if (shadowClickCount >= 3 && companionData.philoScore >= 6 && Math.random() < 0.3) {
+          // 播放特殊音效
+          playEtherealShimmer();
+          // 延遲進入，讓對話先消失
+          setTimeout(() => {
+            jumpToNode('consciousness_mirror');
+          }, 1500);
+        } else {
+          showShadowDialogue();
+        }
+      });
+    }
+  }, 1000);
+});
+
+// 記錄探索時有概率顯示影子自語
+const originalUpdateCompanion = updateCompanion;
+updateCompanion = function(id) {
+  originalUpdateCompanion(id);
+  maybeShowShadowMonologue();
+};
