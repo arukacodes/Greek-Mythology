@@ -590,8 +590,8 @@ header p{
   font-family:'Noto Serif TC', serif;
   font-size:13px;
   letter-spacing:0.15em;
-  color:var(--gold-soft);
-  text-shadow:0 0 10px rgba(201, 168, 76, 0.3);
+  color:#a8a4a0;
+  text-shadow:0 0 6px rgba(150, 150, 150, 0.1);
 }
 .loading-en{
   display:block;

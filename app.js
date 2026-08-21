@@ -561,8 +561,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
       });
 
+      // 手機觸控支援
+      shadow.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (shyTimeout) clearTimeout(shyTimeout);
+        if (confusedTimeout) clearTimeout(confusedTimeout);
+        const shyProb = parseInt(document.getElementById('shyProbability')?.value || 70) / 100;
+        if (Math.random() < shyProb) {
+          shadow.classList.remove('confused');
+          shadow.classList.add('shy');
+          shadow.style.left = '-30px';
+          shadow.style.top = `calc(50vh + ${(Math.random() * 20 - 10)}px)`;
+        } else {
+          shadow.classList.remove('shy');
+          shadow.classList.add('confused');
+          confusedTimeout = setTimeout(() => shadow.classList.remove('confused'), 2000);
+        }
+      }, { passive: false });
+
       shadow._baseLeft = -10;
       shadow._baseTop = 50;
+
+      // 全域觸控監聽：點擊陰影外的地方時恢復（手機端）
+      document.addEventListener('touchstart', (e) => {
+        if (!shadow.classList.contains('shy')) return;
+        // 如果點擊的不是 shadow 本身
+        if (!shadow.contains(e.target)) {
+          shadow.classList.remove('shy');
+          shadow.style.left = '-10px';
+          shadow.style.top = '50vh';
+        }
+      });
 
       // 用 IntersectionObserver 代替 mousemove，只在 Shadow 可見時計算
       // 但為了簡單，這裡還是保留 mousemove，只是加節流
